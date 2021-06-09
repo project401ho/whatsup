@@ -1,4 +1,4 @@
-# 커뮤니티 긴기 게시글 모음 사이트
+# 커뮤니티 인기 게시글 모음 사이트
 
 # AWS url:
 https://master.d2y0wpanbqeoy2.amplifyapp.com/
