@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "whatsup4381100f_identitypool_4381100f",
+    "identityPoolName": "whatsup71f03046_identitypool_71f03046",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "whatsu4381100f",
-    "userPoolName": "whatsup4381100f_userpool_4381100f",
+    "resourceNameTruncated": "whatsu71f03046",
+    "userPoolName": "whatsup71f03046_userpool_71f03046",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "whatsu4381100f_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "whatsu71f03046_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "4381100f",
-    "resourceName": "whatsup4381100f",
+    "sharedId": "71f03046",
+    "resourceName": "whatsup71f03046",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
