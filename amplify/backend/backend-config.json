@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "whatsup4381100f": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

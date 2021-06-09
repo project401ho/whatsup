@@ -3,6 +3,8 @@ import React,{Component} from 'react';
 import Navigation from './components/Navigation'
 import ContentsList from './components/ContentsList'
 import Pages from './components/Pages'
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+
 
 class App extends Component {
   constructor(props){
@@ -25,9 +27,11 @@ class App extends Component {
           data = {this.state.contentslist}
         ></ContentsList>
         <Pages></Pages>
+        <AmplifySignOut />
+
       </div>
     );
   }
 }
 
-export default App;
+export default withAuthenticator(App);
