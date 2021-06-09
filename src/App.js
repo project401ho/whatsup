@@ -19,6 +19,9 @@ class App extends Component {
       ]
     }
   }
+  async fetchContentLists(){
+
+  }
   render(){
     return (
       <div className="App">
