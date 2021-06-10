@@ -30,6 +30,13 @@ class App extends Component {
   async fetchContentLists(){
     const apiData = await API.graphql({query: listPosts})
     const postFromAPI = apiData.data.listPosts.items;
+    await Promise.all(postFromAPI.map(async post=>{
+      if(post.image){
+        const image = await Storage.get(post.image)
+        post.image = image
+      }
+      return post
+    }))
     let loaded = true
     this.setState({postList:postFromAPI,isloaded:loaded,content_max_id:postFromAPI.length+1})  
   }
