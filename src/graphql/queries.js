@@ -13,6 +13,7 @@ export const getPost = /* GraphQL */ `
         items {
           id
           postID
+          nickname
           content
           createdAt
           updatedAt
@@ -64,6 +65,7 @@ export const getComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      nickname
       content
       createdAt
       updatedAt
@@ -89,6 +91,7 @@ export const listComments = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        nickname
         content
         createdAt
         updatedAt

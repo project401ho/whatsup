@@ -16,6 +16,7 @@ export const createPost = /* GraphQL */ `
         items {
           id
           postID
+          nickname
           content
           createdAt
           updatedAt
@@ -42,6 +43,7 @@ export const updatePost = /* GraphQL */ `
         items {
           id
           postID
+          nickname
           content
           createdAt
           updatedAt
@@ -68,6 +70,7 @@ export const deletePost = /* GraphQL */ `
         items {
           id
           postID
+          nickname
           content
           createdAt
           updatedAt
@@ -99,6 +102,7 @@ export const createComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      nickname
       content
       createdAt
       updatedAt
@@ -125,6 +129,7 @@ export const updateComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      nickname
       content
       createdAt
       updatedAt
@@ -151,6 +156,7 @@ export const deleteComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      nickname
       content
       createdAt
       updatedAt
