@@ -13,6 +13,15 @@ export const onCreatePost = /* GraphQL */ `
         items {
           id
           postID
+          post {
+            id
+            title
+            content
+            image
+            video
+            createdAt
+            updatedAt
+          }
           nickname
           content
           createdAt
@@ -37,6 +46,15 @@ export const onUpdatePost = /* GraphQL */ `
         items {
           id
           postID
+          post {
+            id
+            title
+            content
+            image
+            video
+            createdAt
+            updatedAt
+          }
           nickname
           content
           createdAt
@@ -61,6 +79,15 @@ export const onDeletePost = /* GraphQL */ `
         items {
           id
           postID
+          post {
+            id
+            title
+            content
+            image
+            video
+            createdAt
+            updatedAt
+          }
           nickname
           content
           createdAt
@@ -85,6 +112,14 @@ export const onCreateComment = /* GraphQL */ `
         image
         video
         comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -109,6 +144,14 @@ export const onUpdateComment = /* GraphQL */ `
         image
         video
         comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -133,6 +176,14 @@ export const onDeleteComment = /* GraphQL */ `
         image
         video
         comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt

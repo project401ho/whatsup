@@ -7,8 +7,8 @@ import Pages from './components/Pages'
 import Post from './components/Post'
 // import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import { API, Storage } from 'aws-amplify'
-import {listPosts, getPost} from './graphql/queries'
-import {createPost as createPostMutation, updatePost as updatePostMutation, createComment as createCommentMutation} from './graphql/mutations'
+import {listPosts, listComments, getPost} from './graphql/queries'
+import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
 
 class App extends Component {
   constructor(props){
@@ -20,18 +20,28 @@ class App extends Component {
       content_max_id : 0,
       selected_post : {},
       current_page : 1,
-
     }
     
   }
 
+  //lifecycle hook
+  componentDidMount(){
+    this.fetchContentLists()
+  }
+
   async createComment(formData){
-    console.log("StartCreateComment");
-    console.log("formData",formData);
+    if(!formData.nickname || !formData.content) return
     await API.graphql({query: createCommentMutation, variables:{input:formData}})
-    console.log("AddedComment")
-    console.log(await API.graphql({query: getPost, variables:{id:this.state.selected_post.id}} ).data.getPost)
-    // this.fetchContentLists()
+    let _id = this.state.selected_post.id
+    let temp = await API.graphql({query: getPost, variables:{id:_id}})
+    this.setState({selected_post:temp.data.getPost})
+  }
+
+
+  async fetchComments(){
+    const apiData =await API.graphql({query: listComments})
+    const commentsFromAPI = apiData.data.listComments.items
+    this.setState({commentsLists:commentsFromAPI})
   }
 
   async photoHandler(e){
@@ -42,15 +52,10 @@ class App extends Component {
   async fetchContentLists(){
     const apiData = await API.graphql({query: listPosts, variables:{limit:15}})
     const postFromAPI = apiData.data.listPosts.items.sort((a,b)=>b.id - a.id);
-    await Promise.all(postFromAPI.map(async post=>{
-      if(post.image){
-        const image = await Storage.get(post.image)
-        post.image = image
-      }
-      return post
-    }))
+    console.log("howmany");
     let loaded = true
     this.setState({postList:postFromAPI,isloaded:loaded,content_max_id:postFromAPI.length+1})  
+    
   }
   
   async createPost(formData){
@@ -65,11 +70,12 @@ class App extends Component {
     this.setState({postList: list, mode:"list", content_max_id: maxid})
   }
   selectContent(){
+    
     let content
     if(this.state.mode === "list"){
-      if(this.state.isloaded === false){
-        this.fetchContentLists()
-      }
+      // if(this.state.isloaded === false){
+      //   this.fetchContentLists()
+      // }
       content = <ContentsList
           postlist = {this.state.postList}
           moveToPost = {(item)=>{
@@ -82,7 +88,7 @@ class App extends Component {
     }
     else if(this.state.mode ==="post"){
       if(this.state.selected_post){
-        content = <Post post={this.state.selected_post} createComment={(dataForm)=>this.createComment(dataForm)}></Post>        
+        content = <Post fetchComments={(_postID)=>this.fetchComments(_postID)} post={this.state.selected_post} createComment={(dataForm)=>this.createComment(dataForm)}></Post>        
       }
       else{
         this.setState({mode:"list"})
