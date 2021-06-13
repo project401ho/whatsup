@@ -14,6 +14,9 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 실시간 댓글 반영 및 중복되지 않는 댓글 ID 생성<br>
 do while로 중복 방지 함<br>
 shouldComponentUpdate로 약간의 최적화 <br>
+댓글 섭밋시 state 초기화 추가 <br>
+
+
 
 ## 6.12
 댓글 불러오기 <br>
