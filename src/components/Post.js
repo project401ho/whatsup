@@ -5,7 +5,7 @@ class Post extends Component {
   constructor(props){
     super(props)
     this.state = {
-      //id가 코멘트 등록후 하나 올라가야됨 실시간 반영 안됌 수정 요망
+      
       id: (this.props.post.id)+"_"+(this.props.post.comments.items.length+1),
       postID: this.props.post.id,
       nickname : "",
@@ -19,20 +19,25 @@ class Post extends Component {
   componentDidMount(){
     this.imageLoad()        
   }
+  shouldComponentUpdate(props){
+    if(this.props.post.comments.items.length === props.post.comments.items.length) return true
+    else{
+      console.log("caught")
+      this.setState({id: (props.post.id)+"_"+(props.post.comments.items.length+1)})    
+      return true
+    }
+    
+  }
 
   stateHandler(e){
     this.setState({[e.target.name] : e.target.value})
   }
 
   commentListGenerate(){
-    // console.log("!");
     let commentlist = []
     this.props.post.comments.items.sort((a,b)=>{
-      // console.log("a",new Date(a.createdAt));
-      // console.log("b",new Date(b.createdAt));
       let ad = new Date(a.createdAt)
       let bd = new Date(b.createdAt)
-      // console.log(ad > bd);
       if(ad > bd) return 1
       else if(ad < bd) return -1
       else return 0
@@ -69,7 +74,7 @@ class Post extends Component {
             this.props.createComment(temp)
             e.target.nickname.value = ""
             e.target.content.value = ""
-            
+            this.setState({nickname:"",content:""})
           }}>
             <p><input name="nickname" type="text" placeholder="닉네임" onChange={(e)=>{
               this.stateHandler(e)

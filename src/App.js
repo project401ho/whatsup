@@ -5,9 +5,9 @@ import CreatePost from './components/CreatePost'
 import ContentsList from './components/ContentsList'
 import Pages from './components/Pages'
 import Post from './components/Post'
-// import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import { API, Storage } from 'aws-amplify'
-import {listPosts, listComments, getPost} from './graphql/queries'
+import {listPosts, listComments, getPost,getComment} from './graphql/queries'
 import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
 
 class App extends Component {
@@ -15,22 +15,40 @@ class App extends Component {
     super(props)
     this.state = {
       mode: "list",
-      isloaded: false,
       postList: [],
       content_max_id : 0,
       selected_post : {},
       current_page : 1,
+      content: "",
     }
     
   }
 
   //lifecycle hook
   componentDidMount(){
-    this.fetchContentLists()
+    this.fetchContentLists()    
   }
 
   async createComment(formData){
+
+    //폼 체크
     if(!formData.nickname || !formData.content) return
+
+    //중복 체크
+    let check = await API.graphql({query: getComment, variables:{id:formData.id}})
+    if(check.data.getComment){
+      let checkComment = null
+      do{
+        let temp = formData.id.split("_").map((w)=>+w)
+        temp[1] += 1
+        temp = temp[0].toString()+"_"+temp[1].toString()         
+        formData.id = temp
+        checkComment = await API.graphql({query: getComment, variables:{id:formData.id}})
+
+      }while(checkComment.data.getComment)
+    }
+
+    //코멘트 등록
     await API.graphql({query: createCommentMutation, variables:{input:formData}})
     let _id = this.state.selected_post.id
     let temp = await API.graphql({query: getPost, variables:{id:_id}})
@@ -39,7 +57,7 @@ class App extends Component {
 
 
   async fetchComments(){
-    const apiData =await API.graphql({query: listComments})
+    const apiData = await API.graphql({query: listComments})
     const commentsFromAPI = apiData.data.listComments.items
     this.setState({commentsLists:commentsFromAPI})
   }
@@ -52,9 +70,7 @@ class App extends Component {
   async fetchContentLists(){
     const apiData = await API.graphql({query: listPosts, variables:{limit:15}})
     const postFromAPI = apiData.data.listPosts.items.sort((a,b)=>b.id - a.id);
-    console.log("howmany");
-    let loaded = true
-    this.setState({postList:postFromAPI,isloaded:loaded,content_max_id:postFromAPI.length+1})  
+    this.setState({postList:postFromAPI,content_max_id:postFromAPI.length+1})  
     
   }
   
@@ -73,9 +89,6 @@ class App extends Component {
     
     let content
     if(this.state.mode === "list"){
-      // if(this.state.isloaded === false){
-      //   this.fetchContentLists()
-      // }
       content = <ContentsList
           postlist = {this.state.postList}
           moveToPost = {(item)=>{
@@ -103,11 +116,11 @@ class App extends Component {
         <Navigation home={()=>this.setState({mode:"list"})}></Navigation>
         {this.selectContent()}
         <Pages></Pages>
-        {/* <AmplifySignOut /> */}
+        <AmplifySignOut />
 
       </div>
     );
   }
 }
 
-export default App;
+export default withAuthenticator(App);
