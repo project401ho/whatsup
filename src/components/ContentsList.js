@@ -4,34 +4,52 @@ class ContentsList extends Component {
   render(){
     let lists = []
     this.props.postlist.forEach((item)=>{
+       
+        let date = new Date(item.createdAt)
+        let hours = date.getHours()
+        let minutes = date.getMinutes()
+        if(hours < 10) hours = "0"+hours.toString()
+        if(minutes < 10) minutes = "0"+minutes.toString()
+        // console.log(item);
         lists.push(
-            <li key = {item.id}>
-                <a 
-                    href={"/content/"+item.id}
-                    onClick={(e)=>{
-                        e.preventDefault()
-                        this.props.moveToPost(item)
-                    }}
-                >
-                    <div className="content_list_item_container">
-                        <h3>{item.title}</h3>
-                        {/* <p>{item.comment_count}</p> */}
+            <li className = "contentList_li" key = {item.id}>
+                <div className = "contentList_info">                
+                    <div className="contentList_subject">                        
+                        <p>
+                          <a 
+                                href={"/content/"+item.id}
+                                onClick={(e)=>{
+                                    e.preventDefault()
+                                    this.props.moveToPost(item)
+                                }}
+                            >
+                                <span className="contentList_subject_title">{item.title}</span>  
+                                {/* 게시글 생성후에 이게 문제를 일으킴 왠지 모르겠음 ㅠ */}
+                                <span className="contentList_subject_comments">[{item.comments.items.length}]</span>
+                            </a>  
+                        </p>
+                        
                     </div>
-                    <div className="content_list_item_container">
-                        <p>{item.content}</p>
+                    <div className="contentList_detail">
+                        <p>
+                            <span className="contentList_detail_uploader">{item.uploader} |</span>  
+                            <span className="contentList_detail_id"> No. {item.id} |</span>    
+                            <span className="contentList_detail_time"> {hours}:{minutes}</span>                             
+                        </p>
+                        
+                        
                         {/* <p>{item.number}</p>
                         <p>{item.time}</p> */}
-                   </div>
-                </a>
+                   </div>                   
+                </div>
+                <hr></hr>
             </li>
         )
     })
     return (
-      <div>
-          <ul>
-              {lists}
-          </ul>
-      </div>
+        <ul className = "contentList_ul">
+            {lists}
+        </ul>
     );
   }
 }

@@ -19,11 +19,23 @@ class Pages extends Component {
         this.setState({max:temp-5,min:temp2-5})        
     }
     load_pages(){
+        // console.log("load pages");
+        
         let lists = []    
         for(let i = this.state.min; i < this.state.max; i++){
-            lists.push(
-                <li key={i} className="pages_button"><input type="button" value={i}></input></li>    
-            )
+            // console.log("i",i);
+            // console.log(this.props.current_page);
+            if(i === this.props.current_page){
+                lists.push(
+                    <li key={i} className="pages_button"><input id = "pages_current" type="button" value={i} onClick={(e)=>this.props.changePage(e.target.value)}></input></li>    
+                )
+            }
+            else{
+                lists.push(
+                    <li key={i} className="pages_button"><input type="button" value={i} onClick={(e)=>this.props.changePage(e.target.value)}></input></li>    
+                )
+            }
+            
         }
         return lists
     }
@@ -32,16 +44,25 @@ class Pages extends Component {
             return (        
                 <ul className="pages_list">            
                     {this.load_pages()}
-                    <li className="pages_button_next"><input type="button" value="다음" onClick={(e)=>this.next_pages()}></input></li>
+                    <li className="pages_button"><input type="button" value="다음" onClick={(e)=>{
+                        this.next_pages()
+                        this.props.changePage(this.state.max)
+                    }}></input></li>
                 </ul>
             );
         }
         else{
             return (        
                 <ul className="pages_list">            
-                    <li className="pages_button_next"><input type="button" value="이전" onClick={(e)=>this.previous_pages()}></input></li>
+                    <li className="pages_button"><input type="button" value="이전" onClick={(e)=>{
+                        this.previous_pages()
+                        this.props.changePage(this.state.min-1)
+                    }}></input></li>
                     {this.load_pages()}
-                    <li className="pages_button_next"><input type="button" value="다음" onClick={(e)=>this.next_pages()}></input></li>
+                    <li className="pages_button"><input type="button" value="다음" onClick={(e)=>{
+                        this.next_pages()
+                        this.props.changePage(this.state.max)
+                    }}></input></li>
                 </ul>
             );
         }

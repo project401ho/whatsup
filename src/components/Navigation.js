@@ -4,7 +4,7 @@ class Navigation extends Component {
   render(){
     return (
       <div className="navigation">
-          <h1><a href="/" onClick={(e)=>{
+          <h1 className="navigation_title"><a href="/" onClick={(e)=>{
             e.preventDefault()
             this.props.home()
           }}>Whats UP</a></h1>

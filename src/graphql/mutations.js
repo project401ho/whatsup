@@ -12,6 +12,7 @@ export const createPost = /* GraphQL */ `
       content
       image
       video
+      uploader
       comments {
         items {
           id
@@ -22,6 +23,7 @@ export const createPost = /* GraphQL */ `
             content
             image
             video
+            uploader
             createdAt
             updatedAt
           }
@@ -48,6 +50,7 @@ export const updatePost = /* GraphQL */ `
       content
       image
       video
+      uploader
       comments {
         items {
           id
@@ -58,6 +61,7 @@ export const updatePost = /* GraphQL */ `
             content
             image
             video
+            uploader
             createdAt
             updatedAt
           }
@@ -84,6 +88,7 @@ export const deletePost = /* GraphQL */ `
       content
       image
       video
+      uploader
       comments {
         items {
           id
@@ -94,6 +99,7 @@ export const deletePost = /* GraphQL */ `
             content
             image
             video
+            uploader
             createdAt
             updatedAt
           }
@@ -123,6 +129,7 @@ export const createComment = /* GraphQL */ `
         content
         image
         video
+        uploader
         comments {
           items {
             id
@@ -158,6 +165,7 @@ export const updateComment = /* GraphQL */ `
         content
         image
         video
+        uploader
         comments {
           items {
             id
@@ -193,6 +201,7 @@ export const deleteComment = /* GraphQL */ `
         content
         image
         video
+        uploader
         comments {
           items {
             id

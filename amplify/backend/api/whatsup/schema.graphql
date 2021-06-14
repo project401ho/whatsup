@@ -4,6 +4,7 @@ type Post @model{
   content: String
   image: String
   video: String
+  uploader: String
   comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
 }
 

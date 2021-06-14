@@ -9,6 +9,7 @@ export const getPost = /* GraphQL */ `
       content
       image
       video
+      uploader
       comments {
         items {
           id
@@ -19,6 +20,7 @@ export const getPost = /* GraphQL */ `
             content
             image
             video
+            uploader
             createdAt
             updatedAt
           }
@@ -47,6 +49,7 @@ export const listPosts = /* GraphQL */ `
         content
         image
         video
+        uploader
         comments {
           items {
             id
@@ -76,6 +79,7 @@ export const getComment = /* GraphQL */ `
         content
         image
         video
+        uploader
         comments {
           items {
             id
@@ -113,6 +117,7 @@ export const listComments = /* GraphQL */ `
           content
           image
           video
+          uploader
           comments {
             nextToken
           }

@@ -75,18 +75,23 @@ class App extends Component {
   }
   
   async createPost(formData){
-    if((!formData.title || !formData.id || !formData.content) && (formData.image || formData.video)) return
+    // console.log("start create post");
+    if(!formData.title || !formData.id || !formData.content) return
+    // console.log("PAssed");
     await API.graphql({query:createPostMutation, variables:{input: formData} })
     if(formData.image){
       const image = await Storage.get(formData.image)
       formData.image = image
     }
-    let list = [...this.state.postList].concat(formData)
+    // console.log(formData);
+    let temp = await API.graphql({query:getPost, variables:{id:formData.id}})
+    // console.log(temp);
+    let list = [...this.state.postList].concat(temp.data.getPost)
     let maxid = this.state.content_max_id +1
     this.setState({postList: list, mode:"list", content_max_id: maxid})
   }
-  selectContent(){
-    
+
+  selectContent(){    
     let content
     if(this.state.mode === "list"){
       content = <ContentsList
@@ -109,13 +114,18 @@ class App extends Component {
     }
     return content
   }
+
+  changePage(page){
+    this.setState({current_page:Number(page)})
+  }
+
   render(){
     
     return (
       <div className="App">
         <Navigation home={()=>this.setState({mode:"list"})}></Navigation>
         {this.selectContent()}
-        <Pages></Pages>
+        <Pages current_page={this.state.current_page} changePage={(page)=>this.changePage(page)}></Pages>
         <AmplifySignOut />
 
       </div>

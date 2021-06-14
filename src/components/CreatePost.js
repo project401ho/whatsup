@@ -3,23 +3,34 @@ import {Component} from 'react';
 class CreatePost extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      
+    this.state = {      
       id: this.props.id,
       title: "",
       content: "",
       image: "",
       video: "",
-
+      uploader: "와썹",
     }
   }
   stateHandler(e){
     this.setState({[e.target.name]:e.target.value})
   }
+  shouldComponentUpdate(props){
+    if(props.id !== this.props.id){
+      this.setState({id:props.id})
+      return true
+    }
+    return true
+  }
   render(){
     return (
       <div className="CreatePost">
           <h1>Create POST</h1>
+          <input
+            name = "uploader"
+            value="와썹"
+            onChange={(e)=>this.stateHandler(e)}
+          />
           <input
             name = "title"
             placeholder="post title"
@@ -44,7 +55,6 @@ class CreatePost extends Component {
           <button onClick={(e)=>{
             e.preventDefault()
             let temp = this.state
-            console.log("temp", temp)
             this.props.createPost(temp)
             
           }}>Create Note</button>

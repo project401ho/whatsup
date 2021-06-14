@@ -43,7 +43,7 @@ class Post extends Component {
       else return 0
     }).forEach((item,i)=>{
       commentlist.push(
-        <li key={i}>
+        <li className = "comment_li" key={i}>
           <p>{item.nickname}</p>
           <p>{item.content}</p>
         </li>
@@ -86,9 +86,9 @@ class Post extends Component {
               this.stateHandler(e)
             }}></input></p>
           </form>
-          <div>
+          <ul>
               {this.commentListGenerate()}
-          </div>
+          </ul>
       </div>
     );
   }
