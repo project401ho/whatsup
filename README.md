@@ -12,6 +12,9 @@ username이 project401ho면 만들기 버튼 활성화
 Post css 수정
 current page에 따라 불러오는 post 다르게 하기
 
+pages에서 발견한 사실:
+line-height: value;로 한글과 영/숫자의 줄맞춤 체크
+
 
 # 업데이트 기록
 ## 6.13
