@@ -14,12 +14,12 @@ class Navigation extends Component {
               
               <li className="navigation_button_li">
                 <button type = "button" className="navigation_button"> 
-                  <FontAwesomeIcon icon={faUserCircle} size="lg"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="yellow"></FontAwesomeIcon>
                 </button>
               </li>
               <li type = "button" className="navigation_button_li">
                 <button className="navigation_button"> 
-                  <FontAwesomeIcon icon={faEdit} size="lg"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faEdit} size="lg" color="yellow"></FontAwesomeIcon>
                 </button>
               </li>
           </ul>
