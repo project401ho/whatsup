@@ -1,6 +1,7 @@
 import './App.css';
 import React,{Component} from 'react';
 import Navigation from './components/Navigation'
+import Announcement from './components/Announcement'
 import CreatePost from './components/CreatePost'
 import ContentsList from './components/ContentsList'
 import Pages from './components/Pages'
@@ -124,6 +125,7 @@ class App extends Component {
     return (
       <div className="App">
         <Navigation home={()=>this.setState({mode:"list"})}></Navigation>
+        <Announcement></Announcement>
         {this.selectContent()}
         <Pages current_page={this.state.current_page} changePage={(page)=>this.changePage(page)}></Pages>
         <AmplifySignOut />

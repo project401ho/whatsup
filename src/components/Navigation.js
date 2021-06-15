@@ -1,4 +1,6 @@
 import {Component} from 'react';
+import { faUserCircle, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Navigation extends Component {
   render(){
@@ -9,8 +11,17 @@ class Navigation extends Component {
             this.props.home()
           }}>Whats UP</a></h1>
           <ul className="navigation_buttons_holder">
-              <li className="navigation_button_li"><input className="navigation_button" type="button" value="My"></input></li>
-              <li className="navigation_button_li"><input className="navigation_button" type="button" value="Write"></input></li>
+              
+              <li className="navigation_button_li">
+                <button type = "button" className="navigation_button"> 
+                  <FontAwesomeIcon icon={faUserCircle} size="lg"></FontAwesomeIcon>
+                </button>
+              </li>
+              <li type = "button" className="navigation_button_li">
+                <button className="navigation_button"> 
+                  <FontAwesomeIcon icon={faEdit} size="lg"></FontAwesomeIcon>
+                </button>
+              </li>
           </ul>
       </div>
     );

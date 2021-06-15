@@ -7,6 +7,7 @@ class Pages extends Component {
             min: 1,
             max: 6
         }
+        
     }
     next_pages(){
         let temp = this.state.max

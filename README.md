@@ -6,24 +6,38 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 --
 
 # 할 일:
-로그인 없이 사용하기
-username이 project401ho면 만들기 버튼 활성화
-네비게이션 버튼 수정 및 CSS
-Post css 수정
-current page에 따라 불러오는 post 다르게 하기
+로그인 없이 사용하기<br>
+username이 project401ho면 만들기 버튼 활성화<br>
+네비게이션 버튼 수정 및 CSS<br>
+Post css 수정<br>
+current page에 따라 불러오는 post 다르게 하기<br>
 
-pages에서 발견한 사실:
-line-height: value;로 한글과 영/숫자의 줄맞춤 체크
+
 
 
 # 업데이트 기록
-## 6.13
-컨텐츠 리스트 CSS 수정
-PAGE CSS 수정 및 state 변경
-createPost 수정
-컨텐츠리스트 약간 수정
-업로드 이름 보이기
+## 6.15
+fontawesome 리액트 api 설정<br>
+네비게이션 버튼 스타일 수정<br>
+<br>
+button type => <br>
+1. submit => form 전송 기능<br>
+2. reset => form 내용 초기화<br>
+3. button => 자바스크립트 이벤트<br>
+<br>
+input type="button" => 디자인 제약이 있음<br>
+<br>
+자바스크립트 이벤트는 가급적 "<"button">"을 쓰자<br>
 
+
+## 6.14
+컨텐츠 리스트 CSS 수정<br>
+PAGE CSS 수정 및 state 변경<br>
+createPost 수정<br>
+컨텐츠리스트 약간 수정<br>
+업로더 이름 보이기<br>
+(!) pages에서 발견한 사실 (!):<br>
+line-height: value;로 한글과 영/숫자의 줄맞춤 체크<br>
 
 ## 6.13
 실시간 댓글 반영 및 중복되지 않는 댓글 ID 생성<br>
