@@ -6,15 +6,13 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 --
 
 # 할 일:
-## 리스트:
+## 게시물 리스트:
 익명 게시판<br>
 공지<br>
 게시물 조회수 보이기<br>
 게시물 수 만큼 페이지 계산 및 보이기<br>
 current page에 따라 불러오는 post 다르게 하기<br>
-(게스트 어카운트) 로그인 없이 사용하기<br>
-username이 project401ho면 만들기 버튼 활성화<br>
-네비게이션 버튼 수정 및 CSS<br>
+네비게이션 CSS<br>
 
 ## 게시물:
 Post css 수정<br>
@@ -22,8 +20,13 @@ Post css 수정<br>
 댓글 좋아요 기능<br>
 
 
+
 # 업데이트 기록
 ## 6.16
+게시글 이미지 사이즈 퍼센트로 바꿈
+로그인 안할시 댓글 작성 불가
+비로그인이 댓글 보기만 가능
+
 Auth 관련 교육 영상 <br>
 https://www.youtube.com/watch?v=lMOVP1Y8vOc<br>
 

@@ -21,12 +21,15 @@ const SignIn = ({onSignIn}) => {
 
   return (
     <div className="signin">
+      <div>
       <TextField
         id="username"
         label = "Username"
         value={username}
         onChange={e=>setUsername(e.target.value)}
       />
+      </div>
+      <div>
       <TextField
         id="password"
         label = "Password"
@@ -34,9 +37,12 @@ const SignIn = ({onSignIn}) => {
         value={password}
         onChange={e=>setPassword(e.target.value)}
       />
+      </div>
+      <div>
       <Button id="isgnInButton" color="primary" onClick ={signIn}>
         signIn
       </Button>
+      </div>
     </div>
   )
 }

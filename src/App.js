@@ -42,12 +42,12 @@ class App extends Component {
   AssessLoggedInState(){
     Auth.currentAuthenticatedUser()
       .then((e) => {        
-        console.log("WHATHTHATHATH");
+        // console.log("WHATHTHATHATH");
         this.setState({loggedin: true, user:e})
-        console.log(this.state.user);
+        // console.log(this.state.user);
       })
       .catch(()=>{
-        console.log("WHT");
+        // console.log("WHT");
         this.setState({loggedin: false})
       })
   }
@@ -59,7 +59,7 @@ class App extends Component {
       await Auth.signOut()
       this.setState({loggedin: false, user:{}})
     } catch(error){
-      console.log("error signing out", error);
+      // console.log("error signing out", error);
     }
   }
   //log in & out FINISH!
@@ -68,8 +68,12 @@ class App extends Component {
   async createComment(formData){
 
     //폼 체크
-    if(!formData.nickname || !formData.content) return
-
+    if(!formData.nickname || !formData.content ) return
+    if(!this.state.loggedin){
+      alert("로그인을 해주세요")
+      return
+    }
+    
     //중복 체크
     let check = await API.graphql({
       query: getComment, 
@@ -123,13 +127,13 @@ class App extends Component {
   }
 
   async fetchContentLists(){
-    console.log("fetch list start");
+    // console.log("fetch list start");
     const apiData = await API.graphql({
       query: listPosts, 
       variables:{limit:15},
       authMode: 'AWS_IAM'
     })
-    console.log("fetch done");
+    // console.log("fetch done");
     const postFromAPI = apiData.data.listPosts.items.sort((a,b)=>b.id - a.id);
     this.setState({postList:postFromAPI,content_max_id:postFromAPI.length+1})  
     
@@ -175,7 +179,7 @@ class App extends Component {
     }
     else if(this.state.mode ==="post"){
       if(this.state.selected_post){
-        content = <Post fetchComments={(_postID)=>this.fetchComments(_postID)} post={this.state.selected_post} createComment={(dataForm)=>this.createComment(dataForm)}></Post>        
+        content = <Post loggedin={this.state.loggedin} fetchComments={(_postID)=>this.fetchComments(_postID)} post={this.state.selected_post} createComment={(dataForm)=>this.createComment(dataForm)}></Post>        
       }
       else{
         this.setState({mode:"list"})

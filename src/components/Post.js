@@ -65,9 +65,11 @@ class Post extends Component {
       <div className="post">
           <h1>{this.state.post.title}</h1>          
           {
-              this.state.post.image && <img src={this.state.post.image} style={{width:400,height:400}} alt=""/>
+              this.state.post.image && <img className="post_img" src={this.state.post.image} alt=""/>
           }
           <p>{this.state.post.content}</p>
+          
+          {this.props.loggedin ? 
           <form onSubmit={(e)=>{
             e.preventDefault()
             let temp = {id:this.state.id,postID:this.state.postID,nickname:this.state.nickname,content:this.state.content,}
@@ -86,6 +88,9 @@ class Post extends Component {
               this.stateHandler(e)
             }}></input></p>
           </form>
+          :
+          <noscript></noscript>
+          }
           <ul>
               {this.commentListGenerate()}
           </ul>

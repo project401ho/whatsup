@@ -150,7 +150,12 @@ a:visited {
 }
 /* ContentList End */
 
-
+/* Post Start */
+.post_img{
+  width:60%;
+  
+}
+/* Post End */
 
 /* Pages Start */
 
