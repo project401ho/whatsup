@@ -4,7 +4,7 @@ class CreatePost extends Component {
   constructor(props){
     super(props)
     this.state = {      
-      id: this.props.id,
+      id: "",
       title: "",
       content: "",
       image: "",
@@ -63,6 +63,11 @@ class CreatePost extends Component {
           <button onClick={(e)=>{
             e.preventDefault()
             let temp = this.state
+            let date = new Date()            
+
+            let _id = ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime()
+            
+            this.setState({id:_id})
             this.props.createPost(temp)
             
           }}>만들기</button>

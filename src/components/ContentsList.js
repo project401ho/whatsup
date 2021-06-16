@@ -3,8 +3,10 @@ import {Component} from 'react';
 class ContentsList extends Component {
   render(){
     let lists = []
-    this.props.postlist.forEach((item)=>{
-       
+    
+    this.props.postlist.forEach((item, i)=>{
+        let _id = (this.props.current_page-1) * 15 + i + 1
+        
         let date = new Date(item.createdAt)
         let hours = date.getHours()
         let minutes = date.getMinutes()
@@ -23,8 +25,7 @@ class ContentsList extends Component {
                                     this.props.moveToPost(item)
                                 }}
                             >
-                                <span className="contentList_subject_title">{item.title}</span>  
-                                {/* 게시글 생성후에 이게 문제를 일으킴 왠지 모르겠음 ㅠ */}
+                                <span className="contentList_subject_title">{item.title}</span>                                  
                                 <span className="contentList_subject_comments">[{item.comments.items.length}]</span>
                             </a>  
                         </p>
@@ -33,7 +34,7 @@ class ContentsList extends Component {
                     <div className="contentList_detail">
                         <p>
                             <span className="contentList_detail_uploader">{item.uploader} |</span>  
-                            <span className="contentList_detail_id"> No. {item.id} |</span>    
+                            <span className="contentList_detail_id"> No. {_id} |</span>    
                             <span className="contentList_detail_time"> {hours}:{minutes}</span>                             
                         </p>
                         

@@ -1,4 +1,4 @@
-type Post @model{
+type Post @model @key(name:"postByDate", fields:["title", "createdAt"]) {
   id: ID!
   title: String!
   content: String

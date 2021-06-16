@@ -13,6 +13,7 @@ import { API, Auth, Storage } from 'aws-amplify'
 import {listPosts, listComments, getPost,getComment} from './graphql/queries'
 import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router, Link } from 'react-router-dom';
+import {Button} from "@material-ui/core";
 
 
 
@@ -22,12 +23,12 @@ class App extends Component {
     this.state = {
       mode: "list",
       postList: [],
-      content_max_id : 0,
       selected_post : {},
       current_page : 1,
       content: "",
       loggedin: false,
       user : {},
+      nexttoken_ContenList : null,
     }
     
   }
@@ -113,11 +114,14 @@ class App extends Component {
 
 
   async fetchComments(){
+
     const apiData = await API.graphql({
       query: listComments,
       authMode: 'AWS_IAM'
     })
-    const commentsFromAPI = apiData.data.listComments.items
+    const commentsFromAPI = apiData.data.listComments.items   
+  
+
     this.setState({commentsLists:commentsFromAPI})
   }
 
@@ -127,16 +131,21 @@ class App extends Component {
   }
 
   async fetchContentLists(){
-    // console.log("fetch list start");
+    // console.log("fetch list start")
+    // console.log("b4",this.state.nexttoken_ContenList);
     const apiData = await API.graphql({
       query: listPosts, 
-      variables:{limit:15},
-      authMode: 'AWS_IAM'
+      variables:{limit: 5, nextToken: this.state.nexttoken_ContenList},
+      authMode: 'AWS_IAM',
+            
     })
     // console.log("fetch done");
+    // console.log(apiData);
     const postFromAPI = apiData.data.listPosts.items.sort((a,b)=>b.id - a.id);
-    this.setState({postList:postFromAPI,content_max_id:postFromAPI.length+1})  
-    
+    let token = apiData.data.listPosts.nextToken
+    this.setState({postList:postFromAPI, nexttoken_ContenList:token})  
+    // console.log(this.state.nexttoken_ContenList);
+
   }
   
   async createPost(formData){
@@ -160,14 +169,14 @@ class App extends Component {
     })
     // console.log(temp);
     let list = [...this.state.postList].concat(temp.data.getPost)
-    let maxid = this.state.content_max_id +1
-    this.setState({postList: list, mode:"list", content_max_id: maxid})
+    this.setState({postList: list, mode:"list"})
   }
 
   selectContent(){    
     let content
     if(this.state.mode === "list"){
       content = <ContentsList
+          current_page = {this.state.current_page}
           postlist = {this.state.postList}
           moveToPost = {(item)=>{
             this.setState({selected_post:item, mode:"post"})
@@ -175,7 +184,7 @@ class App extends Component {
         ></ContentsList>
     }
     else if(this.state.mode === "create"){
-      content = <CreatePost id={this.state.content_max_id} photoHandler={(e)=>this.photoHandler(e)} createPost={(formData)=>this.createPost(formData)} ></CreatePost>
+      content = <CreatePost photoHandler={(e)=>this.photoHandler(e)} createPost={(formData)=>this.createPost(formData)} ></CreatePost>
     }
     else if(this.state.mode ==="post"){
       if(this.state.selected_post){
@@ -213,6 +222,7 @@ class App extends Component {
             </Route>
           </Switch>
           <Pages current_page={this.state.current_page} changePage={(page)=>this.changePage(page)}></Pages>
+          <Button id="text" onClick={()=>this.fetchContentLists()}>next</Button>
         </div>
       </Router>
     );

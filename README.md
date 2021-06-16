@@ -12,7 +12,9 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 게시물 조회수 보이기<br>
 게시물 수 만큼 페이지 계산 및 보이기<br>
 current page에 따라 불러오는 post 다르게 하기<br>
+테이블 항목 수 가져와서 리스트 no 제대로 뿌려주기<br>
 네비게이션 CSS<br>
+
 
 ## 게시물:
 Post css 수정<br>
@@ -23,6 +25,11 @@ Post css 수정<br>
 
 # 업데이트 기록
 ## 6.16
+GraphQL createAt 별로 소팅 하는 다큐먼트 <br>
+https://docs.amplify.aws/guides/api-graphql/query-with-sorting/q/platform/js#implementation <br>
+nextToken이용한 페이지네이션 구현<br>
+
+
 게시글 이미지 사이즈 퍼센트로 바꿈
 로그인 안할시 댓글 작성 불가
 비로그인이 댓글 보기만 가능
