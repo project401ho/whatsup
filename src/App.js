@@ -1,15 +1,20 @@
+
 import './App.css';
 import React,{Component} from 'react';
 import Navigation from './components/Navigation'
 import Announcement from './components/Announcement'
 import CreatePost from './components/CreatePost'
 import ContentsList from './components/ContentsList'
+import SignIn from './components/SignIn'
+import MyPage from './components/MyPage'
 import Pages from './components/Pages'
 import Post from './components/Post'
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
-import { API, Storage } from 'aws-amplify'
+import { API, Auth, Storage } from 'aws-amplify'
 import {listPosts, listComments, getPost,getComment} from './graphql/queries'
 import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
+import { Switch, Route, BrowserRouter as Router, Link } from 'react-router-dom';
+
+
 
 class App extends Component {
   constructor(props){
@@ -21,6 +26,8 @@ class App extends Component {
       selected_post : {},
       current_page : 1,
       content: "",
+      loggedin: false,
+      user : {},
     }
     
   }
@@ -28,7 +35,35 @@ class App extends Component {
   //lifecycle hook
   componentDidMount(){
     this.fetchContentLists()    
+    this.AssessLoggedInState()
   }
+
+  //log in & out
+  AssessLoggedInState(){
+    Auth.currentAuthenticatedUser()
+      .then((e) => {        
+        console.log("WHATHTHATHATH");
+        this.setState({loggedin: true, user:e})
+        console.log(this.state.user);
+      })
+      .catch(()=>{
+        console.log("WHT");
+        this.setState({loggedin: false})
+      })
+  }
+  onSignIn(user){
+    this.setState({loggedin:true, user:user})
+  }
+  async signOut(){
+    try {
+      await Auth.signOut()
+      this.setState({loggedin: false, user:{}})
+    } catch(error){
+      console.log("error signing out", error);
+    }
+  }
+  //log in & out FINISH!
+
 
   async createComment(formData){
 
@@ -36,7 +71,11 @@ class App extends Component {
     if(!formData.nickname || !formData.content) return
 
     //중복 체크
-    let check = await API.graphql({query: getComment, variables:{id:formData.id}})
+    let check = await API.graphql({
+      query: getComment, 
+      variables:{id:formData.id},
+      authMode: 'AWS_IAM',
+    })
     if(check.data.getComment){
       let checkComment = null
       do{
@@ -44,21 +83,36 @@ class App extends Component {
         temp[1] += 1
         temp = temp[0].toString()+"_"+temp[1].toString()         
         formData.id = temp
-        checkComment = await API.graphql({query: getComment, variables:{id:formData.id}})
+        checkComment = await API.graphql({
+          query: getComment, 
+          variables:{id:formData.id},
+          authMode: 'AWS_IAM',
+        })
 
       }while(checkComment.data.getComment)
     }
 
     //코멘트 등록
-    await API.graphql({query: createCommentMutation, variables:{input:formData}})
+    await API.graphql({
+      query: createCommentMutation,
+      variables:{input:formData},
+      authMode: 'AWS_IAM',
+    })
     let _id = this.state.selected_post.id
-    let temp = await API.graphql({query: getPost, variables:{id:_id}})
+    let temp = await API.graphql({
+      query: getPost, 
+      variables:{id:_id},
+      authMode: 'AWS_IAM',
+    })
     this.setState({selected_post:temp.data.getPost})
   }
 
 
   async fetchComments(){
-    const apiData = await API.graphql({query: listComments})
+    const apiData = await API.graphql({
+      query: listComments,
+      authMode: 'AWS_IAM'
+    })
     const commentsFromAPI = apiData.data.listComments.items
     this.setState({commentsLists:commentsFromAPI})
   }
@@ -69,7 +123,13 @@ class App extends Component {
   }
 
   async fetchContentLists(){
-    const apiData = await API.graphql({query: listPosts, variables:{limit:15}})
+    console.log("fetch list start");
+    const apiData = await API.graphql({
+      query: listPosts, 
+      variables:{limit:15},
+      authMode: 'AWS_IAM'
+    })
+    console.log("fetch done");
     const postFromAPI = apiData.data.listPosts.items.sort((a,b)=>b.id - a.id);
     this.setState({postList:postFromAPI,content_max_id:postFromAPI.length+1})  
     
@@ -79,13 +139,21 @@ class App extends Component {
     // console.log("start create post");
     if(!formData.title || !formData.id || !formData.content) return
     // console.log("PAssed");
-    await API.graphql({query:createPostMutation, variables:{input: formData} })
+    await API.graphql({
+      query:createPostMutation, 
+      variables:{input: formData},
+      authMode: 'AWS_IAM'
+ })
     if(formData.image){
       const image = await Storage.get(formData.image)
       formData.image = image
     }
     // console.log(formData);
-    let temp = await API.graphql({query:getPost, variables:{id:formData.id}})
+    let temp = await API.graphql({
+      query:getPost, 
+      variables:{id:formData.id},
+      authMode: 'AWS_IAM',
+    })
     // console.log(temp);
     let list = [...this.state.postList].concat(temp.data.getPost)
     let maxid = this.state.content_max_id +1
@@ -119,20 +187,32 @@ class App extends Component {
   changePage(page){
     this.setState({current_page:Number(page)})
   }
-
+  changeMode(_mode){
+    this.setState({mode:_mode})
+  }
   render(){
     
     return (
-      <div className="App">
-        <Navigation home={()=>this.setState({mode:"list"})}></Navigation>
-        <Announcement></Announcement>
-        {this.selectContent()}
-        <Pages current_page={this.state.current_page} changePage={(page)=>this.changePage(page)}></Pages>
-        <AmplifySignOut />
-
-      </div>
+      <Router>
+        <div className="App">
+          <Navigation changemode={(_mode)=>this.changeMode(_mode)} user={this.state.user} loggedin={this.state.loggedin} home={()=>this.setState({mode:"list"})}></Navigation>
+          <Announcement></Announcement>
+          <Switch>
+            <Route exact path='/'>
+              {this.selectContent()}
+            </Route>
+            <Route path="/signin">
+              <SignIn onSignIn={(user)=>this.onSignIn(user)}></SignIn>
+            </Route>
+            <Route path="/mypage">
+              <MyPage onSignOut={()=>this.signOut()}></MyPage>
+            </Route>
+          </Switch>
+          <Pages current_page={this.state.current_page} changePage={(page)=>this.changePage(page)}></Pages>
+        </div>
+      </Router>
     );
   }
 }
 
-export default withAuthenticator(App);
+export default App;

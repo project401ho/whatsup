@@ -25,23 +25,30 @@ class CreatePost extends Component {
   render(){
     return (
       <div className="CreatePost">
-          <h1>Create POST</h1>
-          <input
-            name = "uploader"
-            value="와썹"
-            onChange={(e)=>this.stateHandler(e)}
-          />
+          <h1>게시물 만들기</h1>
+          <p>
+            <input
+              name = "uploader"
+              value="와썹"
+              onChange={(e)=>this.stateHandler(e)}
+            />
+          </p>
+          <p>
           <input
             name = "title"
             placeholder="post title"
             onChange={(e)=>this.stateHandler(e)}
           />
+          </p>
+          <p>
           <input
             name = "content"
             placeholder="post content"
             onChange={(e)=>this.stateHandler(e)}
 
           />
+          </p>
+          <p>
           <input
             name = "image"
             type="file"
@@ -52,12 +59,13 @@ class CreatePost extends Component {
               this.setState({image:file.name})              
             }}
           />
+          </p>
           <button onClick={(e)=>{
             e.preventDefault()
             let temp = this.state
             this.props.createPost(temp)
             
-          }}>Create Note</button>
+          }}>만들기</button>
       </div>
     );
   }
