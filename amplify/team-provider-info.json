@@ -15,6 +15,12 @@
       "auth": {
         "whatsup4381100f": {},
         "whatsup71f03046": {}
+      },
+      "function": {
+        "confimSignUp": {
+          "deploymentBucketName": "amplify-amplify58818c97a6e74-staging-50045-deployment",
+          "s3Key": "amplify-builds/confimSignUp-69327159735a61596c41-build.zip"
+        }
       }
     }
   }
