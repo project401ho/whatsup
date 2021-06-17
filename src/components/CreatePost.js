@@ -3,12 +3,15 @@ import {Component} from 'react';
 class CreatePost extends Component {
   constructor(props){
     super(props)
+    let date = new Date()
     this.state = {      
-      id: "",
+      id : ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
       title: "",
+      count: this.props.total_post_count + 1,
       content: "",
       image: "",
       video: "",
+      type:"post",
       uploader: "와썹",
     }
   }
@@ -63,11 +66,7 @@ class CreatePost extends Component {
           <button onClick={(e)=>{
             e.preventDefault()
             let temp = this.state
-            let date = new Date()            
-
-            let _id = ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime()
-            
-            this.setState({id:_id})
+            console.log(temp);
             this.props.createPost(temp)
             
           }}>만들기</button>

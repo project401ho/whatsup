@@ -1,73 +1,65 @@
 import {Component} from 'react';
 
 class Pages extends Component {
-    constructor(props){
-        super(props)
-        this.state={
-            min: 1,
-            max: 6
-        }
-        
-    }
-    next_pages(){
-        let temp = this.state.max
-        let temp2 = this.state.min
-        this.setState({max:temp+5,min:temp2+5})        
-    }
-    previous_pages(){
-        let temp = this.state.max
-        let temp2 = this.state.min
-        this.setState({max:temp-5,min:temp2-5})        
-    }
+
     load_pages(){
         // console.log("load pages");
         
         let lists = []    
-        for(let i = this.state.min; i < this.state.max; i++){
+        for(let i = 1+(this.props.next_page_count*5); i < this.props.required_page_count+1; i++){
             // console.log("i",i);
             // console.log(this.props.current_page);
             if(i === this.props.current_page){
                 lists.push(
-                    <li key={i} className="pages_button"><input id = "pages_current" type="button" value={i} onClick={(e)=>this.props.changePage(e.target.value)}></input></li>    
+                    <li key={i} className="pages_button">
+                        <input 
+                            id = "pages_current" 
+                            type="button" 
+                            value={i} 
+                            onClick={(e)=>this.props.changePage(e.target.value)}>
+                        </input>
+                    </li>    
                 )
             }
             else{
                 lists.push(
-                    <li key={i} className="pages_button"><input type="button" value={i} onClick={(e)=>this.props.changePage(e.target.value)}></input></li>    
+                    <li key={i} className="pages_button">
+                        <input 
+                            type="button" 
+                            value={i} 
+                            onClick={(e)=>this.props.changePage(e.target.value)}>
+                        </input>
+                    </li>    
                 )
             }
             
         }
         return lists
     }
-    render(){        
-        if(this.state.min === 1){
-            return (        
-                <ul className="pages_list">            
-                    {this.load_pages()}
-                    <li className="pages_button"><input type="button" value="다음" onClick={(e)=>{
-                        this.next_pages()
-                        this.props.changePage(this.state.max)
-                    }}></input></li>
-                </ul>
-            );
-        }
-        else{
-            return (        
-                <ul className="pages_list">            
-                    <li className="pages_button"><input type="button" value="이전" onClick={(e)=>{
-                        this.previous_pages()
-                        this.props.changePage(this.state.min-1)
-                    }}></input></li>
-                    {this.load_pages()}
-                    <li className="pages_button"><input type="button" value="다음" onClick={(e)=>{
-                        this.next_pages()
-                        this.props.changePage(this.state.max)
-                    }}></input></li>
-                </ul>
-            );
-        }
-        
+    render(){    
+        return(
+            <ul className="pages_list">
+            {this.props.next_page_count > 0 
+                ?
+                <li className="pages_button"><input type="button" value="이전" onClick={(e)=>{
+                    this.props.nextPageCountHandler()
+                    this.props.changePage((this.props.next_page_count*5)-1)
+                }}></input></li>
+                :
+                <noscript></noscript>
+            }
+            {this.load_pages()}
+            {this.props.nexttoken_ContenList[this.props.next_page_count] !== null 
+                ?
+                <li className="pages_button"><input type="button" value="다음" onClick={(e)=>{
+                    this.props.nextPageCountHandler()
+                    this.props.changePage((this.props.next_page_count+1*5)+1)
+                }}></input></li>
+                :
+                <noscript></noscript>
+            }
+            </ul>        
+        )
     }
 }
 

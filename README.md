@@ -32,6 +32,24 @@ nextToken Pagination 시 포스트 fetch가 순서대로 안됌<br>
 
 # 업데이트 기록
 ## 6.17
+pagination 구현<br>
+게시물 개수 트랙킹<br>
+한번에 50개 불러와서 10개씩 짤라 보여줌<br>
+게시물 넘버 구현<br>
+fetch sort 구현<br>
+current page에 따라 불러오는 post 다르게 하기<br>
+nextToken Pagination 시 포스트 fetch가 순서대로 안됌<br>
+
+구현 완료 workflow:
+1. 각 게시물에 카운트를 하나씩 올려서 저장 마지막거 +1이 다음 게시물 카운트 즉 총 게시물 갯수
+2. 테이블 항목 수 가져와서 리스트 no 제대로 뿌려주기
+3. 포스트 날짜별로 정렬 한뒤 limit 만큼 가져오기
+4. 숫자 버튼 클릭시 fetchContentList() 호출 (nextToken으로 페이지네이션 됨)
+5. current_page 하나 늘리기
+6. 다음/이전 버튼 클릭시 current_page 알맞게 갱신 및 fetch 또 호출
+
+
+
 가입 하기 버튼 및 기능 구현 <br>
 이메일 자동 컨펌<br>
 이메일 중복 체크 불가 (유저풀을 다시 만들어야 함)<br>

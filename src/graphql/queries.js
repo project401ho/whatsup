@@ -5,7 +5,10 @@ export const getPost = /* GraphQL */ `
   query GetPost($id: ID!) {
     getPost(id: $id) {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -16,12 +19,14 @@ export const getPost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -31,7 +36,6 @@ export const getPost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -45,7 +49,10 @@ export const listPosts = /* GraphQL */ `
     listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -61,7 +68,6 @@ export const listPosts = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nextToken
@@ -75,7 +81,10 @@ export const getComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -91,7 +100,6 @@ export const getComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname
@@ -113,7 +121,10 @@ export const listComments = /* GraphQL */ `
         postID
         post {
           id
+          count
           title
+          type
+          createdAt
           content
           image
           video
@@ -121,12 +132,55 @@ export const listComments = /* GraphQL */ `
           comments {
             nextToken
           }
-          createdAt
           updatedAt
         }
         nickname
         content
         createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const postsByDate = /* GraphQL */ `
+  query PostsByDate(
+    $type: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    postsByDate(
+      type: $type
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        count
+        title
+        type
+        createdAt
+        content
+        image
+        video
+        uploader
+        comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         updatedAt
       }
       nextToken

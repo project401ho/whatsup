@@ -9,8 +9,8 @@ import SignIn from './components/SignIn'
 import MyPage from './components/MyPage'
 import Pages from './components/Pages'
 import Post from './components/Post'
-import { API, Auth, Storage } from 'aws-amplify'
-import {listPosts, listComments, getPost,getComment} from './graphql/queries'
+import { API, Auth, Storage} from 'aws-amplify'
+import {listPosts, listComments, getPost,getComment, postsByDate} from './graphql/queries'
 import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router, Link } from 'react-router-dom';
 import {Button} from "@material-ui/core";
@@ -23,12 +23,16 @@ class App extends Component {
     this.state = {
       mode: "list",
       postList: [],
+      sub_postList: [],
       selected_post : {},
       current_page : 1,
+      next_page_count : 0,
       content: "",
       loggedin: false,
       user : {},
-      nexttoken_ContenList : null,
+      nexttoken_ContenList : [],
+      required_page_count : 0,
+      total_post_count: 0,
     }
     
   }
@@ -60,7 +64,7 @@ class App extends Component {
       await Auth.signOut()
       this.setState({loggedin: false, user:{}})
     } catch(error){
-      // console.log("error signing out", error);
+      // console.log("error signing out", error);  
     }
   }
   //log in & out FINISH!
@@ -131,19 +135,49 @@ class App extends Component {
   }
 
   async fetchContentLists(){
-    // console.log("fetch list start")
+    
+    console.log("fetch list start")
     // console.log("b4",this.state.nexttoken_ContenList);
-    const apiData = await API.graphql({
-      query: listPosts, 
-      variables:{limit: 5, nextToken: this.state.nexttoken_ContenList},
-      authMode: 'AWS_IAM',
+    // const apiData = await API.graphql({
+    //   query: listPosts, 
+    //   variables:{limit: 5, nextToken: this.state.nexttoken_ContenList},
+    //   authMode: 'AWS_IAM',
             
+    // })
+    const apiData = await API.graphql({
+      query: postsByDate, 
+      variables:{
+        limit: 50, 
+        type: "post",
+        sortDirection: "DESC",
+        nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
+      },       
+      authMode: 'AWS_IAM',            
     })
     // console.log("fetch done");
     // console.log(apiData);
-    const postFromAPI = apiData.data.listPosts.items.sort((a,b)=>b.id - a.id);
-    let token = apiData.data.listPosts.nextToken
-    this.setState({postList:postFromAPI, nexttoken_ContenList:token})  
+    const postFromAPI = apiData.data.postsByDate.items;
+    let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
+    // console.log(postFromAPI.length);
+    let pagecount = Math.ceil(postFromAPI.length/10)
+    // let temp = []
+    // let _postList = []
+    // while(postFromAPI.length > 0){
+    //   if(temp.length < 10){
+    //     temp.push(postFromAPI.pop())
+    //   }
+    //   else{
+    //     _postList.push(temp)
+    //   }
+    // }
+    let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
+    this.setState({ 
+      sub_postList:_subpostlist, 
+      postList:postFromAPI, 
+      nexttoken_ContenList:newtokenlist, 
+      required_page_count:pagecount,
+      total_post_count:postFromAPI[0].count,
+    })  
     // console.log(this.state.nexttoken_ContenList);
 
   }
@@ -156,7 +190,7 @@ class App extends Component {
       query:createPostMutation, 
       variables:{input: formData},
       authMode: 'AWS_IAM'
- })
+    })
     if(formData.image){
       const image = await Storage.get(formData.image)
       formData.image = image
@@ -169,22 +203,30 @@ class App extends Component {
     })
     // console.log(temp);
     let list = [...this.state.postList].concat(temp.data.getPost)
-    this.setState({postList: list, mode:"list"})
+    let _total_post_count = this.state.total_post_count+1
+    this.setState({postList: list, total_post_count:_total_post_count})
+    window.location.reload()
   }
 
   selectContent(){    
     let content
     if(this.state.mode === "list"){
       content = <ContentsList
+          total_post_count = {this.state.total_post_count}
+          next_page_count = {this.state.next_page_count}
           current_page = {this.state.current_page}
-          postlist = {this.state.postList}
+          postlist = {this.state.sub_postList}
           moveToPost = {(item)=>{
             this.setState({selected_post:item, mode:"post"})
           }}
         ></ContentsList>
     }
     else if(this.state.mode === "create"){
-      content = <CreatePost photoHandler={(e)=>this.photoHandler(e)} createPost={(formData)=>this.createPost(formData)} ></CreatePost>
+      content = <CreatePost 
+        photoHandler={(e)=>this.photoHandler(e)} 
+        createPost={(formData)=>this.createPost(formData)} 
+        total_post_count={this.state.total_post_count}
+      ></CreatePost>
     }
     else if(this.state.mode ==="post"){
       if(this.state.selected_post){
@@ -198,7 +240,19 @@ class App extends Component {
   }
 
   changePage(page){
-    this.setState({current_page:Number(page)})
+    let pressed_page = Number(page)
+    let temp = [...this.state.postList]
+    if(temp.length > pressed_page * 10){
+      temp = temp.slice((pressed_page-1)*10, pressed_page * 10)
+    }
+    else{
+      temp = temp.slice((pressed_page-1)*10,temp.length)
+    }
+    this.setState({current_page:pressed_page, sub_postList: temp})
+  }
+  nextPageCountHandler(num){
+    let temp = this.state.next_page_count+num
+    this.setState({next_page_count:temp})
   }
   changeMode(_mode){
     this.setState({mode:_mode})
@@ -221,7 +275,14 @@ class App extends Component {
               <MyPage onSignOut={()=>this.signOut()}></MyPage>
             </Route>
           </Switch>
-          <Pages current_page={this.state.current_page} changePage={(page)=>this.changePage(page)}></Pages>
+          <Pages 
+            nexttoken_ContenList ={this.state.nexttoken_ContenList}
+            next_page_count= {this.state.next_page_count} 
+            required_page_count={this.state.required_page_count} 
+            current_page={this.state.current_page} 
+            changePage={(page)=>this.changePage(page)}
+            nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+          ></Pages>
           <Button id="text" onClick={()=>this.fetchContentLists()}>next</Button>
         </div>
       </Router>

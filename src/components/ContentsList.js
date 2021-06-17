@@ -2,10 +2,12 @@ import {Component} from 'react';
 
 class ContentsList extends Component {
   render(){
+    console.log(this.props.current_page);
     let lists = []
     
     this.props.postlist.forEach((item, i)=>{
-        let _id = (this.props.current_page-1) * 15 + i + 1
+        //          total count of posts    
+        let postnumber = this.props.total_post_count - (this.props.next_page_count*10) - i
         
         let date = new Date(item.createdAt)
         let hours = date.getHours()
@@ -19,7 +21,7 @@ class ContentsList extends Component {
                     <div className="contentList_subject">                        
                         <p>
                           <a 
-                                href={"/content/"+item.id}
+                                href={"/"}
                                 onClick={(e)=>{
                                     e.preventDefault()
                                     this.props.moveToPost(item)
@@ -34,7 +36,7 @@ class ContentsList extends Component {
                     <div className="contentList_detail">
                         <p>
                             <span className="contentList_detail_uploader">{item.uploader} |</span>  
-                            <span className="contentList_detail_id"> No. {_id} |</span>    
+                            <span className="contentList_detail_id"> No. {postnumber} |</span>    
                             <span className="contentList_detail_time"> {hours}:{minutes}</span>                             
                         </p>
                         

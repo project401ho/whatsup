@@ -8,7 +8,10 @@ export const createPost = /* GraphQL */ `
   ) {
     createPost(input: $input, condition: $condition) {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -19,12 +22,14 @@ export const createPost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -34,7 +39,6 @@ export const createPost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -46,7 +50,10 @@ export const updatePost = /* GraphQL */ `
   ) {
     updatePost(input: $input, condition: $condition) {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -57,12 +64,14 @@ export const updatePost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -72,7 +81,6 @@ export const updatePost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -84,7 +92,10 @@ export const deletePost = /* GraphQL */ `
   ) {
     deletePost(input: $input, condition: $condition) {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -95,12 +106,14 @@ export const deletePost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -110,7 +123,6 @@ export const deletePost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -125,7 +137,10 @@ export const createComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -141,7 +156,6 @@ export const createComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname
@@ -161,7 +175,10 @@ export const updateComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -177,7 +194,6 @@ export const updateComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname
@@ -197,7 +213,10 @@ export const deleteComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -213,7 +232,6 @@ export const deleteComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname

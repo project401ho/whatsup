@@ -5,7 +5,10 @@ export const onCreatePost = /* GraphQL */ `
   subscription OnCreatePost {
     onCreatePost {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -16,12 +19,14 @@ export const onCreatePost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -31,7 +36,6 @@ export const onCreatePost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -40,7 +44,10 @@ export const onUpdatePost = /* GraphQL */ `
   subscription OnUpdatePost {
     onUpdatePost {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -51,12 +58,14 @@ export const onUpdatePost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -66,7 +75,6 @@ export const onUpdatePost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -75,7 +83,10 @@ export const onDeletePost = /* GraphQL */ `
   subscription OnDeletePost {
     onDeletePost {
       id
+      count
       title
+      type
+      createdAt
       content
       image
       video
@@ -86,12 +97,14 @@ export const onDeletePost = /* GraphQL */ `
           postID
           post {
             id
+            count
             title
+            type
+            createdAt
             content
             image
             video
             uploader
-            createdAt
             updatedAt
           }
           nickname
@@ -101,7 +114,6 @@ export const onDeletePost = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -113,7 +125,10 @@ export const onCreateComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -129,7 +144,6 @@ export const onCreateComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname
@@ -146,7 +160,10 @@ export const onUpdateComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -162,7 +179,6 @@ export const onUpdateComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname
@@ -179,7 +195,10 @@ export const onDeleteComment = /* GraphQL */ `
       postID
       post {
         id
+        count
         title
+        type
+        createdAt
         content
         image
         video
@@ -195,7 +214,6 @@ export const onDeleteComment = /* GraphQL */ `
           }
           nextToken
         }
-        createdAt
         updatedAt
       }
       nickname

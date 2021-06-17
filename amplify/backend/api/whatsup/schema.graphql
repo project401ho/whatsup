@@ -1,6 +1,15 @@
-type Post @model{
+type Post
+  @model
+  @key(
+    name: "postsByDate"
+    fields: ["type", "createdAt"]
+    queryField: "postsByDate"
+  ) {
   id: ID!
+  count: Int!
   title: String!
+  type: String!
+  createdAt: String!
   content: String
   image: String
   video: String
