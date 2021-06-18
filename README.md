@@ -44,11 +44,17 @@ Post css 수정<br>
 
 # 업데이트 기록
 ## 6.18
-Link와 라우터로 Post 컴포넌트 리팩토링
-Post 컴포넌트 이미지 버그 수정
-createPost 리팩토링
+Link와 라우터로 Post 컴포넌트 리팩토링<br>
+Post 컴포넌트 이미지 버그 수정<br>
+createPost 리팩토링<br>
 
+multiple 이미지 working on<br>
+스키마 업데이트<br>
+createPost 업데이트<br>
+post 하는중<br>
 
+page 버그 발견<br>
+minor bug fix<br>
 
 ## 6.17
 pagination 구현<br>
