@@ -10,7 +10,6 @@ export const onCreatePost = /* GraphQL */ `
       type
       createdAt
       content
-      image
       video
       uploader
       comments {
@@ -24,13 +23,35 @@ export const onCreatePost = /* GraphQL */ `
             type
             createdAt
             content
-            image
             video
             uploader
             updatedAt
           }
           nickname
           content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      resources {
+        items {
+          id
+          postID
+          post {
+            id
+            count
+            title
+            type
+            createdAt
+            content
+            video
+            uploader
+            updatedAt
+          }
+          order
+          file
+          url
           createdAt
           updatedAt
         }
@@ -49,7 +70,6 @@ export const onUpdatePost = /* GraphQL */ `
       type
       createdAt
       content
-      image
       video
       uploader
       comments {
@@ -63,13 +83,35 @@ export const onUpdatePost = /* GraphQL */ `
             type
             createdAt
             content
-            image
             video
             uploader
             updatedAt
           }
           nickname
           content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      resources {
+        items {
+          id
+          postID
+          post {
+            id
+            count
+            title
+            type
+            createdAt
+            content
+            video
+            uploader
+            updatedAt
+          }
+          order
+          file
+          url
           createdAt
           updatedAt
         }
@@ -88,7 +130,6 @@ export const onDeletePost = /* GraphQL */ `
       type
       createdAt
       content
-      image
       video
       uploader
       comments {
@@ -102,13 +143,35 @@ export const onDeletePost = /* GraphQL */ `
             type
             createdAt
             content
-            image
             video
             uploader
             updatedAt
           }
           nickname
           content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      resources {
+        items {
+          id
+          postID
+          post {
+            id
+            count
+            title
+            type
+            createdAt
+            content
+            video
+            uploader
+            updatedAt
+          }
+          order
+          file
+          url
           createdAt
           updatedAt
         }
@@ -130,7 +193,6 @@ export const onCreateComment = /* GraphQL */ `
         type
         createdAt
         content
-        image
         video
         uploader
         comments {
@@ -139,6 +201,18 @@ export const onCreateComment = /* GraphQL */ `
             postID
             nickname
             content
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        resources {
+          items {
+            id
+            postID
+            order
+            file
+            url
             createdAt
             updatedAt
           }
@@ -165,7 +239,6 @@ export const onUpdateComment = /* GraphQL */ `
         type
         createdAt
         content
-        image
         video
         uploader
         comments {
@@ -174,6 +247,18 @@ export const onUpdateComment = /* GraphQL */ `
             postID
             nickname
             content
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        resources {
+          items {
+            id
+            postID
+            order
+            file
+            url
             createdAt
             updatedAt
           }
@@ -200,7 +285,6 @@ export const onDeleteComment = /* GraphQL */ `
         type
         createdAt
         content
-        image
         video
         uploader
         comments {
@@ -214,10 +298,163 @@ export const onDeleteComment = /* GraphQL */ `
           }
           nextToken
         }
+        resources {
+          items {
+            id
+            postID
+            order
+            file
+            url
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         updatedAt
       }
       nickname
       content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateResource = /* GraphQL */ `
+  subscription OnCreateResource {
+    onCreateResource {
+      id
+      postID
+      post {
+        id
+        count
+        title
+        type
+        createdAt
+        content
+        video
+        uploader
+        comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        resources {
+          items {
+            id
+            postID
+            order
+            file
+            url
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      order
+      file
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateResource = /* GraphQL */ `
+  subscription OnUpdateResource {
+    onUpdateResource {
+      id
+      postID
+      post {
+        id
+        count
+        title
+        type
+        createdAt
+        content
+        video
+        uploader
+        comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        resources {
+          items {
+            id
+            postID
+            order
+            file
+            url
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      order
+      file
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteResource = /* GraphQL */ `
+  subscription OnDeleteResource {
+    onDeleteResource {
+      id
+      postID
+      post {
+        id
+        count
+        title
+        type
+        createdAt
+        content
+        video
+        uploader
+        comments {
+          items {
+            id
+            postID
+            nickname
+            content
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        resources {
+          items {
+            id
+            postID
+            order
+            file
+            url
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      order
+      file
+      url
       createdAt
       updatedAt
     }

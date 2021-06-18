@@ -1,8 +1,10 @@
 import {Component} from 'react';
+import {Link} from 'react-router-dom';
+
 
 class ContentsList extends Component {
   render(){
-    console.log(this.props.current_page);
+    // console.log(this.props.current_page); 
     let lists = []
     
     this.props.postlist.forEach((item, i)=>{
@@ -20,16 +22,15 @@ class ContentsList extends Component {
                 <div className = "contentList_info">                
                     <div className="contentList_subject">                        
                         <p>
-                          <a 
-                                href={"/"}
+                          <Link 
+                                to={"/post/"+item.id}
                                 onClick={(e)=>{
-                                    e.preventDefault()
                                     this.props.moveToPost(item)
                                 }}
                             >
                                 <span className="contentList_subject_title">{item.title}</span>                                  
                                 <span className="contentList_subject_comments">[{item.comments.items.length}]</span>
-                            </a>  
+                            </Link>  
                         </p>
                         
                     </div>

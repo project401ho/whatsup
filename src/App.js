@@ -10,10 +10,10 @@ import MyPage from './components/MyPage'
 import Pages from './components/Pages'
 import Post from './components/Post'
 import { API, Auth, Storage} from 'aws-amplify'
-import {listPosts, listComments, getPost,getComment, postsByDate} from './graphql/queries'
+import {getPost, getComment, postsByDate} from './graphql/queries'
 import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
-import { Switch, Route, BrowserRouter as Router, Link } from 'react-router-dom';
-import {Button} from "@material-ui/core";
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+// import {Button} from "@material-ui/core";
 
 
 
@@ -69,7 +69,9 @@ class App extends Component {
   }
   //log in & out FINISH!
 
+  async createResource(formData){
 
+  }
   async createComment(formData){
 
     //폼 체크
@@ -116,24 +118,6 @@ class App extends Component {
     this.setState({selected_post:temp.data.getPost})
   }
 
-
-  async fetchComments(){
-
-    const apiData = await API.graphql({
-      query: listComments,
-      authMode: 'AWS_IAM'
-    })
-    const commentsFromAPI = apiData.data.listComments.items   
-  
-
-    this.setState({commentsLists:commentsFromAPI})
-  }
-
-  async photoHandler(e){
-    const file = e.target.files[0]
-    await Storage.put(file.name, file)
-  }
-
   async fetchContentLists(){
     
     console.log("fetch list start")
@@ -154,22 +138,11 @@ class App extends Component {
       },       
       authMode: 'AWS_IAM',            
     })
-    // console.log("fetch done");
-    // console.log(apiData);
+    console.log(apiData);
+    if(apiData.data.postsByDate.items.length < 1) return
     const postFromAPI = apiData.data.postsByDate.items;
     let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
-    // console.log(postFromAPI.length);
     let pagecount = Math.ceil(postFromAPI.length/10)
-    // let temp = []
-    // let _postList = []
-    // while(postFromAPI.length > 0){
-    //   if(temp.length < 10){
-    //     temp.push(postFromAPI.pop())
-    //   }
-    //   else{
-    //     _postList.push(temp)
-    //   }
-    // }
     let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
     this.setState({ 
       sub_postList:_subpostlist, 
@@ -177,11 +150,14 @@ class App extends Component {
       nexttoken_ContenList:newtokenlist, 
       required_page_count:pagecount,
       total_post_count:postFromAPI[0].count,
-    })  
-    // console.log(this.state.nexttoken_ContenList);
-
+    })
+    
   }
-  
+
+  async imageUpload(_file){
+    await Storage.put(_file.name, _file)
+  }
+
   async createPost(formData){
     // console.log("start create post");
     if(!formData.title || !formData.id || !formData.content) return
@@ -190,21 +166,9 @@ class App extends Component {
       query:createPostMutation, 
       variables:{input: formData},
       authMode: 'AWS_IAM'
-    })
-    if(formData.image){
-      const image = await Storage.get(formData.image)
-      formData.image = image
-    }
-    // console.log(formData);
-    let temp = await API.graphql({
-      query:getPost, 
-      variables:{id:formData.id},
-      authMode: 'AWS_IAM',
-    })
-    // console.log(temp);
-    let list = [...this.state.postList].concat(temp.data.getPost)
+    })    
     let _total_post_count = this.state.total_post_count+1
-    this.setState({postList: list, total_post_count:_total_post_count})
+    this.setState({total_post_count:_total_post_count})
     window.location.reload()
   }
 
@@ -217,25 +181,19 @@ class App extends Component {
           current_page = {this.state.current_page}
           postlist = {this.state.sub_postList}
           moveToPost = {(item)=>{
-            this.setState({selected_post:item, mode:"post"})
+            this.setState({selected_post:item})
           }}
         ></ContentsList>
     }
     else if(this.state.mode === "create"){
-      content = <CreatePost 
-        photoHandler={(e)=>this.photoHandler(e)} 
+      content = <CreatePost
+        createResource = {(formData)=>this.createResource(formData)} 
+        imageUpload={(e)=>this.imageUpload(e)} 
         createPost={(formData)=>this.createPost(formData)} 
         total_post_count={this.state.total_post_count}
       ></CreatePost>
     }
-    else if(this.state.mode ==="post"){
-      if(this.state.selected_post){
-        content = <Post loggedin={this.state.loggedin} fetchComments={(_postID)=>this.fetchComments(_postID)} post={this.state.selected_post} createComment={(dataForm)=>this.createComment(dataForm)}></Post>        
-      }
-      else{
-        this.setState({mode:"list"})
-      }
-    }
+    
     return content
   }
 
@@ -268,6 +226,13 @@ class App extends Component {
             <Route exact path='/'>
               {this.selectContent()}
             </Route>
+            <Route path='/post/*'>
+              <Post 
+                loggedin={this.state.loggedin} 
+                post={this.state.selected_post} 
+                createComment={(dataForm)=>this.createComment(dataForm)}>
+              </Post>
+            </Route>
             <Route path="/signin">
               <SignIn onSignIn={(user)=>this.onSignIn(user)}></SignIn>
             </Route>
@@ -282,8 +247,8 @@ class App extends Component {
             current_page={this.state.current_page} 
             changePage={(page)=>this.changePage(page)}
             nextPageCountHandler={(num)=>this.nextPageCountHandler()}
-          ></Pages>
-          <Button id="text" onClick={()=>this.fetchContentLists()}>next</Button>
+          >            
+          </Pages>
         </div>
       </Router>
     );

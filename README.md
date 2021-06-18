@@ -18,19 +18,38 @@ Post css 수정<br>
 게시물 좋아요 기능<br>
 댓글 좋아요 기능<br>
 
-## Pagination
+이미지 여러개
+예상 work flow:
 
-current page에 따라 불러오는 post 다르게 하기<br>
-nextToken Pagination 시 포스트 fetch가 순서대로 안됌<br>
-예상 workflow:
-1. 포스트 테이블 길이 확보 (이걸로 페이지 버튼 갯수 정하기)
-2. 테이블 항목 수 가져와서 리스트 no 제대로 뿌려주기
-3. 포스트 날짜별로 정렬 한뒤 limit 만큼 가져오기
-4. 숫자 버튼 클릭시 fetchContentList() 호출 (nextToken으로 페이지네이션 됨)
-5. current_page 하나 늘리기
-6. 다음/이전 버튼 클릭시 current_page 알맞게 갱신 및 fetch 또 호출
+### 셋업
+1. 스키마에서 resources 만들기
+2. 댓글 처럼 Post 랑 연결하기 
+3. id : 파일 이름
+4. postID : 연결된 게시물 ID
+5. order : 이미지 뿌릴 순서
+6. file: Storage.get(filename)
+
+### 만들기
+1. 이미지 업로드시 files state에 저장
+2. 섭밋시 files 하나하나 storage에 업로드
+3. files 하나 돌때마다 resources에 게시글과 연동해서 추가
+4. 3번 과정시 순서에 따라 order 업데이트
+
+### 불러오기
+1. 게시글 클릭시 연동되있는 resources list 가져오기
+2. resources에 있는 모든 이미지 불러오기
+3. 이미지들을 order에 맞게 정렬
+4. 화면에 뿌려주기
+
 
 # 업데이트 기록
+## 6.18
+Link와 라우터로 Post 컴포넌트 리팩토링
+Post 컴포넌트 이미지 버그 수정
+createPost 리팩토링
+
+
+
 ## 6.17
 pagination 구현<br>
 게시물 개수 트랙킹<br>

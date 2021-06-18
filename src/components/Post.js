@@ -32,7 +32,17 @@ class Post extends Component {
   stateHandler(e){
     this.setState({[e.target.name] : e.target.value})
   }
-
+  imageListGenerate(){
+    if(this.state.isloaded === true || this.props.post.resources.length < 1) return
+    let imagelist = []
+    this.props.post.resources.items.sort((a,b)=>a.order - b.order)
+    .forEach(async (item,i)=>{
+      const image = await Storage.get(item.id)
+      imagelist.push(
+        <img className="post_img" src={image} alt=""/>
+      )
+    })
+  }
   commentListGenerate(){
     let commentlist = []
     this.props.post.comments.items.sort((a,b)=>{
@@ -53,20 +63,18 @@ class Post extends Component {
   }
 
   async imageLoad(){
-    if(this.state.isloaded === true) return
-    const image = await Storage.get(this.state.post.image)
-    let temp = Object.assign({},this.state.post)
-    temp.image = image
-    this.setState({post:temp, isloaded:true})
+    // if(this.state.isloaded === true || this.props.post.image === "") return
+    // const image = await Storage.get(this.state.post.image)
+    // let temp = Object.assign({},this.state.post)
+    // temp.image = image
+    // this.setState({post:temp, isloaded:true})
   }
   
   render(){    
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
-          {
-              this.state.post.image && <img className="post_img" src={this.state.post.image} alt=""/>
-          }
+          {this.imageListGenerate()}
           <p>{this.state.post.content}</p>
           
           {this.props.loggedin ? 

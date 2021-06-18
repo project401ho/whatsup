@@ -11,10 +11,10 @@ type Post
   type: String!
   createdAt: String!
   content: String
-  image: String
   video: String
   uploader: String
   comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
+  resources: [Resource] @connection(keyName: "byPostResource", fields: ["id"])
 }
 
 type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
@@ -23,4 +23,13 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
   post: Post @connection(fields: ["postID"])
   nickname: String!
   content: String!
+}
+
+type Resource @model @key(name: "byPostResource", fields: ["postID", "order"]) {
+  id: ID!
+  postID: ID!
+  post: Post @connection(fields: ["postID"])
+  order: Int!
+  file: String!
+  url: String!
 }

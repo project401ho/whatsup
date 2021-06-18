@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {Auth} from 'aws-amplify';
-import {Button, TextField } from "@material-ui/core";
+import React from "react";
+// import {Auth} from 'aws-amplify';
+import {Button } from "@material-ui/core";
 import {useHistory} from 'react-router-dom'
 
 const MyPage = ({onSignOut}) => {

@@ -4,19 +4,65 @@ class CreatePost extends Component {
   constructor(props){
     super(props)
     let date = new Date()
-    this.state = {      
-      id : ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
-      title: "",
-      count: this.props.total_post_count + 1,
-      content: "",
-      image: "",
-      video: "",
-      type:"post",
-      uploader: "와썹",
+    this.state = {     
+      post:{
+        id : ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
+        title: "",
+        count: this.props.total_post_count + 1,
+        content: "",        
+        video: "",
+        type:"post",
+        uploader: "와썹",
+      }, 
+      resource: {
+        id: "filename",
+        postID: ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
+        order: 0,
+        file: null,     
+        url: "", 
+      },
+      resources:[],
+      fileButtonList: [],
     }
   }
+  componentDidMount(){
+    this.addImageFile()
+  }
+  addResource (filename,file,order) {
+    let resource = Object.assign({},this.state.resource,{id:filename,file:file,order:order})
+    let _resources = [...this.state.resources].concat(resource)
+    this.setState({resources:_resources})
+  }
+  editResrouce (){
+
+  }
+  addImageFile(){
+    this.addResource("fiilename",null,this.state.fileButtonList.length+1)
+    let temp = [...this.state.fileButtonList]
+    temp.push(
+    <div key = {this.state.fileButtonList.length+1}>
+      <input        
+        name = "image"
+        type="file"
+        id={this.state.fileButtonList.length}
+        onChange={(e)=>{
+          console.log(e);
+          if(!e.target.files[0]) return
+          let file = e.target.files[0]
+          let _resources = [...this.state.resources]
+          _resources[Number(e.target.id)].file = file;
+          _resources[Number(e.target.id)].id = file.name          
+          this.setState({resources:_resources})              
+        }}
+      />
+    </div>,
+    )
+    this.setState({fileButtonList:temp})
+  }
   stateHandler(e){
-    this.setState({[e.target.name]:e.target.value})
+    let temp = {[e.target.name]:e.target.value}
+    let _post = Object.assign({},this.state.post,temp)
+    this.setState({post:_post})
   }
   shouldComponentUpdate(props){
     if(props.id !== this.props.id){
@@ -51,25 +97,24 @@ class CreatePost extends Component {
 
           />
           </p>
-          <p>
-          <input
-            name = "image"
-            type="file"
-            onChange={(e)=>{
-              if(!e.target.files[0]) return
-              this.props.photoHandler(e)
-              let file = e.target.files[0]
-              this.setState({image:file.name})              
-            }}
-          />
-          </p>
+          {this.state.fileButtonList}
+          <div>
           <button onClick={(e)=>{
             e.preventDefault()
-            let temp = this.state
-            console.log(temp);
-            this.props.createPost(temp)
+            this.addImageFile()
             
+          }}>이미지 파일 추가</button>
+          </div>  
+          <div>
+          <button onClick={(e)=>{
+            e.preventDefault()
+            this.state.resources.forEach((item)=>{
+              this.props.imageUpload(item.file)
+              this.props.createResource(item)
+            })
+            this.props.createPost(this.state.post)
           }}>만들기</button>
+          </div>                  
       </div>
     );
   }
