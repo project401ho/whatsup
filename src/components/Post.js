@@ -8,13 +8,15 @@ class Post extends Component {
   constructor(props){
     super(props)    
     console.log(props);
-    this.state = {      
+    this.state = {  
       id: (this.props.post.id)+"_"+(this.props.post.comments.items.length+1),
       postID: this.props.post.id,
       nickname : "",
       content : "",
       post: this.props.post,
       isloaded: false,
+      imagelists:[]    
+      
     }
     
   }
@@ -22,7 +24,8 @@ class Post extends Component {
   //lifecycle hook
   componentDidMount(){    
     
-    this.imageLoad()        
+    this.imageLoad()  
+    this.imageListGenerate()      
   }
   
   shouldComponentUpdate(props){
@@ -51,19 +54,13 @@ class Post extends Component {
   }
   imageListGenerate(){
     if(this.state.isloaded === true || this.props.post.resources.length < 1) return
-    let imagelist = []
     this.props.post.resources.items.sort((a,b)=>a.order - b.order)
     .forEach(async (item, i)=>
     {
       let _url = await Storage.get(item.id)
-      console.log(_url);
-      imagelist.push(
-        <img key={i} className="post_img" src={_url} alt=""/>
-      )
+      let temp = [...this.state.imagelists].concat(<img key={i} className="post_img" src={_url} alt=""/>)
+      this.setState({imagelists:temp})
     })
-    console.log(imagelist);
-    console.log("done");
-    return imagelist
   }
   commentListGenerate(){
     let commentlist = []
@@ -96,7 +93,7 @@ class Post extends Component {
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
-          {this.imageListGenerate()}
+          {this.state.imagelists}
           <p>{this.state.post.content}</p>
           
           {this.props.loggedin ? 
