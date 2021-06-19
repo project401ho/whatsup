@@ -51,7 +51,6 @@ export const getPost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -94,7 +93,6 @@ export const listPosts = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -137,7 +135,6 @@ export const getComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -219,7 +216,6 @@ export const getResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -229,7 +225,6 @@ export const getResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }
@@ -264,7 +259,6 @@ export const listResources = /* GraphQL */ `
         }
         order
         file
-        url
         createdAt
         updatedAt
       }
@@ -315,7 +309,6 @@ export const postsByDate = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }

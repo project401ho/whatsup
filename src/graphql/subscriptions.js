@@ -51,7 +51,6 @@ export const onCreatePost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -111,7 +110,6 @@ export const onUpdatePost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -171,7 +169,6 @@ export const onDeletePost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -212,7 +209,6 @@ export const onCreateComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -258,7 +254,6 @@ export const onUpdateComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -304,7 +299,6 @@ export const onDeleteComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -350,7 +344,6 @@ export const onCreateResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -360,7 +353,6 @@ export const onCreateResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }
@@ -397,7 +389,6 @@ export const onUpdateResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -407,7 +398,6 @@ export const onUpdateResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }
@@ -444,7 +434,6 @@ export const onDeleteResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -454,7 +443,6 @@ export const onDeleteResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }

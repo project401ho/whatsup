@@ -1,11 +1,13 @@
 import {Component} from 'react';
 import { API } from 'aws-amplify'
 import {getPost} from '../graphql/queries'
+import { Storage } from 'aws-amplify'
 
 
 class Post extends Component {  
   constructor(props){
     super(props)    
+    console.log(props);
     this.state = {      
       id: (this.props.post.id)+"_"+(this.props.post.comments.items.length+1),
       postID: this.props.post.id,
@@ -51,13 +53,16 @@ class Post extends Component {
     if(this.state.isloaded === true || this.props.post.resources.length < 1) return
     let imagelist = []
     this.props.post.resources.items.sort((a,b)=>a.order - b.order)
-    .forEach((item, i)=>
+    .forEach(async (item, i)=>
     {
-      console.log(item.url);      
+      let _url = await Storage.get(item.id)
+      console.log(_url);
       imagelist.push(
-        <img key={i} className="post_img" src={item.url} alt=""/>
+        <img key={i} className="post_img" src={_url} alt=""/>
       )
     })
+    console.log(imagelist);
+    console.log("done");
     return imagelist
   }
   commentListGenerate(){

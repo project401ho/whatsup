@@ -31,5 +31,4 @@ type Resource @model @key(name: "byPostResource", fields: ["postID", "order"]) {
   post: Post @connection(fields: ["postID"])
   order: Int!
   file: String!
-  url: String!
 }

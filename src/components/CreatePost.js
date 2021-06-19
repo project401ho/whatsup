@@ -20,7 +20,6 @@ class CreatePost extends Component {
         postID: ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
         order: 0,
         file: null,     
-        url: "", 
       },
       resources:[],
       fileButtonList: [],
@@ -107,9 +106,8 @@ class CreatePost extends Component {
           <button onClick={(e)=>{
             e.preventDefault()
             this.state.resources.forEach(async (item)=>{
-              this.props.imageUpload(item.file)
-              let _url = await Storage.get(item.id)
-              let temp = Object.assign({},item,{url:_url,file:"done"})
+              this.props.imageUpload(item.file)              
+              let temp = Object.assign({},item,{file:"done"})
               console.log(temp);
               this.props.createResource(temp)
             })

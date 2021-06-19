@@ -54,7 +54,6 @@ export const createPost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -117,7 +116,6 @@ export const updatePost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -180,7 +178,6 @@ export const deletePost = /* GraphQL */ `
           }
           order
           file
-          url
           createdAt
           updatedAt
         }
@@ -224,7 +221,6 @@ export const createComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -273,7 +269,6 @@ export const updateComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -322,7 +317,6 @@ export const deleteComment = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -371,7 +365,6 @@ export const createResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -381,7 +374,6 @@ export const createResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }
@@ -421,7 +413,6 @@ export const updateResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -431,7 +422,6 @@ export const updateResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }
@@ -471,7 +461,6 @@ export const deleteResource = /* GraphQL */ `
             postID
             order
             file
-            url
             createdAt
             updatedAt
           }
@@ -481,7 +470,6 @@ export const deleteResource = /* GraphQL */ `
       }
       order
       file
-      url
       createdAt
       updatedAt
     }
