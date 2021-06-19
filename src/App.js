@@ -11,14 +11,16 @@ import Pages from './components/Pages'
 import Post from './components/Post'
 import { API, Auth, Storage} from 'aws-amplify'
 import {getPost, getComment, postsByDate} from './graphql/queries'
-import {createPost as createPostMutation, createComment as createCommentMutation} from './graphql/mutations'
+import {createPost as createPostMutation, createComment as createCommentMutation, createResource as createResourceMutation} from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 // import {Button} from "@material-ui/core";
 
 
 
 class App extends Component {
+  
   constructor(props){
+    
     super(props)
     this.state = {
       mode: "list",
@@ -39,10 +41,16 @@ class App extends Component {
 
   //lifecycle hook
   componentDidMount(){
+    window.onbeforeunload = function(e) {
+      console.log(e);
+      return "wow"
+    }
     this.fetchContentLists()    
     this.AssessLoggedInState()
   }
-
+  componentWillUnmount(){    
+    window.onbeforeunload = null;
+  }
   //log in & out
   AssessLoggedInState(){
     Auth.currentAuthenticatedUser()
@@ -70,7 +78,11 @@ class App extends Component {
   //log in & out FINISH!
 
   async createResource(formData){
-
+    await API.graphql({
+      query:createResourceMutation,
+      variables:{input:formData},
+      authMode: 'AWS_IAM',
+    })
   }
   async createComment(formData){
 

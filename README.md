@@ -21,28 +21,28 @@ Post css 수정<br>
 이미지 여러개
 예상 work flow:
 
-### 셋업
-1. 스키마에서 resources 만들기
-2. 댓글 처럼 Post 랑 연결하기 
-3. id : 파일 이름
-4. postID : 연결된 게시물 ID
-5. order : 이미지 뿌릴 순서
-6. file: Storage.get(filename)
 
-### 만들기
-1. 이미지 업로드시 files state에 저장
-2. 섭밋시 files 하나하나 storage에 업로드
-3. files 하나 돌때마다 resources에 게시글과 연동해서 추가
-4. 3번 과정시 순서에 따라 order 업데이트
-
-### 불러오기
-1. 게시글 클릭시 연동되있는 resources list 가져오기
-2. resources에 있는 모든 이미지 불러오기
-3. 이미지들을 order에 맞게 정렬
-4. 화면에 뿌려주기
 
 
 # 업데이트 기록
+## 6.19
+post컴포넌트를 router로 구현하니 리로드 버그가 생김<br>
+createPost 시 resource 생성<br>
+이미지 여러장 불러오기 구현<br>
+
+### multiple image workflow:
+### 만들기
+1. 이미지 업로드시 files state에 저장
+2. 섭밋시 files 하나하나 storage에 업로드
+3. 업로드된 file의 url을 resource 객체에 저장
+4. resource 객체 하나하나 graphql에 postID와 연동해서 저장
+
+### 불러오기
+1. props.post 에 있는 resources list 가져오기
+2. order별로 소팅후 각각의 url에 맞게 img 태그 imagelist에 push
+3. imagelist 반환
+
+
 ## 6.18
 Link와 라우터로 Post 컴포넌트 리팩토링<br>
 Post 컴포넌트 이미지 버그 수정<br>

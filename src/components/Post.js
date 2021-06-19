@@ -1,11 +1,12 @@
 import {Component} from 'react';
-import { Storage } from 'aws-amplify'
+import { API } from 'aws-amplify'
+import {getPost} from '../graphql/queries'
 
-class Post extends Component {
+
+class Post extends Component {  
   constructor(props){
-    super(props)
-    this.state = {
-      
+    super(props)    
+    this.state = {      
       id: (this.props.post.id)+"_"+(this.props.post.comments.items.length+1),
       postID: this.props.post.id,
       nickname : "",
@@ -13,12 +14,15 @@ class Post extends Component {
       post: this.props.post,
       isloaded: false,
     }
+    
   }
 
   //lifecycle hook
-  componentDidMount(){
+  componentDidMount(){    
+    
     this.imageLoad()        
   }
+  
   shouldComponentUpdate(props){
     if(this.props.post.comments.items.length === props.post.comments.items.length) return true
     else{
@@ -28,6 +32,17 @@ class Post extends Component {
     }
     
   }
+  // generic
+  async getPost(){
+    let _id = window.location.href.split("/")
+    _id = _id[_id.length-1]
+    let temp = await API.graphql({
+      query: getPost, 
+      variables:{id:_id},
+      authMode: 'AWS_IAM',
+    }).data.getPost
+    this.setState({post:temp,postID:temp.id,id:(temp.post.id)+"_"+(temp.post.comments.items.length+1)})
+  }
 
   stateHandler(e){
     this.setState({[e.target.name] : e.target.value})
@@ -36,12 +51,14 @@ class Post extends Component {
     if(this.state.isloaded === true || this.props.post.resources.length < 1) return
     let imagelist = []
     this.props.post.resources.items.sort((a,b)=>a.order - b.order)
-    .forEach(async (item,i)=>{
-      const image = await Storage.get(item.id)
+    .forEach((item, i)=>
+    {
+      console.log(item.url);      
       imagelist.push(
-        <img className="post_img" src={image} alt=""/>
+        <img key={i} className="post_img" src={item.url} alt=""/>
       )
     })
+    return imagelist
   }
   commentListGenerate(){
     let commentlist = []

@@ -1,4 +1,5 @@
 import {Component} from 'react';
+import { Storage } from 'aws-amplify'
 
 class CreatePost extends Component {
   constructor(props){
@@ -32,9 +33,6 @@ class CreatePost extends Component {
     let resource = Object.assign({},this.state.resource,{id:filename,file:file,order:order})
     let _resources = [...this.state.resources].concat(resource)
     this.setState({resources:_resources})
-  }
-  editResrouce (){
-
   }
   addImageFile(){
     this.addResource("fiilename",null,this.state.fileButtonList.length+1)
@@ -108,9 +106,12 @@ class CreatePost extends Component {
           <div>
           <button onClick={(e)=>{
             e.preventDefault()
-            this.state.resources.forEach((item)=>{
+            this.state.resources.forEach(async (item)=>{
               this.props.imageUpload(item.file)
-              this.props.createResource(item)
+              let _url = await Storage.get(item.id)
+              let temp = Object.assign({},item,{url:_url,file:"done"})
+              console.log(temp);
+              this.props.createResource(temp)
             })
             this.props.createPost(this.state.post)
           }}>만들기</button>
