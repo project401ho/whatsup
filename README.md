@@ -17,15 +17,27 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 Post css 수정<br>
 게시물 좋아요 기능<br>
 댓글 좋아요 기능<br>
+p태그 삽입기능<br>
 
-이미지 여러개
-예상 work flow:
-
-
-
+## 마이페이지:
+로그인일시 유저이름과 패스워드 텍스트 필드만<br>
+가입하기: <br>
+1. 가입하기 클릭시 이메일 필드 추가
+2. 가입하기 버튼 기능 바꿔주기
 
 # 업데이트 기록
+## 6.20
+post에서 새로고침 해도 정상 로드 됨<br>
+url에서 바로 갈수있음 (공유 기능 가능)<br>
+다이렉트 랜딩시 댓글 못달던 버그수정<br>
+creatpost 보안 이슈가 있긴 한데 일단 보류 <br>
+
+
 ## 6.19
+post router 리로드시에 App 컴포넌트에 있는 selected_post 가 undefined여서<br>
+props가 빈걸로 들어옴 어떻게 수정할지 생각해야함<br>
+
+
 post컴포넌트를 router로 구현하니 리로드 버그가 생김<br>
 createPost 시 resource 생성<br>
 이미지 여러장 불러오기 구현<br>

@@ -18,3 +18,12 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+
+function doNotReload(event){
+  if( (event.ctrlKey === true && (event.keyCode === 78 || event.keyCode === 82)) || (event.keyCode === 116) ) {
+      event.cancelBubble = true;
+      event.returnValue = false;
+  } 
+}
+document.onkeydown = doNotReload;

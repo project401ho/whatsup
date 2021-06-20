@@ -26,7 +26,7 @@ class App extends Component {
       mode: "list",
       postList: [],
       sub_postList: [],
-      selected_post : {},
+      selected_post : null,
       current_page : 1,
       next_page_count : 0,
       content: "",
@@ -41,38 +41,29 @@ class App extends Component {
 
   //lifecycle hook
   componentDidMount(){
-    window.onbeforeunload = function(e) {
-      console.log(e);
-      return "wow"
-    }
     this.fetchContentLists()    
     this.AssessLoggedInState()
-  }
-  componentWillUnmount(){    
-    window.onbeforeunload = null;
   }
   //log in & out
   AssessLoggedInState(){
     Auth.currentAuthenticatedUser()
       .then((e) => {        
-        // console.log("WHATHTHATHATH");
-        this.setState({loggedin: true, user:e})
-        // console.log(this.state.user);
+        this.onSignIn(e)        
       })
       .catch(()=>{
-        // console.log("WHT");
         this.setState({loggedin: false})
       })
   }
   onSignIn(user){
+    localStorage.setItem("user",JSON.stringify(user))
     this.setState({loggedin:true, user:user})
   }
   async signOut(){
     try {
       await Auth.signOut()
+      localStorage.setItem("user",null)
       this.setState({loggedin: false, user:{}})
     } catch(error){
-      // console.log("error signing out", error);  
     }
   }
   //log in & out FINISH!
@@ -121,7 +112,7 @@ class App extends Component {
       variables:{input:formData},
       authMode: 'AWS_IAM',
     })
-    let _id = this.state.selected_post.id
+    let _id = formData.postID
     let temp = await API.graphql({
       query: getPost, 
       variables:{id:_id},
@@ -132,8 +123,6 @@ class App extends Component {
 
   async fetchContentLists(){
     
-    console.log("fetch list start")
-    // console.log("b4",this.state.nexttoken_ContenList);
     // const apiData = await API.graphql({
     //   query: listPosts, 
     //   variables:{limit: 5, nextToken: this.state.nexttoken_ContenList},
@@ -150,7 +139,6 @@ class App extends Component {
       },       
       authMode: 'AWS_IAM',            
     })
-    console.log(apiData);
     if(apiData.data.postsByDate.items.length < 1) return
     const postFromAPI = apiData.data.postsByDate.items;
     let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
@@ -171,9 +159,7 @@ class App extends Component {
   }
 
   async createPost(formData){
-    // console.log("start create post");
-    if(!formData.title || !formData.id || !formData.content) return
-    // console.log("PAssed");
+    if(!formData.title || !formData.id || !formData.content || this.state.user.gr) return
     await API.graphql({
       query:createPostMutation, 
       variables:{input: formData},
@@ -227,6 +213,8 @@ class App extends Component {
   changeMode(_mode){
     this.setState({mode:_mode})
   }
+  
+
   render(){
     
     return (
@@ -240,6 +228,7 @@ class App extends Component {
             </Route>
             <Route path='/post/*'>
               <Post 
+                sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 
                 post={this.state.selected_post} 
                 createComment={(dataForm)=>this.createComment(dataForm)}>

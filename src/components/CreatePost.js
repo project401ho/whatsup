@@ -1,5 +1,4 @@
 import {Component} from 'react';
-import { Storage } from 'aws-amplify'
 
 class CreatePost extends Component {
   constructor(props){

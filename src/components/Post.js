@@ -5,56 +5,81 @@ import { Storage } from 'aws-amplify'
 
 
 class Post extends Component {  
-  constructor(props){
-    super(props)    
-    console.log(props);
-    this.state = {  
-      id: (this.props.post.id)+"_"+(this.props.post.comments.items.length+1),
-      postID: this.props.post.id,
+
+  constructor(props){    
+    super(props)
+    this.state ={  
+      id: "",
+      postID: "",
       nickname : "",
       content : "",
-      post: this.props.post,
+      post: {},
       isloaded: false,
-      imagelists:[]    
-      
+      imagelists:[],
+      commentlist: [],
+      state_init : false,
     }
-    
   }
 
   //lifecycle hook
   componentDidMount(){    
-    
-    this.imageLoad()  
-    this.imageListGenerate()      
+    this.stateInit(this.props)
   }
   
   shouldComponentUpdate(props){
-    if(this.props.post.comments.items.length === props.post.comments.items.length) return true
-    else{
-      console.log("caught")
-      this.setState({id: (props.post.id)+"_"+(props.post.comments.items.length+1)})    
-      return true
+    if(this.props.post !== props.post){
+      this.stateInit(props)
     }
-    
+    return true
   }
   // generic
+  async stateInit(props){
+    if(props.post === null){
+      await this.getPost()
+      this.imageListGenerate() 
+      this.commentListGenerate()      
+    }
+    else{
+      await this.setState({
+        id: (props.post.id)+"_"+(props.post.comments.items.length+1),
+        postID: props.post.id,
+        nickname : "",
+        content : "",
+        post: props.post,
+        isloaded: false,
+        imagelists:[],
+        commentlist: [],
+        state_init : false,
+      })
+      this.imageListGenerate() 
+      this.commentListGenerate()
+    }
+  }
+
   async getPost(){
     let _id = window.location.href.split("/")
-    _id = _id[_id.length-1]
+    _id = _id[_id.length-1].toString()
     let temp = await API.graphql({
       query: getPost, 
       variables:{id:_id},
       authMode: 'AWS_IAM',
-    }).data.getPost
-    this.setState({post:temp,postID:temp.id,id:(temp.post.id)+"_"+(temp.post.comments.items.length+1)})
+    })
+    temp = temp.data.getPost    
+    this.setState({
+      post:temp,
+      postID:temp.id,
+      id:(temp.id)+"_"+(temp.comments.items.length+1),
+      state_init : true,
+    })
+      
   }
 
   stateHandler(e){
     this.setState({[e.target.name] : e.target.value})
   }
   imageListGenerate(){
-    if(this.state.isloaded === true || this.props.post.resources.length < 1) return
-    this.props.post.resources.items.sort((a,b)=>a.order - b.order)
+    if(this.state.isloaded === true || this.state.post.resources.length < 1) return
+    this.state.post.resources.items.sort((a,b)=>a.order - b.order)
     .forEach(async (item, i)=>
     {
       let _url = await Storage.get(item.id)
@@ -63,37 +88,31 @@ class Post extends Component {
     })
   }
   commentListGenerate(){
-    let commentlist = []
-    this.props.post.comments.items.sort((a,b)=>{
+    let _commentlist = []
+    this.state.post.comments.items.sort((a,b)=>{
       let ad = new Date(a.createdAt)
       let bd = new Date(b.createdAt)
       if(ad > bd) return 1
       else if(ad < bd) return -1
       else return 0
     }).forEach((item,i)=>{
-      commentlist.push(
+      _commentlist.push(
         <li className = "comment_li" key={i}>
           <p>{item.nickname}</p>
           <p>{item.content}</p>
         </li>
       )
     })
-    return commentlist 
+    this.setState({commentlist:_commentlist})
   }
 
-  async imageLoad(){
-    // if(this.state.isloaded === true || this.props.post.image === "") return
-    // const image = await Storage.get(this.state.post.image)
-    // let temp = Object.assign({},this.state.post)
-    // temp.image = image
-    // this.setState({post:temp, isloaded:true})
-  }
-  
+ 
   render(){    
+    
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
-          {this.state.imagelists}
+            {this.state.imagelists}
           <p>{this.state.post.content}</p>
           
           {this.props.loggedin ? 
@@ -119,7 +138,7 @@ class Post extends Component {
           <noscript></noscript>
           }
           <ul>
-              {this.commentListGenerate()}
+            {this.state.commentlist}
           </ul>
       </div>
     );
