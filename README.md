@@ -10,13 +10,12 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 익명 게시판<br>
 공지<br>
 게시물 조회수 보이기<br>
-네비게이션 CSS<br>
 
 
 ## 게시물:
 Post css 수정<br>
-게시물 좋아요 기능<br>
-댓글 좋아요 기능<br>
+게시물 업 기능<br>
+댓글 업 기능<br>
 p태그 삽입기능<br>
 
 ## 마이페이지:
@@ -26,6 +25,12 @@ p태그 삽입기능<br>
 2. 가입하기 버튼 기능 바꿔주기
 
 # 업데이트 기록
+## 6.21
+포스트 CSS 수정<br>
+포스트 key 관련 수정<br>
+localstorage & user 버그 픽스<br>
+네비게이션 페이지 CSS 수정<br>
+
 ## 6.20
 post에서 새로고침 해도 정상 로드 됨<br>
 url에서 바로 갈수있음 (공유 기능 가능)<br>

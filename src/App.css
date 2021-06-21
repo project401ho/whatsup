@@ -4,12 +4,16 @@
   body {
     width: 680px;
     margin: 0 auto;
-    border-left: 1px solid #262626;
-    border-right: 1px solid #262626;
-    background: #fff;
+    border: 0px;    
+    background: rgb(223, 223, 223);
   }
 }
-
+hr{  
+  margin: 0px;
+  height: 2px;
+  border: 0px;
+  background: #333;
+}
 .App {
   text-align: center;
 }
@@ -48,16 +52,16 @@ a:visited {
 .navigation_title{
   width:100%;
   height: 100%;
-  margin: 0px 3%;
+  margin: 0px 10%;
   text-align: left;
+  color: rgb(255, 255, 53);
 }
 .navigation_title a{
-  color: yellow;
+  color: rgb(255, 255, 53);
 }
 
 .navigation_button_li button{
   border-radius: 5px;
-  border: 1px grey solid;
   background-color: #333;
 }
 
@@ -67,6 +71,7 @@ a:visited {
 .navigation_button{
   width: 40px;
   height: 30px;
+  /* border: 2px solid rgb(255, 255, 53); */
 }
 .navigation_buttons_holder{
   display: flex;
@@ -82,7 +87,7 @@ a:visited {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background-color: powderblue;
+  background-color: #333;
 }
 
 /* Navigation End */
@@ -164,13 +169,14 @@ a:visited {
   display: inline-block;
   height: 100%;
   margin: 0px 5px;
+  
 }
 
 .pages_button input{
-  
-  color: #888;
+  background-color:#333;
+  color: rgb(255, 255, 53);
   border-radius: 3px;
-  border: 1px #ccc solid;
+  /* border: 1px #rgb(255, 255, 53) solid; */
   height: 70%;   
   line-height: 20px;
   margin: 15% 0px;
@@ -184,7 +190,7 @@ a:visited {
   /* display: flex;
   flex-direction: row;
   justify-content: center; */
-  background-color: lightgrey;
+  background-color: #333;
   margin: 0px;
   padding: 10px;
   height: 40px;
@@ -192,4 +198,64 @@ a:visited {
 
 /* Pages End */
 
+/* Post Start */
+.post_comment_ul{
+  padding: 0px;
+  margin: 0px;
+}
+.post_comment_li{
+  border-bottom: 1px #999 solid;
+  padding: 2%;
+  margin: 0px 1%;
+}
+.post_comment_subject{
+  list-style: none;
+  width: 80%;
+  text-align: left;
+  
+}
+.post_comment_nickname{  
+  font-size: 1em;
+  color: #ff5722;
+}
+.post_comment_time{
+  margin: 5px auto;
+  font-size: 0.7em;
+  color: #999;
+}
+.post_comment_detail{
+  margin: 4px 0px;
+  list-style: none;
+  width: 80%;
+  text-align: left;
+  word-wrap: break-word;
+}
+.post_comment_content{
+  margin: 2% auto;
+  
+}
+.post_comment_functions{
+  margin-top: 5px;
+  font-size: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.post_comment_functions_buttons{
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.post_comment_recomment{
+
+}
+.post_comment_upanddown {
+
+}
+.post_comment_morefunction{
+
+}
+
+/* Post End */
 

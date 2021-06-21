@@ -55,7 +55,6 @@ class App extends Component {
       })
   }
   onSignIn(user){
-    localStorage.setItem("user",JSON.stringify(user))
     this.setState({loggedin:true, user:user})
   }
   async signOut(){

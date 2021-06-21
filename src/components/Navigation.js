@@ -19,7 +19,7 @@ class Navigation extends Component {
               }}>
                 <li className="navigation_button_li">
                   <button type = "button" className="navigation_button"> 
-                    <FontAwesomeIcon icon={faWrench} size="lg" color="yellow"></FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faWrench} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
                   </button>
                 </li> 
               </Link>
@@ -31,7 +31,7 @@ class Navigation extends Component {
               <li className="navigation_button_li">
                 <Link to='/mypage'>
                 <button type = "button" className="navigation_button"> 
-                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="yellow"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
                 </button>
                 </Link>
               </li> 
@@ -39,7 +39,7 @@ class Navigation extends Component {
               <li className="navigation_button_li">
                 <Link to="/signin">
                 <button type = "button" className="navigation_button"> 
-                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="yellow"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
                 </button>
                 </Link>
               </li>
@@ -47,7 +47,7 @@ class Navigation extends Component {
               
               <li type = "button" className="navigation_button_li">
                 <button className="navigation_button"> 
-                  <FontAwesomeIcon icon={faEdit} size="lg" color="yellow"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faEdit} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
                 </button>
               </li>
           </ul>

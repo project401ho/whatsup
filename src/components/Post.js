@@ -83,7 +83,7 @@ class Post extends Component {
     .forEach(async (item, i)=>
     {
       let _url = await Storage.get(item.id)
-      let temp = [...this.state.imagelists].concat(<img key={i} className="post_img" src={_url} alt=""/>)
+      let temp = [...this.state.imagelists].concat(<img key={_url} className="post_img" src={_url} alt=""/>)
       this.setState({imagelists:temp})
     })
   }
@@ -97,9 +97,22 @@ class Post extends Component {
       else return 0
     }).forEach((item,i)=>{
       _commentlist.push(
-        <li className = "comment_li" key={i}>
-          <p>{item.nickname}</p>
-          <p>{item.content}</p>
+        <li className = "post_comment_li" key={"comment"+i}>
+          <div className="post_comment_subject">
+            <span className = "post_comment_nickname" >{item.nickname}</span>
+            <span className = "post_comment_time" > {item.createdAt}</span>
+          </div>
+          <div className="post_comment_detail">
+            <p className = "post_comment_content" >{item.content}gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</p>
+          </div>
+          <div className="post_comment_functions">
+            <span className = "post_comment_recomment" >recomment</span>      
+            <div className="post_comment_functions_buttons">  
+              <span className = "post_comment_upanddown" >up</span>
+              <span className = "post_comment_upanddown" >down</span>
+              <span className = "post_comment_morefunction" >menu</span>
+            </div>  
+          </div>
         </li>
       )
     })
@@ -114,7 +127,10 @@ class Post extends Component {
           <h1>{this.state.post.title}</h1>          
             {this.state.imagelists}
           <p>{this.state.post.content}</p>
-          
+          <hr></hr>
+          <ul className="post_comment_ul">
+            {this.state.commentlist}
+          </ul>
           {this.props.loggedin ? 
           <form onSubmit={(e)=>{
             e.preventDefault()
@@ -137,9 +153,7 @@ class Post extends Component {
           :
           <noscript></noscript>
           }
-          <ul>
-            {this.state.commentlist}
-          </ul>
+          
       </div>
     );
   }
