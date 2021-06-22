@@ -12,6 +12,8 @@ export const onCreatePost = /* GraphQL */ `
       content
       video
       uploader
+      likes
+      hates
       comments {
         items {
           id
@@ -25,10 +27,15 @@ export const onCreatePost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           nickname
           content
+          likes
+          hates
+          reported
           createdAt
           updatedAt
         }
@@ -47,6 +54,8 @@ export const onCreatePost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           order
@@ -71,6 +80,8 @@ export const onUpdatePost = /* GraphQL */ `
       content
       video
       uploader
+      likes
+      hates
       comments {
         items {
           id
@@ -84,10 +95,15 @@ export const onUpdatePost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           nickname
           content
+          likes
+          hates
+          reported
           createdAt
           updatedAt
         }
@@ -106,6 +122,8 @@ export const onUpdatePost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           order
@@ -130,6 +148,8 @@ export const onDeletePost = /* GraphQL */ `
       content
       video
       uploader
+      likes
+      hates
       comments {
         items {
           id
@@ -143,10 +163,15 @@ export const onDeletePost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           nickname
           content
+          likes
+          hates
+          reported
           createdAt
           updatedAt
         }
@@ -165,6 +190,8 @@ export const onDeletePost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           order
@@ -192,12 +219,17 @@ export const onCreateComment = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -218,6 +250,9 @@ export const onCreateComment = /* GraphQL */ `
       }
       nickname
       content
+      likes
+      hates
+      reported
       createdAt
       updatedAt
     }
@@ -237,12 +272,17 @@ export const onUpdateComment = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -263,6 +303,9 @@ export const onUpdateComment = /* GraphQL */ `
       }
       nickname
       content
+      likes
+      hates
+      reported
       createdAt
       updatedAt
     }
@@ -282,12 +325,17 @@ export const onDeleteComment = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -308,6 +356,9 @@ export const onDeleteComment = /* GraphQL */ `
       }
       nickname
       content
+      likes
+      hates
+      reported
       createdAt
       updatedAt
     }
@@ -327,12 +378,17 @@ export const onCreateResource = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -372,12 +428,17 @@ export const onUpdateResource = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -417,12 +478,17 @@ export const onDeleteResource = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }

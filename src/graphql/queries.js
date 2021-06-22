@@ -12,6 +12,8 @@ export const getPost = /* GraphQL */ `
       content
       video
       uploader
+      likes
+      hates
       comments {
         items {
           id
@@ -25,10 +27,15 @@ export const getPost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           nickname
           content
+          likes
+          hates
+          reported
           createdAt
           updatedAt
         }
@@ -47,6 +54,8 @@ export const getPost = /* GraphQL */ `
             content
             video
             uploader
+            likes
+            hates
             updatedAt
           }
           order
@@ -76,12 +85,17 @@ export const listPosts = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -118,12 +132,17 @@ export const getComment = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -144,6 +163,9 @@ export const getComment = /* GraphQL */ `
       }
       nickname
       content
+      likes
+      hates
+      reported
       createdAt
       updatedAt
     }
@@ -168,6 +190,8 @@ export const listComments = /* GraphQL */ `
           content
           video
           uploader
+          likes
+          hates
           comments {
             nextToken
           }
@@ -178,6 +202,9 @@ export const listComments = /* GraphQL */ `
         }
         nickname
         content
+        likes
+        hates
+        reported
         createdAt
         updatedAt
       }
@@ -199,12 +226,17 @@ export const getResource = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }
@@ -249,6 +281,8 @@ export const listResources = /* GraphQL */ `
           content
           video
           uploader
+          likes
+          hates
           comments {
             nextToken
           }
@@ -292,12 +326,17 @@ export const postsByDate = /* GraphQL */ `
         content
         video
         uploader
+        likes
+        hates
         comments {
           items {
             id
             postID
             nickname
             content
+            likes
+            hates
+            reported
             createdAt
             updatedAt
           }

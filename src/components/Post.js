@@ -2,7 +2,9 @@ import {Component} from 'react';
 import { API } from 'aws-amplify'
 import {getPost} from '../graphql/queries'
 import { Storage } from 'aws-amplify'
-
+import { faThumbsUp,faThumbsDown} from "@fortawesome/free-regular-svg-icons";
+import { faEllipsisV} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Post extends Component {  
 
@@ -15,6 +17,9 @@ class Post extends Component {
       content : "",
       post: {},
       isloaded: false,
+      like: 0,
+      hate: 0,
+      reported:0,
       imagelists:[],
       commentlist: [],
       state_init : false,
@@ -101,16 +106,39 @@ class Post extends Component {
           <div className="post_comment_subject">
             <span className = "post_comment_nickname" >{item.nickname}</span>
             <span className = "post_comment_time" > {item.createdAt}</span>
+            <button type="button" className = "post_comment_morefunction" >
+              <FontAwesomeIcon icon={faEllipsisV} size="sm"></FontAwesomeIcon>                
+            </button>
           </div>
           <div className="post_comment_detail">
-            <p className = "post_comment_content" >{item.content}gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</p>
+            <p className = "post_comment_content" >{item.content}</p>
           </div>
           <div className="post_comment_functions">
-            <span className = "post_comment_recomment" >recomment</span>      
+            <span className = "post_comment_recomment" >대댓 달기</span>      
             <div className="post_comment_functions_buttons">  
-              <span className = "post_comment_upanddown" >up</span>
-              <span className = "post_comment_upanddown" >down</span>
-              <span className = "post_comment_morefunction" >menu</span>
+              <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
+                e.preventDefault()
+                let temp = Object.assign({},item,{likes:item.likes+1})
+                delete temp.post
+                delete temp.createdAt
+                delete temp.updatedAt
+                this.props.updateCommentLikes(temp)
+              }}>                    
+                <FontAwesomeIcon icon={faThumbsUp} size="sm"></FontAwesomeIcon>
+                <p className = "post_comment_upanddown_count like">{item.likes}</p>                
+              </button>
+              <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
+                e.preventDefault()
+                let temp = Object.assign({},item,{hates:item.hates+1})
+                delete temp.post
+                delete temp.createdAt
+                delete temp.updatedAt
+                this.props.updateCommentLikes(temp)
+              }}>
+                <FontAwesomeIcon icon={faThumbsDown} size="sm"></FontAwesomeIcon>
+                <p className = "post_comment_upanddown_count hate">{item.hates}</p>                
+              </button>
+              
             </div>  
           </div>
         </li>
@@ -134,7 +162,15 @@ class Post extends Component {
           {this.props.loggedin ? 
           <form onSubmit={(e)=>{
             e.preventDefault()
-            let temp = {id:this.state.id,postID:this.state.postID,nickname:this.state.nickname,content:this.state.content,}
+            let temp = {
+              id:this.state.id,
+              postID:this.state.postID,
+              nickname:this.state.nickname,
+              content:this.state.content,
+              likes: 0,
+              hates: 0,
+              reported:0,
+            }
             this.props.createComment(temp)
             e.target.nickname.value = ""
             e.target.content.value = ""

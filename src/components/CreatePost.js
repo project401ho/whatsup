@@ -13,6 +13,8 @@ class CreatePost extends Component {
         video: "",
         type:"post",
         uploader: "와썹",
+        likes:0,
+        hates:0,
       }, 
       resource: {
         id: "filename",

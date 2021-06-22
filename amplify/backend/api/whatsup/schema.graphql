@@ -13,6 +13,8 @@ type Post
   content: String
   video: String
   uploader: String
+  likes: Int!
+  hates: Int!
   comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
   resources: [Resource] @connection(keyName: "byPostResource", fields: ["id"])
 }
@@ -23,6 +25,9 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
   post: Post @connection(fields: ["postID"])
   nickname: String!
   content: String!
+  likes: Int!
+  hates: Int!
+  reported: Int!
 }
 
 type Resource @model @key(name: "byPostResource", fields: ["postID", "order"]) {

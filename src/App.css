@@ -210,7 +210,7 @@ a:visited {
 }
 .post_comment_subject{
   list-style: none;
-  width: 80%;
+  width: 100%;
   text-align: left;
   
 }
@@ -242,19 +242,43 @@ a:visited {
   justify-content: space-between;
 }
 .post_comment_functions_buttons{
-  width: 30%;
+  width: 15%;
+  font-size: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .post_comment_recomment{
 
 }
 .post_comment_upanddown {
-
+  border: none;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.post_comment_upanddown_count{
+  display: inline;
+  padding:0px 5px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin: 0px;
+  line-height: 20px;
+}
+.like {
+  color: #f94064
+}
+.hate {
+  color: rgb(102, 102, 218);
 }
 .post_comment_morefunction{
-
+  float: right;
+  margin: 2px 5px;
+  border: none;
+  background-color: #fff;
 }
 
 /* Post End */

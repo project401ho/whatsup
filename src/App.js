@@ -11,7 +11,13 @@ import Pages from './components/Pages'
 import Post from './components/Post'
 import { API, Auth, Storage} from 'aws-amplify'
 import {getPost, getComment, postsByDate} from './graphql/queries'
-import {createPost as createPostMutation, createComment as createCommentMutation, createResource as createResourceMutation} from './graphql/mutations'
+import {
+  createPost as createPostMutation, 
+  createComment as createCommentMutation, 
+  createResource as createResourceMutation,
+  updateComment as updateCommentMutation,
+  updatePost as updatePostMutation,
+} from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 // import {Button} from "@material-ui/core";
 
@@ -153,6 +159,15 @@ class App extends Component {
     
   }
 
+  async updateCommentLikes(item){
+    await API.graphql({
+      query:updateCommentMutation,
+      variables:{input:item},
+      authMode: "AWS_IAM"
+    })
+
+  }
+
   async imageUpload(_file){
     await Storage.put(_file.name, _file)
   }
@@ -227,6 +242,7 @@ class App extends Component {
             </Route>
             <Route path='/post/*'>
               <Post 
+                updateCommentLikes = {(item)=>this.updateCommentLikes(item)}
                 sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 
                 post={this.state.selected_post} 
