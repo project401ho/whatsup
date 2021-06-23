@@ -1,5 +1,7 @@
 import {Component} from 'react';
 import {Link} from 'react-router-dom';
+import { faThumbsUp} from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 class ContentsList extends Component {
@@ -30,6 +32,10 @@ class ContentsList extends Component {
                             >
                                 <span className="contentList_subject_title">{item.title}</span>                                  
                                 <span className="contentList_subject_comments">[{item.comments.items.length}]</span>
+                                <span className="contentList_subject_likes">
+                                    <FontAwesomeIcon className="contentList_subject_icon" icon={faThumbsUp} size="sm"></FontAwesomeIcon>                                     
+                                    {item.likes}
+                                </span>
                             </Link>  
                         </p>
                         

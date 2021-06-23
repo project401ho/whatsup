@@ -8,6 +8,9 @@
     background: rgb(223, 223, 223);
   }
 }
+button:hover{
+  cursor:pointer;
+}
 hr{  
   margin: 0px;
   height: 2px;
@@ -134,6 +137,13 @@ a:visited {
   font-size: 0.8em;
   color: #ff5722;
 }
+.contentList_subject_likes{
+  margin: 0px 10px;
+  
+}
+.contentList_subject_icon{
+  margin: 0px 5px;
+}
 .contentList_detail_uploader{
   font-size: 1em;
   color: #ff5722;
@@ -157,8 +167,29 @@ a:visited {
 
 /* Post Start */
 .post_img{
-  width:60%;
-  
+  width:60%;  
+}
+.post_like_button_container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+.post_like_button{
+  margin: 0px 20px 20px 20px;
+  width: 100px;
+  border: none;
+  border-radius: 5px;
+}
+.post_like_icon{
+  margin: 15px 5px 5px 5px;
+  font-size: 1.5rem;
+}
+.post_like_count{
+  margin: 0px;
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 /* Post End */
 
@@ -176,7 +207,6 @@ a:visited {
   background-color:#333;
   color: rgb(255, 255, 53);
   border-radius: 3px;
-  /* border: 1px #rgb(255, 255, 53) solid; */
   height: 70%;   
   line-height: 20px;
   margin: 15% 0px;
@@ -198,7 +228,7 @@ a:visited {
 
 /* Pages End */
 
-/* Post Start */
+/* Post Comment Start */
 .post_comment_ul{
   padding: 0px;
   margin: 0px;
@@ -281,5 +311,5 @@ a:visited {
   background-color: #fff;
 }
 
-/* Post End */
+/* Post Comment End */
 

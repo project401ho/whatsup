@@ -6,6 +6,7 @@ import Announcement from './components/Announcement'
 import CreatePost from './components/CreatePost'
 import ContentsList from './components/ContentsList'
 import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
 import MyPage from './components/MyPage'
 import Pages from './components/Pages'
 import Post from './components/Post'
@@ -165,7 +166,15 @@ class App extends Component {
       variables:{input:item},
       authMode: "AWS_IAM"
     })
-
+    console.log("done update");
+  }
+  async updatePostLikes(item){
+    await API.graphql({
+      query:updatePostMutation,
+      variables:{input:item},
+      authMode: "AWS_IAM"
+    })
+    
   }
 
   async imageUpload(_file){
@@ -242,6 +251,7 @@ class App extends Component {
             </Route>
             <Route path='/post/*'>
               <Post 
+                updatePostLikes = {(item)=>this.updatePostLikes(item)}
                 updateCommentLikes = {(item)=>this.updateCommentLikes(item)}
                 sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 
@@ -251,6 +261,9 @@ class App extends Component {
             </Route>
             <Route path="/signin">
               <SignIn onSignIn={(user)=>this.onSignIn(user)}></SignIn>
+            </Route>
+            <Route path="/signup">
+              <SignUp onSignIn={(user)=>this.onSignIn(user)}></SignUp>
             </Route>
             <Route path="/mypage">
               <MyPage onSignOut={()=>this.signOut()}></MyPage>
