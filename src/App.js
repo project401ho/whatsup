@@ -251,6 +251,7 @@ class App extends Component {
             </Route>
             <Route path='/post/*'>
               <Post 
+                user = {this.state.user}
                 updatePostLikes = {(item)=>this.updatePostLikes(item)}
                 updateCommentLikes = {(item)=>this.updateCommentLikes(item)}
                 sub_postList = {this.state.sub_postList}
@@ -266,7 +267,7 @@ class App extends Component {
               <SignUp onSignIn={(user)=>this.onSignIn(user)}></SignUp>
             </Route>
             <Route path="/mypage">
-              <MyPage onSignOut={()=>this.signOut()}></MyPage>
+              <MyPage onSignOut={()=>this.signOut()} user = {this.state.user}></MyPage>
             </Route>
           </Switch>
           <Pages 

@@ -1,15 +1,22 @@
 import { Component } from 'react';
-import { API } from 'aws-amplify'
-import { getPost } from '../graphql/queries'
+import { API, AWSKinesisFirehoseProvider } from 'aws-amplify'
+import { getPost, getComment } from '../graphql/queries'
+import {
+  createComment as createCommentMutation, 
+  updateComment as updateCommentMutation,
+
+} from '../graphql/mutations'
 import { Storage } from 'aws-amplify'
 import { faThumbsUp,faThumbsDown } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 class Post extends Component {  
-
+  
   constructor(props){    
     super(props)
+    console.log(this.props.user);
+    // this.props.user.cacheUserData("hello")
+    
     this.state ={  
       id: "",
       postID: "",
@@ -32,9 +39,9 @@ class Post extends Component {
   }
   
   shouldComponentUpdate(props, state){
-    if(this.props.post !== props.post){      
-      this.stateInit(props)
-    }
+    // if(this.props.post !== props.post){      
+    //   this.stateInit(props)
+    // }
     
     return true
   }
@@ -84,16 +91,16 @@ class Post extends Component {
     this.setState({[e.target.name] : e.target.value})
   }
   imageListGenerate(){
-    
-    if(this.state.isloaded === true || this.state.post.resources.length < 1 || this.state.imagelists.length > 0) return
+    if(this.state.isloaded === true || this.state.post.resources.length < 1 || [...this.state.imagelists].length > 0) return
     this.state.post.resources.items.sort((a,b)=>a.order - b.order)
     .forEach(async (item, i)=>
     {
       let _url = await Storage.get(item.id)
       let temp = [...this.state.imagelists].concat(<img key={_url} className="post_img" src={_url} alt=""/>)
-      this.setState({imagelists:temp})
+      this.setState({imagelists:temp})      
     })
     
+
   }
   commentListGenerate(){
     let _commentlist = []
@@ -119,41 +126,26 @@ class Post extends Component {
           <div className="post_comment_functions">
             <span className = "post_comment_recomment" >대댓 달기</span>      
             <div className="post_comment_functions_buttons">  
-              <button type="button" className = "post_comment_upanddown" onClick={async (e)=>{
+              <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
                 e.preventDefault()
                 let temp = Object.assign({},item,{likes:item.likes+1})
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
-                await this.props.updateCommentLikes(temp)   
-                let temp2 = await API.graphql({
-                  query: getPost, 
-                  variables:{id:this.state.post.id},
-                  authMode: 'AWS_IAM',
-                })
-                temp2 = temp2.data.getPost    
-                this.setState({post:temp2})
-                this.commentListGenerate()
+                this.updateCommentLikes(temp)   
+                
               }}>                    
                 <FontAwesomeIcon icon={faThumbsUp} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count like">{item.likes}</p>                
               </button>
-              <button type="button" className = "post_comment_upanddown" onClick={async (e)=>{
+              <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
                 e.preventDefault()
-                console.log("click");
                 let temp = Object.assign({},item,{hates:item.hates+1})
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
-                this.props.updateCommentLikes(temp)
-                let temp2 = await API.graphql({
-                  query: getPost, 
-                  variables:{id:this.state.post.id},
-                  authMode: 'AWS_IAM',
-                })
-                temp2 = temp2.data.getPost    
-                this.setState({post:temp2})
-                this.commentListGenerate()
+                this.updateCommentLikes(temp)
+                
 
               }}>
                 <FontAwesomeIcon icon={faThumbsDown} size="sm"></FontAwesomeIcon>
@@ -167,10 +159,95 @@ class Post extends Component {
     })
     this.setState({commentlist:_commentlist})
   }
+  
+  async createComment(formData){
 
+    //폼 체크
+    if(!formData.nickname || !formData.content ) return
+    if(!this.props.loggedin){
+      alert("로그인을 해주세요")
+      return
+    }
+    
+    //중복 체크
+    let check = await API.graphql({
+      query: getComment, 
+      variables:{id:formData.id},
+      authMode: 'AWS_IAM',
+    })
+    if(check.data.getComment){
+      let checkComment = null
+      do{
+        let temp = formData.id.split("_").map((w)=>+w)
+        temp[1] += 1
+        temp = temp[0].toString()+"_"+temp[1].toString()         
+        formData.id = temp
+        checkComment = await API.graphql({
+          query: getComment, 
+          variables:{id:formData.id},
+          authMode: 'AWS_IAM',
+        })
+
+      }while(checkComment.data.getComment)
+    }
+
+    //코멘트 등록
+    await API.graphql({
+      query: createCommentMutation,
+      variables:{input:formData},
+      authMode: 'AWS_IAM',
+    })
+    let _id = formData.postID
+    let temp = await API.graphql({
+      query: getPost, 
+      variables:{id:_id},
+      authMode: 'AWS_IAM',
+    })
+    this.setState({post:temp.data.getPost})
+    this.commentListGenerate()
+
+  }
+  async updateCommentLikes(item){
+    await API.graphql({
+      query:updateCommentMutation,
+      variables:{input:item},
+      authMode: "AWS_IAM"
+    })
+    let temp2 = await API.graphql({
+      query: getPost, 
+      variables:{id:this.state.post.id},
+      authMode: 'AWS_IAM',
+    })
+    temp2 = temp2.data.getPost    
+    this.setState({post:temp2})
+    this.commentListGenerate()
+  }
+  postLikeButtonHandler(){
+    let temp = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
+    delete temp.comments
+    delete temp.resources
+    delete temp.post
+    delete temp.createdAt
+    delete temp.updatedAt
+    this.props.updatePostLikes(temp)
+    let temp2 = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
+    this.setState({post:temp2})
+  }
+  postHatesButtonHandler(){
+    let temp = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
+    delete temp.comments
+    delete temp.resources
+    delete temp.post
+    delete temp.createdAt
+    delete temp.updatedAt
+    this.props.updatePostLikes(temp)
+    let temp2 = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
+    this.setState({post:temp2})
+  }
  
   render(){    
     
+
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
@@ -179,30 +256,14 @@ class Post extends Component {
           <div className = "post_like_button_container">
             <button type="button" className = "post_like_button" onClick={(e)=>{
               e.preventDefault()
-              let temp = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
-              delete temp.comments
-              delete temp.resources
-              delete temp.post
-              delete temp.createdAt
-              delete temp.updatedAt
-              this.props.updatePostLikes(temp)
-              let temp2 = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
-              this.setState({post:temp2})
+              this.postLikeButtonHandler()
             }}>                    
               <FontAwesomeIcon className = "post_like_icon" icon={faThumbsUp}></FontAwesomeIcon>
               <p className = "post_like_count like">{this.state.post.likes}</p>                
             </button>
             <button type="button" className = "post_like_button" onClick={(e)=>{
               e.preventDefault()
-              let temp = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
-              delete temp.post
-              delete temp.comments
-              delete temp.resources
-              delete temp.createdAt
-              delete temp.updatedAt
-              this.props.updatePostLikes(temp)              
-              let temp2 = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
-              this.setState({post:temp2})
+              this.postHatesButtonHandler()
             }}>
               <FontAwesomeIcon className = "post_like_icon" icon={faThumbsDown}></FontAwesomeIcon>
               <p className = "post_like_count hate">{this.state.post.hates}</p>                
@@ -218,20 +279,17 @@ class Post extends Component {
             let temp = {
               id:this.state.id,
               postID:this.state.postID,
-              nickname:this.state.nickname,
+              nickname:this.props.user.username,
               content:this.state.content,
               likes: 0,
               hates: 0,
               reported:0,
             }
-            this.props.createComment(temp)
-            e.target.nickname.value = ""
+            this.createComment(temp)
             e.target.content.value = ""
-            this.setState({nickname:"",content:""})
+            this.setState({content:""})
           }}>
-            <p><input name="nickname" type="text" placeholder="닉네임" onChange={(e)=>{
-              this.stateHandler(e)
-            }}></input></p>
+            
             <p><textarea name="content" placeholder="댓글 내용" onChange={(e)=>{
               this.stateHandler(e)
             }}></textarea></p>
