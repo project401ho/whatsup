@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import { API, AWSKinesisFirehoseProvider } from 'aws-amplify'
+import ContentsList from '../components/ContentsList'
+import { API } from 'aws-amplify'
 import { getPost, getComment } from '../graphql/queries'
 import {
   createComment as createCommentMutation, 
@@ -14,9 +15,7 @@ class Post extends Component {
   
   constructor(props){    
     super(props)
-    console.log(this.props.user);
-    // this.props.user.cacheUserData("hello")
-    
+   
     this.state ={  
       id: "",
       postID: "",
@@ -39,9 +38,9 @@ class Post extends Component {
   }
   
   shouldComponentUpdate(props, state){
-    // if(this.props.post !== props.post){      
-    //   this.stateInit(props)
-    // }
+    if(this.props.post !== props.post){      
+      this.stateInit(props)
+    }
     
     return true
   }
@@ -60,7 +59,7 @@ class Post extends Component {
         content : "",
         post: props.post,
         isloaded: false,
-        imagelists:[],
+        imagelists: [],
         commentlist: [],
         state_init : false,
       })
@@ -90,15 +89,24 @@ class Post extends Component {
   stateHandler(e){
     this.setState({[e.target.name] : e.target.value})
   }
-  imageListGenerate(){
-    if(this.state.isloaded === true || this.state.post.resources.length < 1 || [...this.state.imagelists].length > 0) return
-    this.state.post.resources.items.sort((a,b)=>a.order - b.order)
-    .forEach(async (item, i)=>
-    {
+  async imageListGenerate(){
+    if(this.state.isloaded === true || this.state.post.resources.length < 1) return
+    let templist = []
+    let resourcelist = this.state.post.resources.items.sort((a,b)=>a.order - b.order)
+    for(let i = 0; i < resourcelist.length; i++){
+      let item = resourcelist[i]
       let _url = await Storage.get(item.id)
-      let temp = [...this.state.imagelists].concat(<img key={_url} className="post_img" src={_url} alt=""/>)
-      this.setState({imagelists:temp})      
-    })
+      templist.push(<img key={_url} className="post_img" src={_url} alt=""/>)
+    }
+    this.setState({imagelists: templist})
+
+    // .sort((a,b)=>a.order - b.order)
+    // .forEach(async (item, i)=>
+    // {
+    //   let _url = await Storage.get(item.id)
+    //   let temp = [...this.state.imagelists].concat(<img key={_url} className="post_img" src={_url} alt=""/>)
+    //   this.setState({imagelists:temp})      
+    // })
     
 
   }
@@ -124,7 +132,7 @@ class Post extends Component {
             <p className = "post_comment_content" >{item.content}</p>
           </div>
           <div className="post_comment_functions">
-            <span className = "post_comment_recomment" >대댓 달기</span>      
+            <span className = "post_comment_recomment">대댓 달기</span>      
             <div className="post_comment_functions_buttons">  
               <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
                 e.preventDefault()
@@ -246,8 +254,7 @@ class Post extends Component {
   }
  
   render(){    
-    
-
+        
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
@@ -274,7 +281,7 @@ class Post extends Component {
             {this.state.commentlist}
           </ul>
           {this.props.loggedin ? 
-          <form onSubmit={(e)=>{
+          <form className = "post_create_comment_container" onSubmit={(e)=>{
             e.preventDefault()
             let temp = {
               id:this.state.id,
@@ -289,18 +296,28 @@ class Post extends Component {
             e.target.content.value = ""
             this.setState({content:""})
           }}>
-            
-            <p><textarea name="content" placeholder="댓글 내용" onChange={(e)=>{
+            <div className = "post_create_comment_div">
+            <textarea className = "post_create_comment_textarea" name="content" onChange={(e)=>{
               this.stateHandler(e)
-            }}></textarea></p>
-            <p><input type="submit" onChange={(e)=>{
+            }}></textarea>
+            <input className = "post_create_comment_button" type="submit" value="작성" onChange={(e)=>{
               this.stateHandler(e)
-            }}></input></p>
+            }}></input>
+            </div>
           </form>
           :
           <noscript></noscript>
           }
-          
+          <ContentsList
+            total_post_count = {this.props.total_post_count}
+            next_page_count = {this.props.next_page_count}
+            current_page = {this.props.current_page}
+            postlist = {this.props.sub_postList}
+            moveToPost = {(item)=>{
+              this.props.moveToPost(item)
+              window.scrollTo(0, 0);
+            }}
+        ></ContentsList>
       </div>
     );
   }

@@ -251,6 +251,15 @@ class App extends Component {
             </Route>
             <Route path='/post/*'>
               <Post 
+                total_post_count = {this.state.total_post_count}
+                next_page_count = {this.state.next_page_count}
+                current_page = {this.state.current_page}
+                postlist = {this.state.sub_postList}
+                moveToPost = {(item)=>{
+                  this.setState({selected_post:item})
+                  
+                }}
+
                 user = {this.state.user}
                 updatePostLikes = {(item)=>this.updatePostLikes(item)}
                 updateCommentLikes = {(item)=>this.updateCommentLikes(item)}

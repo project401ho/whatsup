@@ -21,6 +21,14 @@ p태그 삽입기능<br>
 
 
 # 업데이트 기록
+## 6.25
+댓글 ui 수정 <br>
+댓글 밑에 게시글 리스트 보이기 <br>
+리스트 클릭시 이미지 중복 렌더링 버그 근본 픽스 <br>
+리스트 클릭시 scroll to top 기능 추가 <br>
+댓글 textarea focus outline 삭제 <br>
+Post 댓글 css 수정
+
 ## 6.24
 마이페이지 유저 ID 보여주기<br>
 Post 닉네임 유저 닉네임으로 고정<br>
