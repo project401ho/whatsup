@@ -28,6 +28,7 @@ class Post extends Component {
       reported:0,
       imagelists:[],
       commentlist: [],
+      best_commentlist: [],
       state_init : false,
     }
   }
@@ -112,6 +113,7 @@ class Post extends Component {
   }
   commentListGenerate(){
     let _commentlist = []
+    let best_list = []
     this.state.post.comments.items.sort((a,b)=>{
       let ad = new Date(a.createdAt)
       let bd = new Date(b.createdAt)
@@ -119,11 +121,14 @@ class Post extends Component {
       else if(ad < bd) return -1
       else return 0
     }).forEach((item,i)=>{
+      let hours = Number(item.createdAt.split("T")[1].substring(0,2))+9
+      hours = hours > 24 ? hours - 24 : hours
+      let minutes = item.createdAt.split("T")[1].substring(3,5)
       _commentlist.push(
         <li className = "post_comment_li" key={"comment"+i}>
           <div className="post_comment_subject">
             <span className = "post_comment_nickname" >{item.nickname}</span>
-            <span className = "post_comment_time" > {item.createdAt}</span>
+            <span className = "post_comment_time" > {hours + ":" + minutes}</span>
             <button type="button" className = "post_comment_morefunction" >
               <FontAwesomeIcon icon={faEllipsisV} size="sm"></FontAwesomeIcon>                
             </button>
@@ -140,8 +145,7 @@ class Post extends Component {
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
-                this.updateCommentLikes(temp)   
-                
+                this.updateCommentLikes(temp)                   
               }}>                    
                 <FontAwesomeIcon icon={faThumbsUp} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count like">{item.likes}</p>                
@@ -153,19 +157,25 @@ class Post extends Component {
                 delete temp.createdAt
                 delete temp.updatedAt
                 this.updateCommentLikes(temp)
-                
-
               }}>
                 <FontAwesomeIcon icon={faThumbsDown} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count hate">{item.hates}</p>                
-              </button>
-              
+              </button>              
             </div>  
           </div>
         </li>
       )
+      best_list.push([i,item.likes])
     })
-    this.setState({commentlist:_commentlist})
+    console.log(best_list);
+    best_list = best_list.sort((a,b)=>b[1]-a[1]).slice(0,3)
+    
+    // best_list.map((item)=>{
+    //   if(item[1] > 5) return _commentlist[item[0]]
+    //   return null
+    // })
+    // console.log(best_list);
+    this.setState({commentlist:_commentlist,best_commentlist:best_list})
   }
   
   async createComment(formData){
@@ -277,6 +287,9 @@ class Post extends Component {
             </button>
           </div>
           <hr></hr>
+          <ul className="post_best_comment_ul">
+            {this.state.best_commentlist}
+          </ul>
           <ul className="post_comment_ul">
             {this.state.commentlist}
           </ul>

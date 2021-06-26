@@ -344,3 +344,10 @@ a:visited {
   border-bottom-right-radius: 5px;
   cursor:pointer;
 }
+/* Post create comment End */
+/* Post best comment start */
+.post_best_comment_ul{
+  background-color: #fce8ec;
+  padding: 0px;
+  margin: 0px;
+}
