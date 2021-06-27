@@ -8,8 +8,8 @@ import {
 
 } from '../graphql/mutations'
 import { Storage } from 'aws-amplify'
-import { faThumbsUp,faThumbsDown } from "@fortawesome/free-regular-svg-icons";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp,faThumbsDown, } from "@fortawesome/free-regular-svg-icons";
+import { faEllipsisV,faRocket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 class Post extends Component {  
   
@@ -165,16 +165,59 @@ class Post extends Component {
           </div>
         </li>
       )
-      best_list.push([i,item.likes])
     })
-    console.log(best_list);
-    best_list = best_list.sort((a,b)=>b[1]-a[1]).slice(0,3)
+    let temp = this.state.post.comments.items.sort((a,b)=>{
+      return b.likes - a.likes
+    }).slice(0,3).filter((item)=>item.likes > 4)
+    temp.forEach((item,i) => {
+      let hours = Number(item.createdAt.split("T")[1].substring(0,2))+9
+      hours = hours > 24 ? hours - 24 : hours
+      let minutes = item.createdAt.split("T")[1].substring(3,5)
+      best_list.push(
+        <li className = "post_comment_li" key={"best_comment"+i}>
+          <div className={"post_comment_subject" + " best" + i}>
+            <FontAwesomeIcon className = "post_best_comment_rocket" icon={faRocket} aria-hidden="true"></FontAwesomeIcon>
+            <span className = "post_comment_nickname best_comment" >{item.nickname}</span>
+            <span className = "post_comment_time" > {hours + ":" + minutes}</span>
+            <button type="button" className = "post_comment_morefunction best_comment" >
+              <FontAwesomeIcon icon={faEllipsisV} size="sm"></FontAwesomeIcon>                
+            </button>
+          </div>
+          <div className="post_comment_detail">
+            <p className = "post_comment_content" >{item.content}</p>
+          </div>
+          <div className="post_comment_functions">
+            <span className = "post_comment_recomment">대댓 달기</span>      
+            <div className="post_comment_functions_buttons">  
+              <button type="button" className = "post_comment_upanddown best_comment" onClick={(e)=>{
+                e.preventDefault()
+                let temp = Object.assign({},item,{likes:item.likes+1})
+                delete temp.post
+                delete temp.createdAt
+                delete temp.updatedAt
+                this.updateCommentLikes(temp)                   
+              }}>                    
+                <FontAwesomeIcon icon={faThumbsUp} size="sm"></FontAwesomeIcon>
+                <p className = "post_comment_upanddown_count like">{item.likes}</p>                
+              </button>
+              <button type="button" className = "post_comment_upanddown best_comment" onClick={(e)=>{
+                e.preventDefault()
+                let temp = Object.assign({},item,{hates:item.hates+1})
+                delete temp.post
+                delete temp.createdAt
+                delete temp.updatedAt
+                this.updateCommentLikes(temp)
+              }}>
+                <FontAwesomeIcon icon={faThumbsDown} size="sm"></FontAwesomeIcon>
+                <p className = "post_comment_upanddown_count hate">{item.hates}</p>                
+              </button>              
+            </div>  
+          </div>
+        </li>
+      )
+    });
     
-    // best_list.map((item)=>{
-    //   if(item[1] > 5) return _commentlist[item[0]]
-    //   return null
-    // })
-    // console.log(best_list);
+
     this.setState({commentlist:_commentlist,best_commentlist:best_list})
   }
   
