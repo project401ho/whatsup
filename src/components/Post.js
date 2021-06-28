@@ -175,7 +175,7 @@ class Post extends Component {
       let minutes = item.createdAt.split("T")[1].substring(3,5)
       best_list.push(
         <li className = "post_comment_li" key={"best_comment"+i}>
-          <div className={"post_comment_subject" + " best" + i}>
+          <div className={"post_comment_subject best" + i}>
             <FontAwesomeIcon className = "post_best_comment_rocket" icon={faRocket} aria-hidden="true"></FontAwesomeIcon>
             <span className = "post_comment_nickname best_comment" >{item.nickname}</span>
             <span className = "post_comment_time" > {hours + ":" + minutes}</span>
