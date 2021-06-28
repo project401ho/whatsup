@@ -1,4 +1,5 @@
 import {Component} from 'react';
+import {Switch} from "@material-ui/core";
 
 class CreatePost extends Component {
   constructor(props){
@@ -24,7 +25,11 @@ class CreatePost extends Component {
       },
       resources:[],
       fileButtonList: [],
+      announcement: false,
     }
+  }
+  togglecheck(){
+    this.setState({announcement:!this.state.announcement})
   }
   componentDidMount(){
     this.addImageFile()
@@ -104,17 +109,28 @@ class CreatePost extends Component {
           }}>이미지 파일 추가</button>
           </div>  
           <div>
+            
           <button onClick={(e)=>{
             e.preventDefault()
-            this.state.resources.forEach(async (item)=>{
-              this.props.imageUpload(item.file)              
-              let temp = Object.assign({},item,{file:"done"})
-              console.log(temp);
-              this.props.createResource(temp)
-            })
-            this.props.createPost(this.state.post)
+            if(!this.state.announcement){
+              this.state.resources.forEach(async (item)=>{
+                this.props.imageUpload(item.file)              
+                let temp = Object.assign({},item,{file:"done"})
+                console.log(temp);
+                this.props.createResource(temp)
+              })
+              this.props.createPost(this.state.post)
+            }
+            else{
+              //upload announcement
+            }
+            
           }}>만들기</button>
-          </div>                  
+          </div>    
+          <div>
+            <Switch onChange= { ()=> {this.togglecheck()}}></Switch>
+          </div>     
+                  
       </div>
     );
   }
