@@ -364,6 +364,7 @@ class Post extends Component {
           :
           <noscript></noscript>
           }
+          <hr></hr>
           <ContentsList
             total_post_count = {this.props.total_post_count}
             next_page_count = {this.props.next_page_count}
