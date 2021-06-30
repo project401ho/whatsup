@@ -282,6 +282,11 @@ class Post extends Component {
 
   }
   async updateCommentLikes(item){
+    
+    if(!this.props.loggedin) {
+      alert("로그인을 해주세요")
+      return
+    }
     await API.graphql({
       query:updateCommentMutation,
       variables:{input:item},
@@ -298,6 +303,10 @@ class Post extends Component {
   }
   postLikeButtonHandler(){
     if(this.state.user_engaged) return
+    if(!this.props.loggedin){
+      alert("로그인을 해주세요")
+      return
+    }
     let _liked_users = [...this.state.post.liked_users]
     _liked_users.push(this.props.user.username)
     let temp = Object.assign({},this.state.post,{likes:this.state.post.likes+1,liked_users:_liked_users})
@@ -312,6 +321,10 @@ class Post extends Component {
   }
   postHatesButtonHandler(){
     if(this.state.user_engaged) return
+    if(!this.props.loggedin){
+      alert("로그인을 해주세요")
+      return
+    }    
     let _hated_users = [...this.state.post.hated_users]
     _hated_users.push(this.props.user.username)
     let temp = Object.assign({},this.state.post,{hates:this.state.post.hates+1,hated_users:_hated_users})

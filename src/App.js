@@ -187,15 +187,9 @@ class App extends Component {
     }
   }
 
-  async updateCommentLikes(item){
-    await API.graphql({
-      query:updateCommentMutation,
-      variables:{input:item},
-      authMode: "AWS_IAM"
-    })
-  }
+
   async updatePost(item){
-    
+
     await API.graphql({
       query:updatePostMutation,
       variables:{input:item},
@@ -289,7 +283,6 @@ class App extends Component {
 
                 user = {this.state.user}
                 updatePostLikes = {(item)=>this.updatePost(item)}
-                updateCommentLikes = {(item)=>this.updateCommentLikes(item)}
                 sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 
                 post={this.state.selected_post} 
