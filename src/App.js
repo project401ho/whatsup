@@ -2,7 +2,6 @@
 import './App.css';
 import React,{Component} from 'react';
 import Navigation from './components/Navigation'
-import Announcement from './components/Announcement'
 import CreatePost from './components/CreatePost'
 import ContentsList from './components/ContentsList'
 import SignIn from './components/SignIn'
@@ -128,35 +127,65 @@ class App extends Component {
   }
 
   async fetchContentLists(){
+    if(this.state.postList.length !== 0){
+      const apiData = await API.graphql({
+        query: postsByDate, 
+        variables:{
+          limit: 50, 
+          type: "post",
+          sortDirection: "DESC",
+          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
+        },       
+        authMode: 'AWS_IAM',            
+      })
+      if(apiData.data.postsByDate.items.length < 1) return
+      const postFromAPI = apiData.data.postsByDate.items;
+      let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
+      let pagecount = Math.ceil(postFromAPI.length/10)
+      let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
+      this.setState({ 
+        sub_postList:_subpostlist, 
+        postList:postFromAPI, 
+        nexttoken_ContenList:newtokenlist, 
+        required_page_count:pagecount,
+        total_post_count:postFromAPI[0].count,
+      })
+    }
+    else{
+      const apiData_announcement = await API.graphql({
+        query:getPost,
+        variables:{
+          id:"announcement"
+        },
+        authMode: "AWS_IAM"
+      })
+      const apiData = await API.graphql({
+        query: postsByDate, 
+        variables:{
+          limit: 49, 
+          type: "post",
+          sortDirection: "DESC",
+          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
+        },       
+        authMode: 'AWS_IAM',            
+      })
+      
+      if(apiData.data.postsByDate.items.length < 1) return
+      const postFromAPI = apiData.data.postsByDate.items;
+      const announcementFromAPI = apiData_announcement.data.getPost
+      postFromAPI.unshift(announcementFromAPI)     
+      let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
+      let pagecount = Math.ceil(postFromAPI.length/10)
+      let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
+      this.setState({ 
+        sub_postList:_subpostlist, 
+        postList:postFromAPI, 
+        nexttoken_ContenList:newtokenlist, 
+        required_page_count:pagecount,
+        total_post_count:postFromAPI[1].count+1,
+      })
+    }
     
-    // const apiData = await API.graphql({
-    //   query: listPosts, 
-    //   variables:{limit: 5, nextToken: this.state.nexttoken_ContenList},
-    //   authMode: 'AWS_IAM',
-            
-    // })
-    const apiData = await API.graphql({
-      query: postsByDate, 
-      variables:{
-        limit: 50, 
-        type: "post",
-        sortDirection: "DESC",
-        nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
-      },       
-      authMode: 'AWS_IAM',            
-    })
-    if(apiData.data.postsByDate.items.length < 1) return
-    const postFromAPI = apiData.data.postsByDate.items;
-    let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
-    let pagecount = Math.ceil(postFromAPI.length/10)
-    let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
-    this.setState({ 
-      sub_postList:_subpostlist, 
-      postList:postFromAPI, 
-      nexttoken_ContenList:newtokenlist, 
-      required_page_count:pagecount,
-      total_post_count:postFromAPI[0].count,
-    })
     
   }
 
@@ -166,9 +195,8 @@ class App extends Component {
       variables:{input:item},
       authMode: "AWS_IAM"
     })
-    console.log("done update");
   }
-  async updatePostLikes(item){
+  async updatePost(item){
     await API.graphql({
       query:updatePostMutation,
       variables:{input:item},
@@ -208,6 +236,7 @@ class App extends Component {
     }
     else if(this.state.mode === "create"){
       content = <CreatePost
+        updatePost = {(item)=>this.updatePost(item)}
         createResource = {(formData)=>this.createResource(formData)} 
         imageUpload={(e)=>this.imageUpload(e)} 
         createPost={(formData)=>this.createPost(formData)} 
@@ -244,7 +273,6 @@ class App extends Component {
       <Router>
         <div className="App">
           <Navigation changemode={(_mode)=>this.changeMode(_mode)} user={this.state.user} loggedin={this.state.loggedin} home={()=>this.setState({mode:"list"})}></Navigation>
-          <Announcement></Announcement>
           <Switch>
             <Route exact path='/'>
               {this.selectContent()}
@@ -261,7 +289,7 @@ class App extends Component {
                 }}
 
                 user = {this.state.user}
-                updatePostLikes = {(item)=>this.updatePostLikes(item)}
+                updatePostLikes = {(item)=>this.updatePost(item)}
                 updateCommentLikes = {(item)=>this.updateCommentLikes(item)}
                 sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 

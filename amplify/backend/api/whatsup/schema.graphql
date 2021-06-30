@@ -15,6 +15,7 @@ type Post
   uploader: String
   likes: Int!
   hates: Int!
+  
   comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
   resources: [Resource] @connection(keyName: "byPostResource", fields: ["id"])
 }

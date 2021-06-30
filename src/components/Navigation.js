@@ -7,11 +7,13 @@ class Navigation extends Component {
   render(){
     return (
       <div className="navigation">
-          <Link to="/" onClick={()=>{
+          <Link to="/" className="navigation_title" onClick={()=>{
             this.props.changemode("list")
           }}>
-            <h1 className="navigation_title">Whats UP</h1>
+            <img src="/logo_transparent.png" alt="whats up logo" ></img>       
+            <p className="navigation_slogan">세상의 모든 유우머</p>                
           </Link>
+          
           <ul className="navigation_buttons_holder">
               {this.props.user.username === "project401ho" ? 
               <Link to="/" onClick={()=>{
@@ -19,7 +21,7 @@ class Navigation extends Component {
               }}>
                 <li className="navigation_button_li">
                   <button type = "button" className="navigation_button"> 
-                    <FontAwesomeIcon icon={faWrench} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faWrench} size="lg" color="rgb(231, 218, 26)"></FontAwesomeIcon>
                   </button>
                 </li> 
               </Link>
@@ -31,7 +33,7 @@ class Navigation extends Component {
               <li className="navigation_button_li">
                 <Link to='/mypage'>
                 <button type = "button" className="navigation_button"> 
-                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="rgb(231, 218, 26)"></FontAwesomeIcon>
                 </button>
                 </Link>
               </li> 
@@ -39,7 +41,7 @@ class Navigation extends Component {
               <li className="navigation_button_li">
                 <Link to="/signin">
                 <button type = "button" className="navigation_button"> 
-                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faUserCircle} size="lg" color="rgb(231, 218, 26)"></FontAwesomeIcon>
                 </button>
                 </Link>
               </li>
@@ -47,7 +49,7 @@ class Navigation extends Component {
               
               <li type = "button" className="navigation_button_li">
                 <button className="navigation_button"> 
-                  <FontAwesomeIcon icon={faEdit} size="lg" color="rgb(255, 255, 53)"></FontAwesomeIcon>
+                  <FontAwesomeIcon icon={faEdit} size="lg" color="rgb(231, 218, 26)"></FontAwesomeIcon>
                 </button>
               </li>
           </ul>

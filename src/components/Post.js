@@ -97,6 +97,7 @@ class Post extends Component {
     for(let i = 0; i < resourcelist.length; i++){
       let item = resourcelist[i]
       let _url = await Storage.get(item.id)
+      console.log(_url);
       templist.push(<img key={_url} className="post_img" src={_url} alt=""/>)
     }
     this.setState({imagelists: templist})

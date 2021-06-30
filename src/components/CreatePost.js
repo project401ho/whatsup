@@ -32,7 +32,6 @@ class CreatePost extends Component {
     this.setState({announcement:!this.state.announcement})
   }
   componentDidMount(){
-    this.addImageFile()
   }
   addResource (filename,file,order) {
     let resource = Object.assign({},this.state.resource,{id:filename,file:file,order:order})
@@ -112,17 +111,22 @@ class CreatePost extends Component {
             
           <button onClick={(e)=>{
             e.preventDefault()
+            this.state.resources.forEach(async (item)=>{
+              this.props.imageUpload(item.file)              
+              let temp = Object.assign({},item,{file:"done"})
+              console.log(temp);
+              this.props.createResource(temp)
+            })
             if(!this.state.announcement){
-              this.state.resources.forEach(async (item)=>{
-                this.props.imageUpload(item.file)              
-                let temp = Object.assign({},item,{file:"done"})
-                console.log(temp);
-                this.props.createResource(temp)
-              })
+              
               this.props.createPost(this.state.post)
             }
             else{
+              let temp = Object.assign({},this.state.post,{id:"announcement",type:"announcement"})
+              console.log(temp);
               //upload announcement
+              this.props.updatePost(temp)              
+
             }
             
           }}>만들기</button>

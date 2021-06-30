@@ -31,6 +31,14 @@ p태그 삽입기능<br>
 
 
 # 업데이트 기록
+## 6.30
+공지 기능
+1. id를 announcement로 한다
+2. 첫 게시글 로드시 상태가 비어있다면 공지와 49개의 리스트 불러오기
+3. ContentsList에서 item의 타입에 따라 클래스 지정
+4. announcement 클래스의 css 및 기타 내용 수정
+5. createPost에서 공지 토글 활성화시에는 announcement를 업데이트 함
+
 ## 6.29
 CSS 수정 <br>
 플래닝 <br>
