@@ -11,7 +11,7 @@ class Navigation extends Component {
             this.props.changemode("list")
           }}>
             <img src="/logo_transparent.png" alt="whats up logo" ></img>       
-            <p className="navigation_slogan">세상의 모든 유우머</p>                
+            <p className="navigation_slogan">세상의 모든 <br></br> 유우머</p>                
           </Link>
           
           <ul className="navigation_buttons_holder">

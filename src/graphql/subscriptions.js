@@ -14,6 +14,8 @@ export const onCreatePost = /* GraphQL */ `
       uploader
       likes
       hates
+      liked_users
+      hated_users
       comments {
         items {
           id
@@ -29,6 +31,8 @@ export const onCreatePost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           nickname
@@ -36,6 +40,8 @@ export const onCreatePost = /* GraphQL */ `
           likes
           hates
           reported
+          liked_users
+          hated_users
           createdAt
           updatedAt
         }
@@ -56,6 +62,8 @@ export const onCreatePost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           order
@@ -82,6 +90,8 @@ export const onUpdatePost = /* GraphQL */ `
       uploader
       likes
       hates
+      liked_users
+      hated_users
       comments {
         items {
           id
@@ -97,6 +107,8 @@ export const onUpdatePost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           nickname
@@ -104,6 +116,8 @@ export const onUpdatePost = /* GraphQL */ `
           likes
           hates
           reported
+          liked_users
+          hated_users
           createdAt
           updatedAt
         }
@@ -124,6 +138,8 @@ export const onUpdatePost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           order
@@ -150,6 +166,8 @@ export const onDeletePost = /* GraphQL */ `
       uploader
       likes
       hates
+      liked_users
+      hated_users
       comments {
         items {
           id
@@ -165,6 +183,8 @@ export const onDeletePost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           nickname
@@ -172,6 +192,8 @@ export const onDeletePost = /* GraphQL */ `
           likes
           hates
           reported
+          liked_users
+          hated_users
           createdAt
           updatedAt
         }
@@ -192,6 +214,8 @@ export const onDeletePost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           order
@@ -221,6 +245,8 @@ export const onCreateComment = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -230,6 +256,8 @@ export const onCreateComment = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -253,6 +281,8 @@ export const onCreateComment = /* GraphQL */ `
       likes
       hates
       reported
+      liked_users
+      hated_users
       createdAt
       updatedAt
     }
@@ -274,6 +304,8 @@ export const onUpdateComment = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -283,6 +315,8 @@ export const onUpdateComment = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -306,6 +340,8 @@ export const onUpdateComment = /* GraphQL */ `
       likes
       hates
       reported
+      liked_users
+      hated_users
       createdAt
       updatedAt
     }
@@ -327,6 +363,8 @@ export const onDeleteComment = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -336,6 +374,8 @@ export const onDeleteComment = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -359,6 +399,8 @@ export const onDeleteComment = /* GraphQL */ `
       likes
       hates
       reported
+      liked_users
+      hated_users
       createdAt
       updatedAt
     }
@@ -380,6 +422,8 @@ export const onCreateResource = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -389,6 +433,8 @@ export const onCreateResource = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -430,6 +476,8 @@ export const onUpdateResource = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -439,6 +487,8 @@ export const onUpdateResource = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -480,6 +530,8 @@ export const onDeleteResource = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -489,6 +541,8 @@ export const onDeleteResource = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }

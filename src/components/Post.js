@@ -30,12 +30,16 @@ class Post extends Component {
       commentlist: [],
       best_commentlist: [],
       state_init : false,
+      user_engaged: false,
+      user_engaged_type: "none",
+      
     }
   }
 
   //lifecycle hook
   componentDidMount(){    
     this.stateInit(this.props)
+    // this.setState({})
   }
   
   shouldComponentUpdate(props, state){
@@ -67,6 +71,7 @@ class Post extends Component {
       this.imageListGenerate() 
       this.commentListGenerate()
     }
+
   }
 
   async getPost(){
@@ -100,17 +105,24 @@ class Post extends Component {
       console.log(_url);
       templist.push(<img key={_url} className="post_img" src={_url} alt=""/>)
     }
-    this.setState({imagelists: templist})
-
-    // .sort((a,b)=>a.order - b.order)
-    // .forEach(async (item, i)=>
-    // {
-    //   let _url = await Storage.get(item.id)
-    //   let temp = [...this.state.imagelists].concat(<img key={_url} className="post_img" src={_url} alt=""/>)
-    //   this.setState({imagelists:temp})      
-    // })
-    
-
+    let engaged = this.ueserEngageHandler()
+    this.setState({imagelists: templist, user_engaged:engaged[0],user_engaged_type:engaged[1]})
+  }
+  ueserEngageHandler(){
+    let temp = []
+    if(this.state.post.liked_users.some((name)=>this.props.user.username === name)){
+      temp.push(true)
+      temp.push("liked")
+    }
+    else if(this.state.post.hated_users.some((name)=>this.props.user.username === name)){
+      temp.push(true)
+      temp.push("hated")
+    }
+    else{
+      temp.push(false)
+      temp.push("none")
+    }
+    return temp
   }
   commentListGenerate(){
     let _commentlist = []
@@ -285,7 +297,10 @@ class Post extends Component {
     this.commentListGenerate()
   }
   postLikeButtonHandler(){
-    let temp = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
+    if(this.state.user_engaged) return
+    let _liked_users = [...this.state.post.liked_users]
+    _liked_users.push(this.props.user.username)
+    let temp = Object.assign({},this.state.post,{likes:this.state.post.likes+1,liked_users:_liked_users})
     delete temp.comments
     delete temp.resources
     delete temp.post
@@ -293,10 +308,13 @@ class Post extends Component {
     delete temp.updatedAt
     this.props.updatePostLikes(temp)
     let temp2 = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
-    this.setState({post:temp2})
+    this.setState({post:temp2,user_engaged:true,user_engaged_type:"liked"})
   }
   postHatesButtonHandler(){
-    let temp = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
+    if(this.state.user_engaged) return
+    let _hated_users = [...this.state.post.hated_users]
+    _hated_users.push(this.props.user.username)
+    let temp = Object.assign({},this.state.post,{hates:this.state.post.hates+1,hated_users:_hated_users})
     delete temp.comments
     delete temp.resources
     delete temp.post
@@ -304,25 +322,25 @@ class Post extends Component {
     delete temp.updatedAt
     this.props.updatePostLikes(temp)
     let temp2 = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
-    this.setState({post:temp2})
+    this.setState({post:temp2,user_engaged:true,user_engaged_type:"hated"})
   }
  
   render(){    
-        
+    
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
             {this.state.imagelists}
           <p>{this.state.post.content}</p>
-          <div className = "post_like_button_container">
-            <button type="button" className = "post_like_button" onClick={(e)=>{
+          <div className = "post_like_button_container ">            
+            <button type="button" className = {"post_like_button "+this.state.user_engaged_type} onClick={(e)=>{
               e.preventDefault()
               this.postLikeButtonHandler()
             }}>                    
               <FontAwesomeIcon className = "post_like_icon" icon={faThumbsUp}></FontAwesomeIcon>
               <p className = "post_like_count like">{this.state.post.likes}</p>                
             </button>
-            <button type="button" className = "post_like_button" onClick={(e)=>{
+            <button type="button" className = {"post_like_button "+this.state.user_engaged_type} onClick={(e)=>{
               e.preventDefault()
               this.postHatesButtonHandler()
             }}>
@@ -348,6 +366,8 @@ class Post extends Component {
               likes: 0,
               hates: 0,
               reported:0,
+              liked_users:[""],
+              hated_users:[""],
             }
             this.createComment(temp)
             e.target.content.value = ""

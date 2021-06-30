@@ -52,12 +52,12 @@ a:visited {
 /* General End */
 
 /* Navigation Start */
-@media screen and (max-width: 330px) {
+@media screen and (max-width: 346px) {
   .navigation_slogan {
     visibility: hidden;
   }
 }
-@media screen and (min-width: 330px) {
+@media screen and (min-width: 346px) {
   .navigation_slogan {
     color: rgb(231, 218, 26);
     font-weight: bold;
@@ -106,6 +106,7 @@ a:visited {
   justify-content: space-between;
   align-items: center;
   background-color: #333;
+  margin-bottom: 5px;
 }
 
 /* Navigation End */
@@ -151,7 +152,7 @@ a:visited {
 }
 
 .contentList_info{
-  margin: 5px 0;
+  margin: 5px 0px 2px 0px;
   padding: 0 3%;
   display: block;
   height: 80%;
@@ -195,6 +196,14 @@ a:visited {
 /* Post Start */
 .post_img{
   width:60%;  
+}
+.liked:nth-child(1){
+  background-color: #ffc6d2;
+  border: 2px solid red;
+}
+.hated:nth-child(2){
+  background-color: rgb(206, 206, 255);
+  border: 2px solid blue;
 }
 .post_like_button_container{
   display: flex;

@@ -14,6 +14,8 @@ export const getPost = /* GraphQL */ `
       uploader
       likes
       hates
+      liked_users
+      hated_users
       comments {
         items {
           id
@@ -29,6 +31,8 @@ export const getPost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           nickname
@@ -36,6 +40,8 @@ export const getPost = /* GraphQL */ `
           likes
           hates
           reported
+          liked_users
+          hated_users
           createdAt
           updatedAt
         }
@@ -56,6 +62,8 @@ export const getPost = /* GraphQL */ `
             uploader
             likes
             hates
+            liked_users
+            hated_users
             updatedAt
           }
           order
@@ -87,6 +95,8 @@ export const listPosts = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -96,6 +106,8 @@ export const listPosts = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -134,6 +146,8 @@ export const getComment = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -143,6 +157,8 @@ export const getComment = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -166,6 +182,8 @@ export const getComment = /* GraphQL */ `
       likes
       hates
       reported
+      liked_users
+      hated_users
       createdAt
       updatedAt
     }
@@ -192,6 +210,8 @@ export const listComments = /* GraphQL */ `
           uploader
           likes
           hates
+          liked_users
+          hated_users
           comments {
             nextToken
           }
@@ -205,6 +225,8 @@ export const listComments = /* GraphQL */ `
         likes
         hates
         reported
+        liked_users
+        hated_users
         createdAt
         updatedAt
       }
@@ -228,6 +250,8 @@ export const getResource = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -237,6 +261,8 @@ export const getResource = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }
@@ -283,6 +309,8 @@ export const listResources = /* GraphQL */ `
           uploader
           likes
           hates
+          liked_users
+          hated_users
           comments {
             nextToken
           }
@@ -328,6 +356,8 @@ export const postsByDate = /* GraphQL */ `
         uploader
         likes
         hates
+        liked_users
+        hated_users
         comments {
           items {
             id
@@ -337,6 +367,8 @@ export const postsByDate = /* GraphQL */ `
             likes
             hates
             reported
+            liked_users
+            hated_users
             createdAt
             updatedAt
           }

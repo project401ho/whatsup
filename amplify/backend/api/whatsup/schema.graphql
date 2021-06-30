@@ -15,7 +15,8 @@ type Post
   uploader: String
   likes: Int!
   hates: Int!
-  
+  liked_users: [String]
+  hated_users: [String]
   comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
   resources: [Resource] @connection(keyName: "byPostResource", fields: ["id"])
 }
@@ -29,6 +30,8 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
   likes: Int!
   hates: Int!
   reported: Int!
+  liked_users: [String]
+  hated_users: [String]
 }
 
 type Resource @model @key(name: "byPostResource", fields: ["postID", "order"]) {

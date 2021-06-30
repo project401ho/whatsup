@@ -16,6 +16,8 @@ class CreatePost extends Component {
         uploader: "와썹",
         likes:0,
         hates:0,
+        liked_users:[""],
+        hated_users:[""],
       }, 
       resource: {
         id: "filename",

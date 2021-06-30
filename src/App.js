@@ -185,8 +185,6 @@ class App extends Component {
         total_post_count:postFromAPI[1].count+1,
       })
     }
-    
-    
   }
 
   async updateCommentLikes(item){
@@ -197,6 +195,7 @@ class App extends Component {
     })
   }
   async updatePost(item){
+    
     await API.graphql({
       query:updatePostMutation,
       variables:{input:item},
