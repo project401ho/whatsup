@@ -102,7 +102,6 @@ class Post extends Component {
     for(let i = 0; i < resourcelist.length; i++){
       let item = resourcelist[i]
       let _url = await Storage.get(item.id)
-      console.log(_url);
       templist.push(<img key={_url} className="post_img" src={_url} alt=""/>)
     }
     let engaged = this.ueserEngageHandler()
@@ -154,7 +153,9 @@ class Post extends Component {
             <div className="post_comment_functions_buttons">  
               <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
                 e.preventDefault()
-                let temp = Object.assign({},item,{likes:item.likes+1})
+                if(this.checkDuplicateLikeComment(item,"like")) return
+                let templist = this.likeCommentHandler(item,"like")
+                let temp = Object.assign({},item,{likes:item.likes+1,liked_users:templist})
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
@@ -165,7 +166,9 @@ class Post extends Component {
               </button>
               <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
                 e.preventDefault()
-                let temp = Object.assign({},item,{hates:item.hates+1})
+                if(this.checkDuplicateLikeComment(item,"hate")) return
+                let templist = this.likeCommentHandler(item,"hate")
+                let temp = Object.assign({},item,{hates:item.hates+1,hated_users:templist})
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
@@ -204,7 +207,9 @@ class Post extends Component {
             <div className="post_comment_functions_buttons">  
               <button type="button" className = "post_comment_upanddown best_comment" onClick={(e)=>{
                 e.preventDefault()
-                let temp = Object.assign({},item,{likes:item.likes+1})
+                if(this.checkDuplicateLikeComment(item,"like")) return
+                let templist = this.likeCommentHandler(item,"like")
+                let temp = Object.assign({},item,{likes:item.likes+1,liked_users:templist})
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
@@ -215,7 +220,9 @@ class Post extends Component {
               </button>
               <button type="button" className = "post_comment_upanddown best_comment" onClick={(e)=>{
                 e.preventDefault()
-                let temp = Object.assign({},item,{hates:item.hates+1})
+                if(this.checkDuplicateLikeComment(item,"hate")) return
+                let templist = this.likeCommentHandler(item,"hate")
+                let temp = Object.assign({},item,{hates:item.hates+1,hated_users:templist})
                 delete temp.post
                 delete temp.createdAt
                 delete temp.updatedAt
@@ -281,6 +288,7 @@ class Post extends Component {
     this.commentListGenerate()
 
   }
+
   async updateCommentLikes(item){
     
     if(!this.props.loggedin) {
@@ -301,6 +309,7 @@ class Post extends Component {
     this.setState({post:temp2})
     this.commentListGenerate()
   }
+
   postLikeButtonHandler(){
     if(this.state.user_engaged) return
     if(!this.props.loggedin){
@@ -319,6 +328,7 @@ class Post extends Component {
     let temp2 = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
     this.setState({post:temp2,user_engaged:true,user_engaged_type:"liked"})
   }
+
   postHatesButtonHandler(){
     if(this.state.user_engaged) return
     if(!this.props.loggedin){
@@ -337,7 +347,64 @@ class Post extends Component {
     let temp2 = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
     this.setState({post:temp2,user_engaged:true,user_engaged_type:"hated"})
   }
- 
+  checkDuplicateLikeComment(item, type){
+    if(type === "like"){
+      if (item.liked_users.some((name)=>this.props.user.username === name)) {
+        // alert("추천을 취소했습니다")
+        this.undoLikeComment(item,type)
+        return true
+      }
+      else if(item.hated_users.some((name)=>this.props.user.username === name)){
+        alert("비추천을 취소하시면 추천이 가능해집니다 :)")
+        return true
+      }
+    }
+    else if(type === "hate"){
+      if (item.hated_users.some((name)=>this.props.user.username === name)) {
+        // alert("비추천을 취소했습니다 :)")
+        this.undoLikeComment(item,type)
+        return true
+      }
+      else if(item.liked_users.some((name)=>this.props.user.username === name)){
+        alert("추천을 취소하시면 비추천이 가능해집니다 :)")
+        return true
+      }
+    }
+    
+    return false
+  }
+  undoLikeComment(item, type){
+    let templist = []
+    let username = this.props.user.username
+    let temp = Object.assign({},item)
+    if(type === "like"){
+      let idx = [...item.liked_users].indexOf(username)
+      templist.splice(idx,1)
+      temp.likes -= 1
+      temp.liked_users = templist      
+    }
+    else if(type === "hate"){
+      let idx = [...item.hated_users].indexOf(username)
+      templist.splice(idx,1)
+      temp.hates -= 1
+      temp.hated_users = templist
+    }
+    delete temp.post
+    delete temp.createdAt
+    delete temp.updatedAt
+    this.updateCommentLikes(temp)
+  }
+  likeCommentHandler(item, flag){
+    let temp = []
+    let username = this.props.user.username
+    if(flag === "like"){
+      temp = [...item.liked_users].concat(username)
+    }
+    else{
+      temp = [...item.hated_users].concat(username)
+    }
+    return temp
+  }
   render(){    
     
     return (

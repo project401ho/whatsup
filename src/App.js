@@ -15,7 +15,6 @@ import {
   createPost as createPostMutation, 
   createComment as createCommentMutation, 
   createResource as createResourceMutation,
-  updateComment as updateCommentMutation,
   updatePost as updatePostMutation,
 } from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
