@@ -12,6 +12,7 @@ export const getPost = /* GraphQL */ `
       content
       video
       uploader
+      source
       likes
       hates
       liked_users
@@ -29,6 +30,7 @@ export const getPost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -40,6 +42,7 @@ export const getPost = /* GraphQL */ `
           likes
           hates
           reported
+          reported_users
           liked_users
           hated_users
           createdAt
@@ -60,6 +63,7 @@ export const getPost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -68,6 +72,7 @@ export const getPost = /* GraphQL */ `
           }
           order
           file
+          uploader_comment
           createdAt
           updatedAt
         }
@@ -93,6 +98,7 @@ export const listPosts = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -106,6 +112,7 @@ export const listPosts = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -119,6 +126,7 @@ export const listPosts = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -144,6 +152,7 @@ export const getComment = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -157,6 +166,7 @@ export const getComment = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -170,6 +180,7 @@ export const getComment = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -182,6 +193,7 @@ export const getComment = /* GraphQL */ `
       likes
       hates
       reported
+      reported_users
       liked_users
       hated_users
       createdAt
@@ -208,6 +220,7 @@ export const listComments = /* GraphQL */ `
           content
           video
           uploader
+          source
           likes
           hates
           liked_users
@@ -225,6 +238,7 @@ export const listComments = /* GraphQL */ `
         likes
         hates
         reported
+        reported_users
         liked_users
         hated_users
         createdAt
@@ -248,6 +262,7 @@ export const getResource = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -261,6 +276,7 @@ export const getResource = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -274,6 +290,7 @@ export const getResource = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -283,6 +300,7 @@ export const getResource = /* GraphQL */ `
       }
       order
       file
+      uploader_comment
       createdAt
       updatedAt
     }
@@ -307,6 +325,7 @@ export const listResources = /* GraphQL */ `
           content
           video
           uploader
+          source
           likes
           hates
           liked_users
@@ -321,6 +340,7 @@ export const listResources = /* GraphQL */ `
         }
         order
         file
+        uploader_comment
         createdAt
         updatedAt
       }
@@ -354,6 +374,7 @@ export const postsByDate = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -367,6 +388,7 @@ export const postsByDate = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -380,6 +402,7 @@ export const postsByDate = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }

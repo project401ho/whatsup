@@ -13,6 +13,7 @@ type Post
   content: String
   video: String
   uploader: String
+  source: String
   likes: Int!
   hates: Int!
   liked_users: [String]
@@ -30,6 +31,7 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
   likes: Int!
   hates: Int!
   reported: Int!
+  reported_users:[String]
   liked_users: [String]
   hated_users: [String]
 }
@@ -40,4 +42,5 @@ type Resource @model @key(name: "byPostResource", fields: ["postID", "order"]) {
   post: Post @connection(fields: ["postID"])
   order: Int!
   file: String!
+  uploader_comment:String
 }

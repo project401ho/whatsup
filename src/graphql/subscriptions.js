@@ -12,6 +12,7 @@ export const onCreatePost = /* GraphQL */ `
       content
       video
       uploader
+      source
       likes
       hates
       liked_users
@@ -29,6 +30,7 @@ export const onCreatePost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -40,6 +42,7 @@ export const onCreatePost = /* GraphQL */ `
           likes
           hates
           reported
+          reported_users
           liked_users
           hated_users
           createdAt
@@ -60,6 +63,7 @@ export const onCreatePost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -68,6 +72,7 @@ export const onCreatePost = /* GraphQL */ `
           }
           order
           file
+          uploader_comment
           createdAt
           updatedAt
         }
@@ -88,6 +93,7 @@ export const onUpdatePost = /* GraphQL */ `
       content
       video
       uploader
+      source
       likes
       hates
       liked_users
@@ -105,6 +111,7 @@ export const onUpdatePost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -116,6 +123,7 @@ export const onUpdatePost = /* GraphQL */ `
           likes
           hates
           reported
+          reported_users
           liked_users
           hated_users
           createdAt
@@ -136,6 +144,7 @@ export const onUpdatePost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -144,6 +153,7 @@ export const onUpdatePost = /* GraphQL */ `
           }
           order
           file
+          uploader_comment
           createdAt
           updatedAt
         }
@@ -164,6 +174,7 @@ export const onDeletePost = /* GraphQL */ `
       content
       video
       uploader
+      source
       likes
       hates
       liked_users
@@ -181,6 +192,7 @@ export const onDeletePost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -192,6 +204,7 @@ export const onDeletePost = /* GraphQL */ `
           likes
           hates
           reported
+          reported_users
           liked_users
           hated_users
           createdAt
@@ -212,6 +225,7 @@ export const onDeletePost = /* GraphQL */ `
             content
             video
             uploader
+            source
             likes
             hates
             liked_users
@@ -220,6 +234,7 @@ export const onDeletePost = /* GraphQL */ `
           }
           order
           file
+          uploader_comment
           createdAt
           updatedAt
         }
@@ -243,6 +258,7 @@ export const onCreateComment = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -256,6 +272,7 @@ export const onCreateComment = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -269,6 +286,7 @@ export const onCreateComment = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -281,6 +299,7 @@ export const onCreateComment = /* GraphQL */ `
       likes
       hates
       reported
+      reported_users
       liked_users
       hated_users
       createdAt
@@ -302,6 +321,7 @@ export const onUpdateComment = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -315,6 +335,7 @@ export const onUpdateComment = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -328,6 +349,7 @@ export const onUpdateComment = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -340,6 +362,7 @@ export const onUpdateComment = /* GraphQL */ `
       likes
       hates
       reported
+      reported_users
       liked_users
       hated_users
       createdAt
@@ -361,6 +384,7 @@ export const onDeleteComment = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -374,6 +398,7 @@ export const onDeleteComment = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -387,6 +412,7 @@ export const onDeleteComment = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -399,6 +425,7 @@ export const onDeleteComment = /* GraphQL */ `
       likes
       hates
       reported
+      reported_users
       liked_users
       hated_users
       createdAt
@@ -420,6 +447,7 @@ export const onCreateResource = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -433,6 +461,7 @@ export const onCreateResource = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -446,6 +475,7 @@ export const onCreateResource = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -455,6 +485,7 @@ export const onCreateResource = /* GraphQL */ `
       }
       order
       file
+      uploader_comment
       createdAt
       updatedAt
     }
@@ -474,6 +505,7 @@ export const onUpdateResource = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -487,6 +519,7 @@ export const onUpdateResource = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -500,6 +533,7 @@ export const onUpdateResource = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -509,6 +543,7 @@ export const onUpdateResource = /* GraphQL */ `
       }
       order
       file
+      uploader_comment
       createdAt
       updatedAt
     }
@@ -528,6 +563,7 @@ export const onDeleteResource = /* GraphQL */ `
         content
         video
         uploader
+        source
         likes
         hates
         liked_users
@@ -541,6 +577,7 @@ export const onDeleteResource = /* GraphQL */ `
             likes
             hates
             reported
+            reported_users
             liked_users
             hated_users
             createdAt
@@ -554,6 +591,7 @@ export const onDeleteResource = /* GraphQL */ `
             postID
             order
             file
+            uploader_comment
             createdAt
             updatedAt
           }
@@ -563,6 +601,7 @@ export const onDeleteResource = /* GraphQL */ `
       }
       order
       file
+      uploader_comment
       createdAt
       updatedAt
     }

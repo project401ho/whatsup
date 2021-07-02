@@ -5,14 +5,14 @@ import { getPost, getComment } from '../graphql/queries'
 import {
   createComment as createCommentMutation, 
   updateComment as updateCommentMutation,
+  updatePost as updatePostMutation,
 
 } from '../graphql/mutations'
 import { Storage } from 'aws-amplify'
 import { faThumbsUp,faThumbsDown, } from "@fortawesome/free-regular-svg-icons";
-import { faEllipsisV,faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV,faRocket,faBan,faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-class Post extends Component {  
-  
+class Post extends Component {    
   constructor(props){    
     super(props)
    
@@ -32,7 +32,8 @@ class Post extends Component {
       state_init : false,
       user_engaged: false,
       user_engaged_type: "none",
-      
+      expand_more_function: false,
+      expand_target_id: "",
     }
   }
 
@@ -91,7 +92,41 @@ class Post extends Component {
     })
       
   }
-
+  async updatePost(item,type){
+    await API.graphql({
+      query:updatePostMutation,
+      variables:{input:item},
+      authMode: "AWS_IAM"
+    })
+    
+    let temp2 = await API.graphql({
+      query: getPost, 
+      variables:{id:this.state.post.id},
+      authMode: 'AWS_IAM',
+    })
+    temp2 = temp2.data.getPost    
+    
+    this.setState({post:temp2,user_engaged:true, user_engaged_type:type+"d"})
+  }
+  async updateComment(item){    
+    if(!this.props.loggedin) {
+      alert("로그인을 해주세요")
+      return
+    }
+    await API.graphql({
+      query:updateCommentMutation,
+      variables:{input:item},
+      authMode: "AWS_IAM"
+    })
+    let temp2 = await API.graphql({
+      query: getPost, 
+      variables:{id:this.state.post.id},
+      authMode: 'AWS_IAM',
+    })
+    temp2 = temp2.data.getPost    
+    this.setState({post:temp2})
+    this.commentListGenerate()
+  }
   stateHandler(e){
     this.setState({[e.target.name] : e.target.value})
   }
@@ -102,7 +137,12 @@ class Post extends Component {
     for(let i = 0; i < resourcelist.length; i++){
       let item = resourcelist[i]
       let _url = await Storage.get(item.id)
-      templist.push(<img key={_url} className="post_img" src={_url} alt=""/>)
+      templist.push(
+      <div key={_url}>
+        <img className="post_img" src={_url} alt="post images"/>
+        <p>{item.uploader_comment}</p>
+      </div>
+      )
     }
     let engaged = this.ueserEngageHandler()
     this.setState({imagelists: templist, user_engaged:engaged[0],user_engaged_type:engaged[1]})
@@ -123,9 +163,29 @@ class Post extends Component {
     }
     return temp
   }
+  reportComment(item){
+    if(item.reported_users.some((user)=>this.props.user.username === user)) {
+      alert("이미 신고 하였습니다.")
+      return
+    }
+    let reportlist = [...item.reported_users].concat(this.props.user.username)
+    let temp = Object.assign({},item,{reported:item.reported+1,reported_users:reportlist})
+    delete temp.post
+    delete temp.createdAt
+    delete temp.updatedAt
+    this.updateComment(temp)
+    alert("신고가 접수되었습니다")
+  }
+  reportCheck(item){
+    if(item.reported >= 5){
+      return true
+    }
+    return false
+  }
   commentListGenerate(){
     let _commentlist = []
     let best_list = []
+    let post_comment_engage_type = "none"
     this.state.post.comments.items.sort((a,b)=>{
       let ad = new Date(a.createdAt)
       let bd = new Date(b.createdAt)
@@ -133,6 +193,13 @@ class Post extends Component {
       else if(ad < bd) return -1
       else return 0
     }).forEach((item,i)=>{
+      post_comment_engage_type="none"
+      let is_blinded = this.reportCheck(item)
+      if(is_blinded){
+        item.content = "다수의 신고로 인해 삭제 되었습니다. 신고수: " + item.reported
+      }
+      if(item.liked_users.some((username)=>this.props.user.username === username)) post_comment_engage_type = "like"
+      else if(item.hated_users.some((username)=>this.props.user.username === username)) post_comment_engage_type = "hate"
       let hours = Number(item.createdAt.split("T")[1].substring(0,2))+9
       hours = hours > 24 ? hours - 24 : hours
       let minutes = item.createdAt.split("T")[1].substring(3,5)
@@ -141,38 +208,49 @@ class Post extends Component {
           <div className="post_comment_subject">
             <span className = "post_comment_nickname" >{item.nickname}</span>
             <span className = "post_comment_time" > {hours + ":" + minutes}</span>
-            <button type="button" className = "post_comment_morefunction" >
+            <button type="button" className = "post_comment_morefunction" onClick={async (e)=>{
+              e.preventDefault()
+              await this.setState({expand_more_function:!this.state.expand_more_function,expand_target_id:item.id})
+              this.commentListGenerate()
+            }}>
               <FontAwesomeIcon icon={faEllipsisV} size="sm"></FontAwesomeIcon>                
             </button>
+            {this.state.expand_more_function && this.state.expand_target_id === item.id
+            ?
+            <span>
+            <button type="button" className = "post_comment_morefunction post_comment_ban" onClick={()=>alert("아직 준비중입니다.")}>
+              <FontAwesomeIcon icon={faBan} size="sm"></FontAwesomeIcon>                
+            </button>
+            <button type="button" className = "post_comment_morefunction post_comment_report" onClick={(e)=>{
+              e.preventDefault()
+              this.reportComment(item)
+            }}>
+              <FontAwesomeIcon icon={faExclamation} size="sm"></FontAwesomeIcon>                
+            </button>
+            </span>
+            :
+            <noscript></noscript>
+            }
           </div>
           <div className="post_comment_detail">
-            <p className = "post_comment_content" >{item.content}</p>
+            <p className = {"post_comment_content isblinded"+is_blinded}>{item.content}</p>
           </div>
           <div className="post_comment_functions">
             <span className = "post_comment_recomment">대댓 달기</span>      
             <div className="post_comment_functions_buttons">  
-              <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
+              <button type="button" className = {"post_comment_upanddown post_comment_engage_type"+post_comment_engage_type} onClick={(e)=>{
                 e.preventDefault()
                 if(this.checkDuplicateLikeComment(item,"like")) return
-                let templist = this.likeCommentHandler(item,"like")
-                let temp = Object.assign({},item,{likes:item.likes+1,liked_users:templist})
-                delete temp.post
-                delete temp.createdAt
-                delete temp.updatedAt
-                this.updateCommentLikes(temp)                   
+                this.likeCommentHandler(item,"like")                   
               }}>                    
                 <FontAwesomeIcon icon={faThumbsUp} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count like">{item.likes}</p>                
               </button>
-              <button type="button" className = "post_comment_upanddown" onClick={(e)=>{
+              <button type="button" className = {"post_comment_upanddown post_comment_engage_type"+post_comment_engage_type} onClick={(e)=>{
                 e.preventDefault()
                 if(this.checkDuplicateLikeComment(item,"hate")) return
-                let templist = this.likeCommentHandler(item,"hate")
-                let temp = Object.assign({},item,{hates:item.hates+1,hated_users:templist})
-                delete temp.post
-                delete temp.createdAt
-                delete temp.updatedAt
-                this.updateCommentLikes(temp)
+                this.likeCommentHandler(item,"hate") 
+                
               }}>
                 <FontAwesomeIcon icon={faThumbsDown} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count hate">{item.hates}</p>                
@@ -182,6 +260,8 @@ class Post extends Component {
         </li>
       )
     })
+
+    //베댓 존
     let temp = this.state.post.comments.items.sort((a,b)=>{
       return b.likes - a.likes
     }).slice(0,3).filter((item)=>item.likes > 4)
@@ -192,41 +272,29 @@ class Post extends Component {
       best_list.push(
         <li className = "post_comment_li" key={"best_comment"+i}>
           <div className={"post_comment_subject best" + i}>
-            <FontAwesomeIcon className = "post_best_comment_rocket" icon={faRocket} aria-hidden="true"></FontAwesomeIcon>
+            <FontAwesomeIcon className="post_best_comment_rocket" icon={faRocket} aria-hidden="true"></FontAwesomeIcon>
             <span className = "post_comment_nickname best_comment" >{item.nickname}</span>
             <span className = "post_comment_time" > {hours + ":" + minutes}</span>
-            <button type="button" className = "post_comment_morefunction best_comment" >
-              <FontAwesomeIcon icon={faEllipsisV} size="sm"></FontAwesomeIcon>                
-            </button>
           </div>
           <div className="post_comment_detail">
             <p className = "post_comment_content" >{item.content}</p>
           </div>
           <div className="post_comment_functions">
-            <span className = "post_comment_recomment">대댓 달기</span>      
+            <span className = "post_comment_recomment">바로가기</span>      
             <div className="post_comment_functions_buttons">  
-              <button type="button" className = "post_comment_upanddown best_comment" onClick={(e)=>{
+              <button type="button" className = {"post_comment_upanddown best_comment post_comment_engage_type"+post_comment_engage_type} onClick={(e)=>{
                 e.preventDefault()
                 if(this.checkDuplicateLikeComment(item,"like")) return
-                let templist = this.likeCommentHandler(item,"like")
-                let temp = Object.assign({},item,{likes:item.likes+1,liked_users:templist})
-                delete temp.post
-                delete temp.createdAt
-                delete temp.updatedAt
-                this.updateCommentLikes(temp)                   
+                this.likeCommentHandler(item,"like")
+                                  
               }}>                    
                 <FontAwesomeIcon icon={faThumbsUp} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count like">{item.likes}</p>                
               </button>
-              <button type="button" className = "post_comment_upanddown best_comment" onClick={(e)=>{
+              <button type="button" className = {"post_comment_upanddown best_comment post_comment_engage_type"+post_comment_engage_type} onClick={(e)=>{
                 e.preventDefault()
                 if(this.checkDuplicateLikeComment(item,"hate")) return
-                let templist = this.likeCommentHandler(item,"hate")
-                let temp = Object.assign({},item,{hates:item.hates+1,hated_users:templist})
-                delete temp.post
-                delete temp.createdAt
-                delete temp.updatedAt
-                this.updateCommentLikes(temp)
+                this.likeCommentHandler(item,"hate")
               }}>
                 <FontAwesomeIcon icon={faThumbsDown} size="sm"></FontAwesomeIcon>
                 <p className = "post_comment_upanddown_count hate">{item.hates}</p>                
@@ -289,64 +357,87 @@ class Post extends Component {
 
   }
 
-  async updateCommentLikes(item){
+  
+  postLikeHateHandler(type){
     
-    if(!this.props.loggedin) {
-      alert("로그인을 해주세요")
-      return
-    }
-    await API.graphql({
-      query:updateCommentMutation,
-      variables:{input:item},
-      authMode: "AWS_IAM"
-    })
-    let temp2 = await API.graphql({
-      query: getPost, 
-      variables:{id:this.state.post.id},
-      authMode: 'AWS_IAM',
-    })
-    temp2 = temp2.data.getPost    
-    this.setState({post:temp2})
-    this.commentListGenerate()
-  }
-
-  postLikeButtonHandler(){
-    if(this.state.user_engaged) return
     if(!this.props.loggedin){
       alert("로그인을 해주세요")
       return
     }
-    let _liked_users = [...this.state.post.liked_users]
-    _liked_users.push(this.props.user.username)
-    let temp = Object.assign({},this.state.post,{likes:this.state.post.likes+1,liked_users:_liked_users})
+    if(type === "like"){
+      let _liked_users = [...this.state.post.liked_users]
+      _liked_users.push(this.props.user.username)
+      let temp = Object.assign({},this.state.post,{likes:_liked_users.length,liked_users:_liked_users})
+      delete temp.comments
+      delete temp.resources
+      delete temp.post
+      delete temp.createdAt
+      delete temp.updatedAt
+      this.updatePost(temp,type)
+      
+    }
+    else if(type === "hate"){
+      let _hated_users = [...this.state.post.hated_users]
+      _hated_users.push(this.props.user.username)
+      let temp = Object.assign({},this.state.post,{hates:_hated_users.length,hated_users:_hated_users})
+      delete temp.comments
+      delete temp.resources
+      delete temp.post
+      delete temp.createdAt
+      delete temp.updatedAt
+      this.updatePost(temp, type)
+    }
+  }
+  checkDuplicateLikePost(item, type){
+    if(type === "like"){
+      if (item.liked_users.some((name)=>this.props.user.username === name)) {
+        // alert("추천을 취소했습니다")
+        
+        this.undoLikePost(item,type)
+        return true
+      }
+      else if(item.hated_users.some((name)=>this.props.user.username === name)){
+        alert("비추천을 취소하시면 추천이 가능해집니다 :)")
+        return true
+      }
+    }
+    else if(type === "hate"){
+      if (item.hated_users.some((name)=>this.props.user.username === name)) {
+        // alert("비추천을 취소했습니다 :)")
+        this.undoLikePost(item,type)        
+        return true
+      }
+      else if(item.liked_users.some((name)=>this.props.user.username === name)){
+        alert("추천을 취소하시면 비추천이 가능해집니다 :)")
+        return true
+      }
+    }
+    
+    return false
+  }
+  undoLikePost(item, type){
+    let templist = []
+    let username = this.props.user.username
+    let temp = Object.assign({},item)
+    console.log("test");
+    if(type === "like"){
+      let idx = [...item.liked_users].indexOf(username)
+      templist.splice(idx,1)
+      temp.liked_users = templist      
+    }
+    else if(type === "hate"){
+      let idx = [...item.hated_users].indexOf(username)
+      templist.splice(idx,1)
+      temp.hated_users = templist
+    }
     delete temp.comments
     delete temp.resources
     delete temp.post
     delete temp.createdAt
     delete temp.updatedAt
-    this.props.updatePostLikes(temp)
-    let temp2 = Object.assign({},this.state.post,{likes:this.state.post.likes+1})
-    this.setState({post:temp2,user_engaged:true,user_engaged_type:"liked"})
+    this.updatePost(temp,"none")
   }
 
-  postHatesButtonHandler(){
-    if(this.state.user_engaged) return
-    if(!this.props.loggedin){
-      alert("로그인을 해주세요")
-      return
-    }    
-    let _hated_users = [...this.state.post.hated_users]
-    _hated_users.push(this.props.user.username)
-    let temp = Object.assign({},this.state.post,{hates:this.state.post.hates+1,hated_users:_hated_users})
-    delete temp.comments
-    delete temp.resources
-    delete temp.post
-    delete temp.createdAt
-    delete temp.updatedAt
-    this.props.updatePostLikes(temp)
-    let temp2 = Object.assign({},this.state.post,{hates:this.state.post.hates+1})
-    this.setState({post:temp2,user_engaged:true,user_engaged_type:"hated"})
-  }
   checkDuplicateLikeComment(item, type){
     if(type === "like"){
       if (item.liked_users.some((name)=>this.props.user.username === name)) {
@@ -392,21 +483,30 @@ class Post extends Component {
     delete temp.post
     delete temp.createdAt
     delete temp.updatedAt
-    this.updateCommentLikes(temp)
+    this.updateComment(temp,"none")
   }
   likeCommentHandler(item, flag){
-    let temp = []
+    let templist = []
     let username = this.props.user.username
     if(flag === "like"){
-      temp = [...item.liked_users].concat(username)
+      templist = [...item.liked_users].concat(username)
+      let temp = Object.assign({},item,{likes:item.likes+1,liked_users:templist})
+      delete temp.post
+      delete temp.createdAt
+      delete temp.updatedAt
+      this.updateComment(temp) 
     }
-    else{
-      temp = [...item.hated_users].concat(username)
+    else if(flag === "hate"){
+      templist = [...item.hated_users].concat(username)
+      let temp = Object.assign({},item,{hates:item.hates+1,hated_users:templist})
+      delete temp.post
+      delete temp.createdAt
+      delete temp.updatedAt
+      this.updateComment(temp)
     }
-    return temp
-  }
-  render(){    
     
+  }
+  render(){        
     return (
       <div className="post">
           <h1>{this.state.post.title}</h1>          
@@ -415,20 +515,25 @@ class Post extends Component {
           <div className = "post_like_button_container ">            
             <button type="button" className = {"post_like_button "+this.state.user_engaged_type} onClick={(e)=>{
               e.preventDefault()
-              this.postLikeButtonHandler()
+              if(this.checkDuplicateLikePost(this.state.post, "like")) return
+              this.postLikeHateHandler("like")
             }}>                    
               <FontAwesomeIcon className = "post_like_icon" icon={faThumbsUp}></FontAwesomeIcon>
               <p className = "post_like_count like">{this.state.post.likes}</p>                
             </button>
             <button type="button" className = {"post_like_button "+this.state.user_engaged_type} onClick={(e)=>{
               e.preventDefault()
-              this.postHatesButtonHandler()
+              if(this.checkDuplicateLikePost(this.state.post, "hate")) return
+              this.postLikeHateHandler("hate")
             }}>
               <FontAwesomeIcon className = "post_like_icon" icon={faThumbsDown}></FontAwesomeIcon>
               <p className = "post_like_count hate">{this.state.post.hates}</p>                
             </button>
           </div>
-          <hr></hr>
+          <div className="post_source_container">
+            출처: {this.state.post.source}
+          </div>
+          
           <ul className="post_best_comment_ul">
             {this.state.best_commentlist}
           </ul>
@@ -448,6 +553,7 @@ class Post extends Component {
               reported:0,
               liked_users:[""],
               hated_users:[""],
+              reported_users:[""]
             }
             this.createComment(temp)
             e.target.content.value = ""
@@ -465,7 +571,6 @@ class Post extends Component {
           :
           <noscript></noscript>
           }
-          <hr></hr>
           <ContentsList
             total_post_count = {this.props.total_post_count}
             next_page_count = {this.props.next_page_count}

@@ -15,7 +15,7 @@ import {
   createPost as createPostMutation, 
   createComment as createCommentMutation, 
   createResource as createResourceMutation,
-  updatePost as updatePostMutation,
+  // updatePost as updatePostMutation,
 } from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 // import {Button} from "@material-ui/core";
@@ -187,15 +187,7 @@ class App extends Component {
   }
 
 
-  async updatePost(item){
 
-    await API.graphql({
-      query:updatePostMutation,
-      variables:{input:item},
-      authMode: "AWS_IAM"
-    })
-    
-  }
 
   async imageUpload(_file){
     await Storage.put(_file.name, _file)
@@ -281,7 +273,6 @@ class App extends Component {
                 }}
 
                 user = {this.state.user}
-                updatePostLikes = {(item)=>this.updatePost(item)}
                 sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 
                 post={this.state.selected_post} 

@@ -16,14 +16,16 @@ class CreatePost extends Component {
         uploader: "와썹",
         likes:0,
         hates:0,
-        liked_users:[""],
-        hated_users:[""],
+        liked_users:[],
+        hated_users:[],
+        source: ""
       }, 
       resource: {
         id: "filename",
         postID: ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
         order: 0,
         file: null,     
+        uploader_comment:"",
       },
       resources:[],
       fileButtonList: [],
@@ -44,7 +46,7 @@ class CreatePost extends Component {
     this.addResource("fiilename",null,this.state.fileButtonList.length+1)
     let temp = [...this.state.fileButtonList]
     temp.push(
-    <div key = {this.state.fileButtonList.length+1}>
+    <div className="create-post-element" key = {this.state.fileButtonList.length+1}>
       <input        
         name = "image"
         type="file"
@@ -57,6 +59,16 @@ class CreatePost extends Component {
           _resources[Number(e.target.id)].file = file;
           _resources[Number(e.target.id)].id = file.name          
           this.setState({resources:_resources})              
+        }}
+      />
+      <input
+        name="image-comment"
+        id={this.state.fileButtonList.length}
+        placeholder="이미지별 코멘트"
+        onChange={(e)=>{
+          let _resources = [...this.state.resources]
+          _resources[Number(e.target.id)].uploader_comment = e.target.value
+          this.setState({resources:_resources})
         }}
       />
     </div>,
@@ -79,38 +91,53 @@ class CreatePost extends Component {
     return (
       <div className="CreatePost">
           <h1>게시물 만들기</h1>
-          <p>
+          <div className=" create-post-element ">
+            <p>공지 토글</p>
+            <Switch onChange= { ()=> {this.togglecheck()}}></Switch>
+          </div> 
+          <div className="create-post-element">
+            <p className="create-post-element-tag">업로더: </p>
             <input
               name = "uploader"
               value="와썹"
               onChange={(e)=>this.stateHandler(e)}
             />
-          </p>
-          <p>
-          <input
-            name = "title"
-            placeholder="post title"
-            onChange={(e)=>this.stateHandler(e)}
-          />
-          </p>
-          <p>
-          <input
-            name = "content"
-            placeholder="post content"
-            onChange={(e)=>this.stateHandler(e)}
-
-          />
-          </p>
+          </div>
+          <div className="create-post-element">
+            <p className="create-post-element-tag">제목: </p>
+            <input
+              name = "title"
+              placeholder="post title"
+              onChange={(e)=>this.stateHandler(e)}
+            />
+          </div>
+          <div className="create-post-content-textarea">
+            <p className="create-post-element-tag">내용: </p>
+            <textarea
+              className="create-post-content-textarea-content"
+              name = "content"
+              placeholder="post content"
+              onChange={(e)=>this.stateHandler(e)}
+            />
+          </div>
           {this.state.fileButtonList}
-          <div>
-          <button onClick={(e)=>{
-            e.preventDefault()
-            this.addImageFile()
-            
-          }}>이미지 파일 추가</button>
+          <div className=" create-post-element create-post-element-center">
+            <button onClick={(e)=>{
+              e.preventDefault()
+              this.addImageFile()
+              
+            }}>미디어 파일 추가</button>
           </div>  
-          <div>
-            
+          <div className="create-post-element">
+            <p className="create-post-element-tag">출처: </p>
+            <input
+              name = "source"
+              placeholder="출처"
+              onChange={(e)=>this.stateHandler(e)}
+            />
+          </div>
+          <div className=" create-post-element create-post-element-center">
+          
           <button onClick={(e)=>{
             e.preventDefault()
             this.state.resources.forEach(async (item)=>{
@@ -133,9 +160,7 @@ class CreatePost extends Component {
             
           }}>만들기</button>
           </div>    
-          <div>
-            <Switch onChange= { ()=> {this.togglecheck()}}></Switch>
-          </div>     
+              
                   
       </div>
     );
