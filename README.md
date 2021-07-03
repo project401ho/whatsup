@@ -24,6 +24,8 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 게시글 추천 기능 왜 되는지 모름 근데 됨 개이득 <br>
 (원래 광클시 중복 추천이 됬는데 이제 안됌 ㅎㅎ)<br>
 pagination 수정 해야됨<br>
+게시글 CSS 수정 <br>
+날짜 구하는 함수 만듬 <br>
 
 
 ## 7.2
