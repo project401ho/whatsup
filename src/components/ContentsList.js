@@ -5,6 +5,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 class ContentsList extends Component {
+    getCreatedDate(item){
+        let date = new Date(item.createdAt)
+        let years = date.getFullYear()
+        let month = date.getMonth()
+        let day = date.getDate()
+        let hours = date.getHours()
+        let minutes = date.getMinutes()
+        if(hours < 10) hours = "0"+hours.toString()
+        if(minutes < 10) minutes = "0"+minutes.toString()
+        if(day < 10) day = "0"+day.toString()
+        if(month < 10) month = "0"+month.toString()
+        return years+"."+month+"."+day +" "+ hours + ":" + minutes
+    }
   render(){
     // console.log(this.props.current_page); 
     let lists = []
@@ -12,12 +25,7 @@ class ContentsList extends Component {
     this.props.postlist.forEach((item, i)=>{
         //          total count of posts    
         let postnumber = this.props.total_post_count - (this.props.next_page_count*10) - i        
-        let date = new Date(item.createdAt)
-        let hours = date.getHours()
-        let minutes = date.getMinutes()
-        if(hours < 10) hours = "0"+hours.toString()
-        if(minutes < 10) minutes = "0"+minutes.toString()
-        // console.log(item);
+        
         if(item.type === "post"){
             lists.push(
             <li className = "contentList_li" key = {item.id}>
@@ -43,8 +51,8 @@ class ContentsList extends Component {
                     <div className="contentList_detail">
                         <p>
                             <span className="contentList_detail_uploader">{item.uploader} |</span>  
-                            <span className="contentList_detail_id"> No. {postnumber} |</span>    
-                            <span className="contentList_detail_time"> {hours}:{minutes}</span>                             
+                            <span className="contentList_detail_id"> No. {item.count} |</span>    
+                            <span className="contentList_detail_time"> {this.getCreatedDate(item)}</span>                             
                         </p>
                    </div>                   
                 </div>
@@ -77,7 +85,7 @@ class ContentsList extends Component {
                     <div className="contentList_detail">
                         <p>
                             <span className="contentList_detail_uploader">{item.uploader} |</span>  
-                            <span className="contentList_detail_time"> {hours}:{minutes}</span>                             
+                            <span className="contentList_detail_time"> {this.getCreatedDate(item)}</span>                             
                         </p>
                    </div>                   
                 </div>

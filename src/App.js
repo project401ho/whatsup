@@ -17,7 +17,7 @@ import {
   createResource as createResourceMutation,
   // updatePost as updatePostMutation,
 } from './graphql/mutations'
-import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 // import {Button} from "@material-ui/core";
 
 
@@ -259,6 +259,9 @@ class App extends Component {
           <Navigation changemode={(_mode)=>this.changeMode(_mode)} user={this.state.user} loggedin={this.state.loggedin} home={()=>this.setState({mode:"list"})}></Navigation>
           <Switch>
             <Route exact path='/'>
+              {this.selectContent()}
+            </Route>
+            <Route path="/page/*">
               {this.selectContent()}
             </Route>
             <Route path='/post/*'>

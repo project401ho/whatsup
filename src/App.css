@@ -194,6 +194,25 @@ a:visited {
 /* ContentList End */
 
 /* Post Start */
+.post_info{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0px 20px 10px 20px;
+  border-bottom: 1px rgb(204, 204, 204) solid;
+}
+.post_title{
+  height:30px;
+  font-size: 1.5em;
+  margin:0px;
+}
+.post_detail_uploader{
+  color: #ff5722;
+}
+.post_detail{
+  margin: 5px 0px;
+  font-size: 0.85em;
+}
 .post_source_container{
   margin: 5px 5px 15px 5px;
   font-size: 0.6em;

@@ -106,7 +106,9 @@ class Post extends Component {
     })
     temp2 = temp2.data.getPost    
     
-    this.setState({post:temp2,user_engaged:true, user_engaged_type:type+"d"})
+    let temptype = type+"d"
+    if(type === "none") temptype = "none"
+    this.setState({post:temp2,user_engaged:true, user_engaged_type:temptype})
   }
   async updateComment(item){    
     if(!this.props.loggedin) {
@@ -419,16 +421,17 @@ class Post extends Component {
     let templist = []
     let username = this.props.user.username
     let temp = Object.assign({},item)
-    console.log("test");
     if(type === "like"){
       let idx = [...item.liked_users].indexOf(username)
       templist.splice(idx,1)
-      temp.liked_users = templist      
+      temp.liked_users = templist  
+      temp.likes = temp.liked_users.length 
     }
     else if(type === "hate"){
       let idx = [...item.hated_users].indexOf(username)
       templist.splice(idx,1)
       temp.hated_users = templist
+      temp.hates = temp.hated_users.length 
     }
     delete temp.comments
     delete temp.resources
@@ -506,10 +509,30 @@ class Post extends Component {
     }
     
   }
+  getCreatedDate(item){
+    let date = new Date(item.createdAt)
+    let years = date.getFullYear()
+    let month = date.getMonth()
+    let day = date.getDate()
+    let hours = date.getHours()
+    let minutes = date.getMinutes()
+    if(hours < 10) hours = "0"+hours.toString()
+    if(minutes < 10) minutes = "0"+minutes.toString()
+    if(day < 10) day = "0"+day.toString()
+    if(month < 10) month = "0"+month.toString()
+    return years+"."+month+"."+day +" "+ hours + ":" + minutes
+  }
   render(){        
+    
     return (
-      <div className="post">
-          <h1>{this.state.post.title}</h1>          
+      <div className="post">          
+          <div className="post_info">
+              <h1 className="post_title">{this.state.post.title}</h1>
+              <p className="post_detail">
+                  <span className="post_detail_uploader">{this.state.post.uploader} |</span>  
+                  <span className="post_detail_time"> {this.getCreatedDate(this.state.post)}</span>                             
+              </p>
+          </div>                        
             {this.state.imagelists}
           <p>{this.state.post.content}</p>
           <div className = "post_like_button_container ">            

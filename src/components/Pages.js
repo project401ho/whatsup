@@ -1,4 +1,5 @@
 import {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 class Pages extends Component {
 
@@ -12,23 +13,35 @@ class Pages extends Component {
             if(i === this.props.current_page){
                 lists.push(
                     <li key={i} className="pages_button">
+                      <Link
+                        to={"/page/"+ i}
+                        onClick={(e)=>this.props.changePage(e.target.value)}
+                      >
                         <input 
                             id = "pages_current" 
                             type="button" 
                             value={i} 
-                            onClick={(e)=>this.props.changePage(e.target.value)}>
+                            // onClick={(e)=>this.props.changePage(e.target.value)}
+                        >
                         </input>
+                      </Link>
                     </li>    
                 )
             }
             else{
                 lists.push(
                     <li key={i} className="pages_button">
+                        <Link
+                        to={"/page/"+ i}
+                        onClick={(e)=>this.props.changePage(e.target.value)}
+                      >
                         <input 
                             type="button" 
                             value={i} 
-                            onClick={(e)=>this.props.changePage(e.target.value)}>
+                            // onClick={(e)=>this.props.changePage(e.target.value)}
+                        >
                         </input>
+                      </Link>
                     </li>    
                 )
             }
