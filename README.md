@@ -6,8 +6,6 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 --
 # 할 일
 뒤로 가기<br>
-익명 게시판<br>
-게시물 조회수 보이기<br>
 베댓 비추 반영 <br>
 비디오 추가 <br>
 대댓글 <br>
@@ -16,10 +14,14 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 북마크<br>
 차단<br>
 페이지네이션 리팩토링 <br>
+익명 게시판<br>
 도메인<br>
 리덕스 적용 <br>
 
 # 업데이트 기록
+## 7.4
+버튼 css 수정 <br>
+
 ## 7.3
 게시글 추천 기능 왜 되는지 모름 근데 됨 개이득 <br>
 (원래 광클시 중복 추천이 됬는데 이제 안됌 ㅎㅎ)<br>

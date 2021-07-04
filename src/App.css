@@ -267,6 +267,10 @@ a:visited {
 .pages_button input{
   background-color:#333;
   color: rgb(231, 218, 26);
+  border-top-color: #e9e785;
+  border-left-color: #e9e785;
+  border-right-color: #b4c51c;
+  border-bottom-color: #b4c51c;
   border-radius: 3px;
   height: 70%;   
   line-height: 20px;
@@ -274,8 +278,10 @@ a:visited {
 }
 #pages_current {
   color: #f94064;
-  border: 1px #f94064 solid;
-
+  border-top-color: #530212;
+  border-left-color: #530212;
+  border-right-color: #f77a93;
+  border-bottom-color: #f77a93;
 }
 .pages_list{
   /* display: flex;
