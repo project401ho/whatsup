@@ -10,10 +10,14 @@ import MyPage from './components/MyPage'
 import Pages from './components/Pages'
 import Post from './components/Post'
 import { API, Auth, Storage} from 'aws-amplify'
-import {getPost, getComment, postsByDate} from './graphql/queries'
+import {
+  getPost, 
+  // getComment, 
+  postsByDate
+} from './graphql/queries'
 import {
   createPost as createPostMutation, 
-  createComment as createCommentMutation, 
+  // createComment as createCommentMutation, 
   createResource as createResourceMutation,
   // updatePost as updatePostMutation,
 } from './graphql/mutations'
@@ -78,53 +82,8 @@ class App extends Component {
       authMode: 'AWS_IAM',
     })
   }
-  async createComment(formData){
-
-    //폼 체크
-    if(!formData.nickname || !formData.content ) return
-    if(!this.state.loggedin){
-      alert("로그인을 해주세요")
-      return
-    }
-    
-    //중복 체크
-    let check = await API.graphql({
-      query: getComment, 
-      variables:{id:formData.id},
-      authMode: 'AWS_IAM',
-    })
-    if(check.data.getComment){
-      let checkComment = null
-      do{
-        let temp = formData.id.split("_").map((w)=>+w)
-        temp[1] += 1
-        temp = temp[0].toString()+"_"+temp[1].toString()         
-        formData.id = temp
-        checkComment = await API.graphql({
-          query: getComment, 
-          variables:{id:formData.id},
-          authMode: 'AWS_IAM',
-        })
-
-      }while(checkComment.data.getComment)
-    }
-
-    //코멘트 등록
-    await API.graphql({
-      query: createCommentMutation,
-      variables:{input:formData},
-      authMode: 'AWS_IAM',
-    })
-    let _id = formData.postID
-    let temp = await API.graphql({
-      query: getPost, 
-      variables:{id:_id},
-      authMode: 'AWS_IAM',
-    })
-    this.setState({selected_post:temp.data.getPost})
-  }
-
-  async fetchContentLists(){
+    async fetchContentLists(){
+    console.time("fetch")
     if(this.state.postList.length !== 0){
       const apiData = await API.graphql({
         query: postsByDate, 
@@ -136,6 +95,8 @@ class App extends Component {
         },       
         authMode: 'AWS_IAM',            
       })
+      console.timeEnd("fetch")
+      console.time("fetch")
       if(apiData.data.postsByDate.items.length < 1) return
       const postFromAPI = apiData.data.postsByDate.items;
       let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
@@ -157,6 +118,8 @@ class App extends Component {
         },
         authMode: "AWS_IAM"
       })
+      console.timeEnd("fetch")
+      console.time("fetch")
       const apiData = await API.graphql({
         query: postsByDate, 
         variables:{
@@ -167,7 +130,8 @@ class App extends Component {
         },       
         authMode: 'AWS_IAM',            
       })
-      
+      console.timeEnd("fetch")
+      console.time("fetch")
       if(apiData.data.postsByDate.items.length < 1) return
       const postFromAPI = apiData.data.postsByDate.items;
       const announcementFromAPI = apiData_announcement.data.getPost
@@ -183,6 +147,7 @@ class App extends Component {
         total_post_count:postFromAPI[1].count+1,
       })
     }
+    console.timeEnd("fetch")
   }
 
 
@@ -201,7 +166,7 @@ class App extends Component {
     })    
     let _total_post_count = this.state.total_post_count+1
     this.setState({total_post_count:_total_post_count})
-    window.location.reload()
+    // window.location.reload()
   }
 
   selectContent(){    
@@ -296,7 +261,8 @@ class App extends Component {
                 sub_postList = {this.state.sub_postList}
                 loggedin={this.state.loggedin} 
                 post={this.state.selected_post} 
-                createComment={(dataForm)=>this.createComment(dataForm)}>
+                
+              >
               </Post>
               <Pages 
                 nexttoken_ContenList ={this.state.nexttoken_ContenList}

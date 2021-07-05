@@ -12,6 +12,7 @@ import { Storage } from 'aws-amplify'
 import { faThumbsUp,faThumbsDown, } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisV,faRocket,faBan,faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 class Post extends Component {    
   constructor(props){    
     super(props)
@@ -139,12 +140,28 @@ class Post extends Component {
     for(let i = 0; i < resourcelist.length; i++){
       let item = resourcelist[i]
       let _url = await Storage.get(item.id)
-      templist.push(
-      <div key={_url}>
-        <img className="post_img" src={_url} alt="post images"/>
-        <p>{item.uploader_comment}</p>
-      </div>
-      )
+      console.log(item.id);
+      console.log(item.id.split(".")[1] === "mp4");
+      if(item.id.split(".")[1] === "mp4"){
+        templist.push(
+        <div key={_url}>
+          <video className="post_img" controls>
+            <source src={_url}></source>
+          </video>
+          
+          <p>{item.uploader_comment}</p>
+        </div>
+        )
+      }
+      else{
+        templist.push(
+        <div key={_url}>
+          <img className="post_img" src={_url} alt="post images"/>
+          <p>{item.uploader_comment}</p>
+        </div>
+        )
+      }
+      
     }
     let engaged = this.ueserEngageHandler()
     this.setState({imagelists: templist, user_engaged:engaged[0],user_engaged_type:engaged[1]})
@@ -312,7 +329,7 @@ class Post extends Component {
   }
   
   async createComment(formData){
-
+    console.time("fetch")
     //폼 체크
     if(!formData.nickname || !formData.content ) return
     if(!this.props.loggedin){
@@ -349,14 +366,18 @@ class Post extends Component {
       authMode: 'AWS_IAM',
     })
     let _id = formData.postID
+    
+
     let temp = await API.graphql({
       query: getPost, 
       variables:{id:_id},
       authMode: 'AWS_IAM',
     })
+      
+
     this.setState({post:temp.data.getPost})
     this.commentListGenerate()
-
+console.timeEnd("fetch")
   }
 
   
@@ -418,17 +439,20 @@ class Post extends Component {
     return false
   }
   undoLikePost(item, type){
+    console.log("undo");
     let templist = []
     let username = this.props.user.username
     let temp = Object.assign({},item)
     if(type === "like"){
-      let idx = [...item.liked_users].indexOf(username)
+      templist = [...item.liked_users]
+      let idx = templist.indexOf(username)
       templist.splice(idx,1)
       temp.liked_users = templist  
       temp.likes = temp.liked_users.length 
     }
     else if(type === "hate"){
-      let idx = [...item.hated_users].indexOf(username)
+      templist = [...item.hated_users]
+      let idx = templist.indexOf(username)
       templist.splice(idx,1)
       temp.hated_users = templist
       temp.hates = temp.hated_users.length 
@@ -472,16 +496,18 @@ class Post extends Component {
     let username = this.props.user.username
     let temp = Object.assign({},item)
     if(type === "like"){
-      let idx = [...item.liked_users].indexOf(username)
+      templist = [...item.liked_users]
+      let idx = templist.indexOf(username)
       templist.splice(idx,1)
-      temp.likes -= 1
-      temp.liked_users = templist      
+      temp.liked_users = templist  
+      temp.likes = temp.liked_users.length     
     }
     else if(type === "hate"){
-      let idx = [...item.hated_users].indexOf(username)
+      templist = [...item.hated_users]
+      let idx = templist.indexOf(username)
       templist.splice(idx,1)
-      temp.hates -= 1
       temp.hated_users = templist
+      temp.hates = temp.hated_users.length 
     }
     delete temp.post
     delete temp.createdAt
