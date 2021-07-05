@@ -24,7 +24,7 @@ class ContentsList extends Component {
     
     this.props.postlist.forEach((item, i)=>{
         //          total count of posts    
-        let postnumber = this.props.total_post_count - (this.props.next_page_count*10) - i        
+        // let postnumber = this.props.total_post_count - (this.props.next_page_count*10) - i        
         
         if(item.type === "post"){
             lists.push(

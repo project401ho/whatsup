@@ -15,8 +15,12 @@ const SignIn = ({onSignIn}) => {
       history.push('/')
       onSignIn(user)
     } catch(error){
+      
       if(error.code === "UserNotFoundException"){
         alert("등록되지 않은 유저 입니다.")
+      }
+      if(error.code === "NotAuthorizedException"){
+        alert("ID 혹은 비밀번호를 다시 확인해주세요")
       }
       console.log("error in signing in 123", error);
     }
@@ -27,7 +31,7 @@ const SignIn = ({onSignIn}) => {
       <div>
       <TextField
         id="username"
-        label = "Username"
+        label = "아이디"
         value={username}
         onChange={e=>setUsername(e.target.value)}
       />
@@ -35,7 +39,7 @@ const SignIn = ({onSignIn}) => {
       <div>
       <TextField
         id="password"
-        label = "Password"
+        label = "비밀번호"
         type="password"
         value={password}
         onChange={e=>setPassword(e.target.value)}

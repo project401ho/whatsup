@@ -6,10 +6,8 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 --
 # 할 일
 뒤로 가기<br>
-베댓 비추 반영 <br>
 비디오 추가 <br>
 대댓글 <br>
-마이페이지 닉변 / 비밀번호 변경 <br>
 검색<br>
 북마크<br>
 차단<br>
@@ -19,6 +17,12 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 리덕스 적용 <br>
 
 # 업데이트 기록
+## 7.5
+베댓 비추 반영 <br>
+마이페이지 닉변/ 비변 기능 추가<br>
+마이페이지 CSS 수정<br>
+가입하기 및 로그인 한글화 및 뒤로가기 기능 추가 <br>
+
 ## 7.4
 버튼 css 수정 <br>
 

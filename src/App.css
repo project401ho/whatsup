@@ -497,3 +497,42 @@ a:visited {
 .create-post-element-center{
   justify-content: center;
 }
+/* create post end */
+/* mypage start */
+.mypage_info{
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.mypage_info > *{
+  border-bottom: 1px solid #999;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  
+}
+.mypage_password_change_activated{
+  height: 200px;
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding:0px;
+}
+.mypage_password_change_activated > *{
+  width:60%;
+  height:10px;
+  margin:10px;
+  padding:10px;
+}
+.mypage_signout_button{
+  margin:15px;
+}

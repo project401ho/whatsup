@@ -8,6 +8,7 @@ const SignUp = ({onSignIn}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [nickname, setNickname] = useState('')
   const history = useHistory()
   
   const signIn = async () => {
@@ -24,7 +25,14 @@ const SignUp = ({onSignIn}) => {
   }
   const signUp = async () => {
     try{
-      await Auth.signUp(username, password, email)
+      await Auth.signUp({
+        username: username, 
+        password: password, 
+        attributes:{
+          email: email, 
+          nickname: nickname
+        }
+      })
         .then(()=>{
           signIn()
         })
@@ -47,7 +55,7 @@ const SignUp = ({onSignIn}) => {
       <div>
       <TextField
         id="username"
-        label = "Username"
+        label = "아이디"
         value={username}
         onChange={e=>setUsername(e.target.value)}
       />
@@ -55,7 +63,7 @@ const SignUp = ({onSignIn}) => {
       <div>
       <TextField
         id="password"
-        label = "Password"
+        label = "비밀번호"
         type="password"
         value={password}
         onChange={e=>setPassword(e.target.value)}
@@ -64,13 +72,26 @@ const SignUp = ({onSignIn}) => {
       <div>
         <TextField
         id="email"
-        label = "E-mail"
+        label = "이메일 주소"
         type="email"
         value={email}
         onChange={e=>setEmail(e.target.value)}
       />
+      
       </div>
       <div>
+        <TextField
+        id="nickname"
+        label = "닉네임"
+        type="nickname"
+        value={nickname}
+        onChange={e=>setNickname(e.target.value)}
+      />
+      </div>
+      <div>
+      <Button id="signUpButton" color="primary" onClick ={()=>history.push("/signin")}>
+        뒤로가기
+      </Button>
       <Button id="signUpButton" color="primary" onClick ={signUp}>
         가입하기
       </Button>

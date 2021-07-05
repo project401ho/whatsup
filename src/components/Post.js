@@ -265,8 +265,8 @@ class Post extends Component {
 
     //베댓 존
     let temp = this.state.post.comments.items.sort((a,b)=>{
-      return b.likes - a.likes
-    }).slice(0,3).filter((item)=>item.likes > 4)
+      return (b.likes-b.hates) - (a.likes-a.hates)
+    }).slice(0,3).filter((item)=>(item.likes-item.hates) > 4)
     temp.forEach((item,i) => {
       let hours = Number(item.createdAt.split("T")[1].substring(0,2))+9
       hours = hours > 24 ? hours - 24 : hours
@@ -569,7 +569,7 @@ class Post extends Component {
             let temp = {
               id:this.state.id,
               postID:this.state.postID,
-              nickname:this.props.user.username,
+              nickname:this.props.user.attributes.nickname,
               content:this.state.content,
               likes: 0,
               hates: 0,

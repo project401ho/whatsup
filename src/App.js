@@ -65,7 +65,6 @@ class App extends Component {
   async signOut(){
     try {
       await Auth.signOut()
-      localStorage.setItem("user",null)
       this.setState({loggedin: false, user:{}})
     } catch(error){
     }
@@ -194,7 +193,7 @@ class App extends Component {
   }
 
   async createPost(formData){
-    if(!formData.title || !formData.id || !formData.content || this.state.user.gr) return
+    if(!formData.title || !formData.id || !formData.content) return
     await API.graphql({
       query:createPostMutation, 
       variables:{input: formData},
@@ -260,9 +259,27 @@ class App extends Component {
           <Switch>
             <Route exact path='/'>
               {this.selectContent()}
+              <Pages 
+                nexttoken_ContenList ={this.state.nexttoken_ContenList}
+                next_page_count= {this.state.next_page_count} 
+                required_page_count={this.state.required_page_count} 
+                current_page={this.state.current_page} 
+                changePage={(page)=>this.changePage(page)}
+                nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+              >            
+              </Pages>
             </Route>
             <Route path="/page/*">
               {this.selectContent()}
+              <Pages 
+                nexttoken_ContenList ={this.state.nexttoken_ContenList}
+                next_page_count= {this.state.next_page_count} 
+                required_page_count={this.state.required_page_count} 
+                current_page={this.state.current_page} 
+                changePage={(page)=>this.changePage(page)}
+                nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+              >            
+              </Pages>
             </Route>
             <Route path='/post/*'>
               <Post 
@@ -281,6 +298,15 @@ class App extends Component {
                 post={this.state.selected_post} 
                 createComment={(dataForm)=>this.createComment(dataForm)}>
               </Post>
+              <Pages 
+                nexttoken_ContenList ={this.state.nexttoken_ContenList}
+                next_page_count= {this.state.next_page_count} 
+                required_page_count={this.state.required_page_count} 
+                current_page={this.state.current_page} 
+                changePage={(page)=>this.changePage(page)}
+                nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+              >            
+              </Pages>
             </Route>
             <Route path="/signin">
               <SignIn onSignIn={(user)=>this.onSignIn(user)}></SignIn>
@@ -292,15 +318,7 @@ class App extends Component {
               <MyPage onSignOut={()=>this.signOut()} user = {this.state.user}></MyPage>
             </Route>
           </Switch>
-          <Pages 
-            nexttoken_ContenList ={this.state.nexttoken_ContenList}
-            next_page_count= {this.state.next_page_count} 
-            required_page_count={this.state.required_page_count} 
-            current_page={this.state.current_page} 
-            changePage={(page)=>this.changePage(page)}
-            nextPageCountHandler={(num)=>this.nextPageCountHandler()}
-          >            
-          </Pages>
+          
         </div>
       </Router>
     );
