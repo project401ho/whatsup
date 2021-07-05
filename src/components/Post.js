@@ -145,7 +145,7 @@ class Post extends Component {
       if(item.id.split(".")[1] === "mp4"){
         templist.push(
         <div key={_url}>
-          <video className="post_img" controls>
+          <video className="post_img" controls muted autoPlay>
             <source src={_url}></source>
           </video>
           
