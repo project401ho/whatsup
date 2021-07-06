@@ -220,7 +220,8 @@ a:visited {
   
 }
 .post_img{
-  width:60%;  
+  width:80%;  
+  height:400px;
 }
 .liked:nth-child(1){
   background-color: #ffc6d2;

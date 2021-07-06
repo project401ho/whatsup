@@ -23,9 +23,6 @@ class ContentsList extends Component {
     let lists = []
     
     this.props.postlist.forEach((item, i)=>{
-        //          total count of posts    
-        // let postnumber = this.props.total_post_count - (this.props.next_page_count*10) - i        
-        
         if(item.type === "post"){
             lists.push(
             <li className = "contentList_li" key = {item.id}>
@@ -36,6 +33,7 @@ class ContentsList extends Component {
                                 to={"/post/"+item.id}
                                 onClick={(e)=>{
                                     this.props.moveToPost(item)
+                                    window.scroll(0,0)
                                 }}
                             >
                                 <span className="contentList_subject_title">{item.title}</span>                                  
