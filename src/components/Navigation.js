@@ -7,14 +7,18 @@ class Navigation extends Component {
   render(){
     return (
       <div className="navigation">
-          <Link to="/" className="navigation_title" >
+          <Link to="/" className="navigation_title" onClick={()=>{
+            this.props.changemode("list")
+          }}>
             <img src="/logo_transparent.png" alt="whats up logo" ></img>       
             <p className="navigation_slogan">세상의 모든 <br></br> 유우머</p>                
           </Link>
           
           <ul className="navigation_buttons_holder">
               {this.props.user.username === "project401ho" ? 
-              <Link to="/create_post">
+              <Link to="/" onClick={()=>{
+                this.props.changemode("create")
+              }}>
                 <li className="navigation_button_li">
                   <button type = "button" className="navigation_button"> 
                     <FontAwesomeIcon icon={faWrench} size="lg" color="rgb(231, 218, 26)"></FontAwesomeIcon>

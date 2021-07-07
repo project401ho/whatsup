@@ -21,11 +21,10 @@ class CreatePost extends Component {
         source: ""
       }, 
       resource: {
-        id: "",
+        id: "filename",
         postID: ""+date.getFullYear() + (date.getMonth()+1)+date.getDate()+date.getTime(),
         order: 0,
         file: null,     
-        filename: "",
         uploader_comment:"",
       },
       resources:[],
@@ -39,11 +38,7 @@ class CreatePost extends Component {
   componentDidMount(){
   }
   addResource (filename,file,order) {
-    let resource = Object.assign({},this.state.resource,{
-      id:this.state.post.id+"_R"+this.state.resources.length,
-      file:file,order:order,
-      filename:filename,
-    })
+    let resource = Object.assign({},this.state.resource,{id:filename,file:file,order:order})
     let _resources = [...this.state.resources].concat(resource)
     this.setState({resources:_resources})
   }
@@ -61,8 +56,8 @@ class CreatePost extends Component {
           if(!e.target.files[0]) return
           let file = e.target.files[0]
           let _resources = [...this.state.resources]
-          _resources[Number(e.target.id)].file = file;          
-          _resources[Number(e.target.id)].filename = file.name          
+          _resources[Number(e.target.id)].file = file;
+          _resources[Number(e.target.id)].id = file.name          
           this.setState({resources:_resources})              
         }}
       />
@@ -148,6 +143,7 @@ class CreatePost extends Component {
             this.state.resources.forEach(async (item)=>{
               this.props.imageUpload(item.file)              
               let temp = Object.assign({},item,{file:"done"})
+              console.log(temp);
               this.props.createResource(temp)
             })
             if(!this.state.announcement){
@@ -156,6 +152,8 @@ class CreatePost extends Component {
             }
             else{
               let temp = Object.assign({},this.state.post,{id:"announcement",type:"announcement"})
+              console.log(temp);
+              //upload announcement
               this.props.updatePost(temp)              
 
             }

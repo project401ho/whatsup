@@ -72,7 +72,6 @@ export const getPost = /* GraphQL */ `
           }
           order
           file
-          filename
           uploader_comment
           createdAt
           updatedAt
@@ -127,7 +126,6 @@ export const listPosts = /* GraphQL */ `
             postID
             order
             file
-            filename
             uploader_comment
             createdAt
             updatedAt
@@ -182,7 +180,6 @@ export const getComment = /* GraphQL */ `
             postID
             order
             file
-            filename
             uploader_comment
             createdAt
             updatedAt
@@ -293,7 +290,6 @@ export const getResource = /* GraphQL */ `
             postID
             order
             file
-            filename
             uploader_comment
             createdAt
             updatedAt
@@ -304,7 +300,6 @@ export const getResource = /* GraphQL */ `
       }
       order
       file
-      filename
       uploader_comment
       createdAt
       updatedAt
@@ -345,7 +340,6 @@ export const listResources = /* GraphQL */ `
         }
         order
         file
-        filename
         uploader_comment
         createdAt
         updatedAt
@@ -408,7 +402,6 @@ export const postsByDate = /* GraphQL */ `
             postID
             order
             file
-            filename
             uploader_comment
             createdAt
             updatedAt

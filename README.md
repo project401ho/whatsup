@@ -6,6 +6,7 @@ https://master.d2y0wpanbqeoy2.amplifyapp.com/
 --
 # 할 일
 뒤로 가기<br>
+비디오 추가 <br>
 대댓글 <br>
 검색<br>
 북마크<br>

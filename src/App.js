@@ -31,6 +31,7 @@ class App extends Component {
   constructor(props){    
     super(props)
     this.state = {
+      mode: "list",
       postList: [],
       sub_postList: [],
       selected_post : null,
@@ -49,7 +50,7 @@ class App extends Component {
 
   //lifecycle hook
   componentDidMount(){
-    this.fetchInitialContentsList()    
+    this.fetchContentLists()    
     this.AssessLoggedInState()
     console.log("Mount done");
   }
@@ -82,9 +83,16 @@ class App extends Component {
       authMode: 'AWS_IAM',
     })
   }
+<<<<<<< HEAD
   async fetchContentLists(current_page){
     console.time("fetch")
     const apiData = await API.graphql({
+=======
+    async fetchContentLists(){
+    console.time("fetch")
+    if(this.state.postList.length !== 0){
+      const apiData = await API.graphql({
+>>>>>>> parent of 9bb4a32 (7.06)
         query: postsByDate, 
         variables:{
           limit: 50, 
@@ -94,17 +102,24 @@ class App extends Component {
         },       
         authMode: 'AWS_IAM',            
       })
+<<<<<<< HEAD
+=======
+      console.timeEnd("fetch")
+      console.time("fetch")
+>>>>>>> parent of 9bb4a32 (7.06)
       if(apiData.data.postsByDate.items.length < 1) return
       const postFromAPI = apiData.data.postsByDate.items;
       let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
       let pagecount = Math.ceil(postFromAPI.length/10)
-      
+      let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
       this.setState({ 
+        sub_postList:_subpostlist, 
         postList:postFromAPI, 
         nexttoken_ContenList:newtokenlist, 
         required_page_count:pagecount,
         total_post_count:postFromAPI[0].count,
       })
+<<<<<<< HEAD
 
       this.changePage(current_page)
     console.timeEnd("fetch")
@@ -143,8 +158,48 @@ class App extends Component {
     })
 
     this.changePage(this.state.current_page)
+    }
+    else{
+      const apiData_announcement = await API.graphql({
+        query:getPost,
+        variables:{
+          id:"announcement"
+        },
+        authMode: "AWS_IAM"
+      })
+      console.timeEnd("fetch")
+      console.time("fetch")
+      const apiData = await API.graphql({
+        query: postsByDate, 
+        variables:{
+          limit: 49, 
+          type: "post",
+          sortDirection: "DESC",
+          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
+        },       
+        authMode: 'AWS_IAM',            
+      })
+      console.timeEnd("fetch")
+      console.time("fetch")
+      if(apiData.data.postsByDate.items.length < 1) return
+      const postFromAPI = apiData.data.postsByDate.items;
+      const announcementFromAPI = apiData_announcement.data.getPost
+      postFromAPI.unshift(announcementFromAPI)     
+      let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
+      let pagecount = Math.ceil(postFromAPI.length/10)
+      let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
+      this.setState({ 
+        sub_postList:_subpostlist, 
+        postList:postFromAPI, 
+        nexttoken_ContenList:newtokenlist, 
+        required_page_count:pagecount,
+        total_post_count:postFromAPI[1].count+1,
+      })
+    }
+>>>>>>> parent of 9bb4a32 (7.06)
     console.timeEnd("fetch")
   }
+
 
 
 
@@ -161,26 +216,55 @@ class App extends Component {
     })    
     let _total_post_count = this.state.total_post_count+1
     this.setState({total_post_count:_total_post_count})
-    // setTimeout(8500)
-    window.location.reload()
+    // window.location.reload()
   }
+
+  selectContent(){    
+    let content
+    if(this.state.mode === "list"){
+      content = <ContentsList
+          total_post_count = {this.state.total_post_count}
+          next_page_count = {this.state.next_page_count}
+          current_page = {this.state.current_page}
+          postlist = {this.state.sub_postList}
+          moveToPost = {(item)=>{
+            this.setState({selected_post:item})
+          }}
+        ></ContentsList>
+    }
+    else if(this.state.mode === "create"){
+      content = <CreatePost
+        updatePost = {(item)=>this.updatePost(item)}
+        createResource = {(formData)=>this.createResource(formData)} 
+        imageUpload={(e)=>this.imageUpload(e)} 
+        createPost={(formData)=>this.createPost(formData)} 
+        total_post_count={this.state.total_post_count}
+      ></CreatePost>
+    }
+    
+    return content
+  }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> parent of 9bb4a32 (7.06)
   changePage(page){
-    let temp_page = Number(page)%5
-    if(temp_page === 0) temp_page = 5
+    let pressed_page = Number(page)
     let temp = [...this.state.postList]
-    if(temp.length > temp_page * 10){
-      temp = temp.slice((temp_page-1)*10, temp_page * 10)
+    if(temp.length > pressed_page * 10){
+      temp = temp.slice((pressed_page-1)*10, pressed_page * 10)
     }
     else{
-      temp = temp.slice((temp_page-1)*10,temp.length)
+      temp = temp.slice((pressed_page-1)*10,temp.length)
     }
-    this.setState({current_page:Number(page), sub_postList: temp})
+    this.setState({current_page:pressed_page, sub_postList: temp})
   }
   nextPageCountHandler(num){
-    let temp = this.state.next_page_count + Number(num)
-    this.setState({next_page_count:temp,current_page:(temp*5)+1})
+    let temp = this.state.next_page_count+num
+    this.setState({next_page_count:temp})
   }
+<<<<<<< HEAD
   updatePost(item){
     await API.graphql({
       query:updatePostMutation, 
@@ -225,29 +309,48 @@ class App extends Component {
         total_post_count={this.state.total_post_count}
       ></CreatePost>
     )
+=======
+  changeMode(_mode){
+    this.setState({mode:_mode})
+>>>>>>> parent of 9bb4a32 (7.06)
   }
+  
+
   render(){
     
     return (
       <Router>
         <div className="App">
-          <Navigation user={this.state.user} loggedin={this.state.loggedin} ></Navigation>
+          <Navigation changemode={(_mode)=>this.changeMode(_mode)} user={this.state.user} loggedin={this.state.loggedin} home={()=>this.setState({mode:"list"})}></Navigation>
           <Switch>
             <Route exact path='/'>
-              {this.loadContentList()}
-              {this.loadPages()}
+              {this.selectContent()}
+              <Pages 
+                nexttoken_ContenList ={this.state.nexttoken_ContenList}
+                next_page_count= {this.state.next_page_count} 
+                required_page_count={this.state.required_page_count} 
+                current_page={this.state.current_page} 
+                changePage={(page)=>this.changePage(page)}
+                nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+              >            
+              </Pages>
             </Route>
-            <Route path="/page">
-              {this.loadContentList()}
-              {this.loadPages()}
-
+            <Route path="/page/*">
+              {this.selectContent()}
+              <Pages 
+                nexttoken_ContenList ={this.state.nexttoken_ContenList}
+                next_page_count= {this.state.next_page_count} 
+                required_page_count={this.state.required_page_count} 
+                current_page={this.state.current_page} 
+                changePage={(page)=>this.changePage(page)}
+                nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+              >            
+              </Pages>
             </Route>
-            <Route path="/create_post">
-              {this.loadCreatePost()}
-            </Route>
-            <Route path='/post/*'>              
+            <Route path='/post/*'>
               <Post 
                 total_post_count = {this.state.total_post_count}
+                next_page_count = {this.state.next_page_count}
                 current_page = {this.state.current_page}
                 postlist = {this.state.sub_postList}
                 moveToPost = {(item)=>{
@@ -262,8 +365,15 @@ class App extends Component {
                 
               >
               </Post>
-              {this.loadContentList()}
-              {this.loadPages()}
+              <Pages 
+                nexttoken_ContenList ={this.state.nexttoken_ContenList}
+                next_page_count= {this.state.next_page_count} 
+                required_page_count={this.state.required_page_count} 
+                current_page={this.state.current_page} 
+                changePage={(page)=>this.changePage(page)}
+                nextPageCountHandler={(num)=>this.nextPageCountHandler()}
+              >            
+              </Pages>
             </Route>
             <Route path="/signin">
               <SignIn onSignIn={(user)=>this.onSignIn(user)}></SignIn>

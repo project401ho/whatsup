@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import ContentsList from '../components/ContentsList'
 import { API } from 'aws-amplify'
 import { getPost, getComment } from '../graphql/queries'
 import {
@@ -138,10 +139,10 @@ class Post extends Component {
     let resourcelist = this.state.post.resources.items.sort((a,b)=>a.order - b.order)
     for(let i = 0; i < resourcelist.length; i++){
       let item = resourcelist[i]
-      let _url = await Storage.get(item.filename)
-      console.log(item.filename);
-      console.log(item.filename.split(".")[1] === "mp4");
-      if(item.filename.split(".")[1] === "mp4"){
+      let _url = await Storage.get(item.id)
+      console.log(item.id);
+      console.log(item.id.split(".")[1] === "mp4");
+      if(item.id.split(".")[1] === "mp4"){
         templist.push(
         <div key={_url}>
           <video className="post_img" controls muted autoPlay>
@@ -619,6 +620,16 @@ console.timeEnd("fetch")
           :
           <noscript></noscript>
           }
+          <ContentsList
+            total_post_count = {this.props.total_post_count}
+            next_page_count = {this.props.next_page_count}
+            current_page = {this.props.current_page}
+            postlist = {this.props.sub_postList}
+            moveToPost = {(item)=>{
+              this.props.moveToPost(item)
+              window.scrollTo(0, 0);
+            }}
+        ></ContentsList>
       </div>
     );
   }
