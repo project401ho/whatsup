@@ -19,7 +19,7 @@ import {
   createPost as createPostMutation, 
   // createComment as createCommentMutation, 
   createResource as createResourceMutation,
-  // updatePost as updatePostMutation,
+  updatePost as updatePostMutation,
 } from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 // import {Button} from "@material-ui/core";
