@@ -158,6 +158,7 @@ class App extends Component {
     })
 
     this.changePage(this.state.current_page)
+=======
     }
     else{
       const apiData_announcement = await API.graphql({
