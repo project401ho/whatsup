@@ -222,43 +222,8 @@ class App extends Component {
     })    
     console.log("updated");
   }
-
-  loadPages(){
-    return (
-      <Pages 
-        nexttoken_ContenList ={this.state.nexttoken_ContenList}
-        next_page_count= {this.state.next_page_count} 
-        required_page_count={this.state.required_page_count} 
-        current_page={this.state.current_page} 
-        changePage={(page)=>this.changePage(page)}
-        nextPageCountHandler={(num)=>this.nextPageCountHandler(num)}
-        fetchContentLists = {(page)=>this.fetchContentLists(page)}   
-      >            
-      </Pages>
-    )
-  }
-  loadContentList(){
-    return (
-      <ContentsList
-        total_post_count = {this.state.total_post_count}
-        current_page = {this.state.current_page}
-        postlist = {this.state.sub_postList}
-        moveToPost = {(item)=>{
-          this.setState({selected_post:item})
-        }}
-      ></ContentsList>
-    )
-  }
-  loadCreatePost(){
-    return(
-      <CreatePost
-        updatePost = {(item)=>this.updatePost(item)}
-        createResource = {(formData)=>this.createResource(formData)} 
-        imageUpload={(e)=>this.imageUpload(e)} 
-        createPost={(formData)=>this.createPost(formData)} 
-        total_post_count={this.state.total_post_count}
-      ></CreatePost>
-    )
+  changeMode(_mode){
+    this.setState({mode:_mode})
   }
 
   changeMode(_mode){
