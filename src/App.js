@@ -89,9 +89,10 @@ class App extends Component {
       authMode: 'AWS_IAM',
     })
   }
-  async fetchContentLists(current_page){
+    async fetchContentLists(){
     console.time("fetch")
-    const apiData = await API.graphql({
+    if(this.state.postList.length !== 0){
+      const apiData = await API.graphql({
         query: postsByDate, 
         variables:{
           limit: 50, 
@@ -101,6 +102,8 @@ class App extends Component {
         },       
         authMode: 'AWS_IAM',            
       })
+      console.timeEnd("fetch")
+      console.time("fetch")
       if(apiData.data.postsByDate.items.length < 1) return
       const postFromAPI = apiData.data.postsByDate.items;
       let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
@@ -113,44 +116,44 @@ class App extends Component {
         required_page_count:pagecount,
         total_post_count:postFromAPI[0].count,
       })
-
-      this.changePage(current_page)
-    console.timeEnd("fetch")
-  }
-  async fetchInitialContentsList(){
-    console.time("fetch")
-    const apiData_announcement = await API.graphql({
-      query:getPost,
-      variables:{
-        id:"announcement"
-      },
-      authMode: "AWS_IAM"
-    })
-    const apiData = await API.graphql({
-      query: postsByDate, 
-      variables:{
-        limit: 49, 
-        type: "post",
-        sortDirection: "DESC",
-        nextToken: null,
-      },       
-      authMode: 'AWS_IAM',            
-    })
-
-    const postFromAPI = apiData.data.postsByDate.items;
-    const announcementFromAPI = apiData_announcement.data.getPost
-    postFromAPI.unshift(announcementFromAPI)     
-    let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
-    let pagecount = Math.ceil(postFromAPI.length/10)    
-    this.setState({ 
-      postList:postFromAPI, 
-      nexttoken_ContenList:newtokenlist, 
-      required_page_count:pagecount,
-      total_post_count:postFromAPI[1].count+1,
-      initiated:true,
-    })
-
-    this.changePage(this.state.current_page)
+    }
+    else{
+      const apiData_announcement = await API.graphql({
+        query:getPost,
+        variables:{
+          id:"announcement"
+        },
+        authMode: "AWS_IAM"
+      })
+      console.timeEnd("fetch")
+      console.time("fetch")
+      const apiData = await API.graphql({
+        query: postsByDate, 
+        variables:{
+          limit: 49, 
+          type: "post",
+          sortDirection: "DESC",
+          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
+        },       
+        authMode: 'AWS_IAM',            
+      })
+      console.timeEnd("fetch")
+      console.time("fetch")
+      if(apiData.data.postsByDate.items.length < 1) return
+      const postFromAPI = apiData.data.postsByDate.items;
+      const announcementFromAPI = apiData_announcement.data.getPost
+      postFromAPI.unshift(announcementFromAPI)     
+      let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
+      let pagecount = Math.ceil(postFromAPI.length/10)
+      let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
+      this.setState({ 
+        sub_postList:_subpostlist, 
+        postList:postFromAPI, 
+        nexttoken_ContenList:newtokenlist, 
+        required_page_count:pagecount,
+        total_post_count:postFromAPI[1].count+1,
+      })
+    }
     console.timeEnd("fetch")
   }
 
@@ -198,7 +201,7 @@ class App extends Component {
     
     return content
   }
-  
+
   changePage(page){
     let pressed_page = Number(page)
     let temp = [...this.state.postList]
@@ -214,18 +217,6 @@ class App extends Component {
     let temp = this.state.next_page_count+num
     this.setState({next_page_count:temp})
   }
-  async updatePost(item){
-    await API.graphql({
-      query:updatePostMutation, 
-      variables:{id: item.id},
-      authMode: 'AWS_IAM'
-    })    
-    console.log("updated");
-  }
-  changeMode(_mode){
-    this.setState({mode:_mode})
-  }
-
   changeMode(_mode){
     this.setState({mode:_mode})
   }
