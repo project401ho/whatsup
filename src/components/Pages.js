@@ -74,68 +74,6 @@ class Pages extends Component {
             </ul>        
         )
     }
-<<<<<<< HEAD
-  return lists
-}
-loadPreviousButton(){
-    let page = ((this.props.next_page_count)*5)
-    return(
-      <li className="pages_button">
-        <Link 
-          to={"/page/"+page}
-          onClick={()=>{
-            this.props.nextPageCountHandler(-1)
-            this.props.fetchContentLists(page)
-          }}
-        >
-          <input type="button" value="이전" onClick={(e)=>{
-             
-            }}>                        
-          </input>
-        </Link>
-      </li>
-    )
-}
-
-loadNextButton(){
-  let page = ((this.props.next_page_count+1)*5)+1
-  return(
-    <li className="pages_button">
-      <Link 
-        to={"/page/"+page}
-        onClick={()=>{
-          this.props.fetchContentLists(page)
-          this.props.nextPageCountHandler(1)    
-        }}
-      >
-        <input type="button" value="다음">
-        </input>
-      </Link>
-    </li>
-  )
-}
-
-render(){    
-    return(
-        <ul className="pages_list">
-        {this.props.next_page_count > 0 
-            ?
-            this.loadPreviousButton()
-            :
-            <noscript></noscript>
-        }
-        {this.load_pages()}
-        {this.props.nexttoken_ContenList[this.props.next_page_count] !== null 
-            ?
-            this.loadNextButton()
-            :
-            <noscript></noscript>
-        }
-        </ul>        
-    )
-  }
-=======
->>>>>>> parent of 9bb4a32 (7.06)
 }
 
 export default Pages;
