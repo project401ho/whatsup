@@ -214,7 +214,7 @@ class App extends Component {
     let temp = this.state.next_page_count+num
     this.setState({next_page_count:temp})
   }
-  updatePost(item){
+  async updatePost(item){
     await API.graphql({
       query:updatePostMutation, 
       variables:{id: item.id},
