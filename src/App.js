@@ -19,7 +19,7 @@ import {
   createPost as createPostMutation, 
   // createComment as createCommentMutation, 
   createResource as createResourceMutation,
-  updatePost as updatePostMutation,
+  // updatePost as updatePostMutation,
 } from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 // import {Button} from "@material-ui/core";
@@ -54,6 +54,12 @@ class App extends Component {
     this.AssessLoggedInState()
     console.log("Mount done");
   }
+  shouldComponentUpdate(){
+    if(this.state.postList.length > 0){
+      return true
+    }
+    return false
+  }
   //log in & out
   AssessLoggedInState(){
     Auth.currentAuthenticatedUser()
@@ -83,16 +89,9 @@ class App extends Component {
       authMode: 'AWS_IAM',
     })
   }
-<<<<<<< HEAD
   async fetchContentLists(current_page){
     console.time("fetch")
     const apiData = await API.graphql({
-=======
-    async fetchContentLists(){
-    console.time("fetch")
-    if(this.state.postList.length !== 0){
-      const apiData = await API.graphql({
->>>>>>> parent of 9bb4a32 (7.06)
         query: postsByDate, 
         variables:{
           limit: 50, 
@@ -102,11 +101,6 @@ class App extends Component {
         },       
         authMode: 'AWS_IAM',            
       })
-<<<<<<< HEAD
-=======
-      console.timeEnd("fetch")
-      console.time("fetch")
->>>>>>> parent of 9bb4a32 (7.06)
       if(apiData.data.postsByDate.items.length < 1) return
       const postFromAPI = apiData.data.postsByDate.items;
       let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
@@ -119,7 +113,6 @@ class App extends Component {
         required_page_count:pagecount,
         total_post_count:postFromAPI[0].count,
       })
-<<<<<<< HEAD
 
       this.changePage(current_page)
     console.timeEnd("fetch")
@@ -158,46 +151,6 @@ class App extends Component {
     })
 
     this.changePage(this.state.current_page)
-=======
-    }
-    else{
-      const apiData_announcement = await API.graphql({
-        query:getPost,
-        variables:{
-          id:"announcement"
-        },
-        authMode: "AWS_IAM"
-      })
-      console.timeEnd("fetch")
-      console.time("fetch")
-      const apiData = await API.graphql({
-        query: postsByDate, 
-        variables:{
-          limit: 49, 
-          type: "post",
-          sortDirection: "DESC",
-          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
-        },       
-        authMode: 'AWS_IAM',            
-      })
-      console.timeEnd("fetch")
-      console.time("fetch")
-      if(apiData.data.postsByDate.items.length < 1) return
-      const postFromAPI = apiData.data.postsByDate.items;
-      const announcementFromAPI = apiData_announcement.data.getPost
-      postFromAPI.unshift(announcementFromAPI)     
-      let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
-      let pagecount = Math.ceil(postFromAPI.length/10)
-      let _subpostlist = postFromAPI.slice(this.state.current_page-1,this.state.current_page*10)
-      this.setState({ 
-        sub_postList:_subpostlist, 
-        postList:postFromAPI, 
-        nexttoken_ContenList:newtokenlist, 
-        required_page_count:pagecount,
-        total_post_count:postFromAPI[1].count+1,
-      })
-    }
->>>>>>> parent of 9bb4a32 (7.06)
     console.timeEnd("fetch")
   }
 
@@ -245,11 +198,7 @@ class App extends Component {
     
     return content
   }
-<<<<<<< HEAD
   
-=======
-
->>>>>>> parent of 9bb4a32 (7.06)
   changePage(page){
     let pressed_page = Number(page)
     let temp = [...this.state.postList]
@@ -265,7 +214,6 @@ class App extends Component {
     let temp = this.state.next_page_count+num
     this.setState({next_page_count:temp})
   }
-<<<<<<< HEAD
   updatePost(item){
     await API.graphql({
       query:updatePostMutation, 
@@ -274,6 +222,7 @@ class App extends Component {
     })    
     console.log("updated");
   }
+
   loadPages(){
     return (
       <Pages 
@@ -310,10 +259,10 @@ class App extends Component {
         total_post_count={this.state.total_post_count}
       ></CreatePost>
     )
-=======
+  }
+
   changeMode(_mode){
     this.setState({mode:_mode})
->>>>>>> parent of 9bb4a32 (7.06)
   }
   
 
@@ -392,5 +341,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;
