@@ -28,8 +28,7 @@ import { Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 
 class App extends Component {
   
-  constructor(props){
-    
+  constructor(props){    
     super(props)
     this.state = {
       postList: [],
@@ -43,14 +42,22 @@ class App extends Component {
       nexttoken_ContenList : [],
       required_page_count : 0,
       total_post_count: 0,
+      initiated: false
     }
-    
+    console.log("constructo done");
   }
 
   //lifecycle hook
   componentDidMount(){
     this.fetchInitialContentsList()    
-    this.AssessLoggedInState()
+    // this.AssessLoggedInState()
+    console.log("Mount done");
+  }
+  shouldComponentUpdate(){
+    if(this.state.postList.length > 0){
+      return true
+    }
+    return false
   }
   //log in & out
   AssessLoggedInState(){
@@ -81,8 +88,8 @@ class App extends Component {
       authMode: 'AWS_IAM',
     })
   }
-    async fetchContentLists(current_page){
-    // console.time("fetch")
+  async fetchContentLists(current_page){
+    console.time("fetch")
     const apiData = await API.graphql({
         query: postsByDate, 
         variables:{
@@ -93,9 +100,6 @@ class App extends Component {
         },       
         authMode: 'AWS_IAM',            
       })
-      // console.log(apiData);
-      // console.timeEnd("fetch")
-      // console.time("fetch")
       if(apiData.data.postsByDate.items.length < 1) return
       const postFromAPI = apiData.data.postsByDate.items;
       let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
@@ -109,46 +113,43 @@ class App extends Component {
       })
 
       this.changePage(current_page)
-    
-    // console.timeEnd("fetch")
+    console.timeEnd("fetch")
   }
   async fetchInitialContentsList(){
+    console.time("fetch")
     const apiData_announcement = await API.graphql({
-        query:getPost,
-        variables:{
-          id:"announcement"
-        },
-        authMode: "AWS_IAM"
-      })
-      // console.timeEnd("fetch")
-      // console.time("fetch")
-      const apiData = await API.graphql({
-        query: postsByDate, 
-        variables:{
-          limit: 49, 
-          type: "post",
-          sortDirection: "DESC",
-          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
-        },       
-        authMode: 'AWS_IAM',            
-      })
-      // console.timeEnd("fetch")
-      // console.time("fetch")
-      if(apiData.data.postsByDate.items.length < 1) return
-      const postFromAPI = apiData.data.postsByDate.items;
-      const announcementFromAPI = apiData_announcement.data.getPost
-      postFromAPI.unshift(announcementFromAPI)     
-      let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
-      let pagecount = Math.ceil(postFromAPI.length/10)
-      
-      this.setState({ 
-        postList:postFromAPI, 
-        nexttoken_ContenList:newtokenlist, 
-        required_page_count:pagecount,
-        total_post_count:postFromAPI[1].count+1,
-      })
+      query:getPost,
+      variables:{
+        id:"announcement"
+      },
+      authMode: "AWS_IAM"
+    })
+    const apiData = await API.graphql({
+      query: postsByDate, 
+      variables:{
+        limit: 49, 
+        type: "post",
+        sortDirection: "DESC",
+        nextToken: null,
+      },       
+      authMode: 'AWS_IAM',            
+    })
 
-      this.changePage(this.state.current_page)
+    const postFromAPI = apiData.data.postsByDate.items;
+    const announcementFromAPI = apiData_announcement.data.getPost
+    postFromAPI.unshift(announcementFromAPI)     
+    let newtokenlist = [...this.state.nexttoken_ContenList].concat(apiData.data.postsByDate.nextToken)
+    let pagecount = Math.ceil(postFromAPI.length/10)    
+    this.setState({ 
+      postList:postFromAPI, 
+      nexttoken_ContenList:newtokenlist, 
+      required_page_count:pagecount,
+      total_post_count:postFromAPI[1].count+1,
+      initiated:true,
+    })
+
+    this.changePage(this.state.current_page)
+    console.timeEnd("fetch")
   }
 
 
@@ -169,7 +170,6 @@ class App extends Component {
     // setTimeout(8500)
     window.location.reload()
   }
-
   
   changePage(page){
     let temp_page = Number(page)%5

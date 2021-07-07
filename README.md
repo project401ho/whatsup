@@ -22,9 +22,15 @@ API.graphql로 fetch하면 300ms-700ms 정도 걸림 <br>
 최적화를 너무 개발새발 한듯함 거의 모든 기능이 체감상 되게 느림 <br>
 
 # 업데이트 기록
+## 7.7
+네트워크 확인 결과도 graphql의 지연시간이 굉장히 김<br>
+어떻게 줄이는지 알아보는중 <br>
+서버사이드 렌더링을 해야할듯 <br>
+next js 를 사용해야하고 create-react-app에서 migrate해야함 <br>
+
 ## 7.6
-페이지 네이션 작동 안함
-리소스 스키마 및 포스트에서 쓰는 리소스 수정 
+페이지 네이션 작동 안함<br>
+리소스 스키마 및 포스트에서 쓰는 리소스 수정 <br>
 
 
 ## 7.5
@@ -208,9 +214,9 @@ https://docs.amplify.aws/guides/api-graphql/query-with-sorting/q/platform/js#imp
 nextToken이용한 페이지네이션 구현<br>
 
 
-게시글 이미지 사이즈 퍼센트로 바꿈
-로그인 안할시 댓글 작성 불가
-비로그인이 댓글 보기만 가능
+게시글 이미지 사이즈 퍼센트로 바꿈<br>
+로그인 안할시 댓글 작성 불가<br>
+비로그인이 댓글 보기만 가능<br>
 
 Auth 관련 교육 영상 <br>
 https://www.youtube.com/watch?v=lMOVP1Y8vOc<br>

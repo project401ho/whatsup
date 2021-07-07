@@ -76,12 +76,11 @@ loadNextButton(){
       <Link 
         to={"/page/"+page}
         onClick={()=>{
-          this.props.nextPageCountHandler(1)
           this.props.fetchContentLists(page)
+          this.props.nextPageCountHandler(1)    
         }}
       >
-        <input type="button" value="다음" onClick={(e)=>{
-        }}>
+        <input type="button" value="다음">
         </input>
       </Link>
     </li>
