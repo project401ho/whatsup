@@ -19,7 +19,7 @@ import {
   createPost as createPostMutation, 
   // createComment as createCommentMutation, 
   createResource as createResourceMutation,
-  // updatePost as updatePostMutation,
+  updatePost as updatePostMutation,
 } from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 // import {Button} from "@material-ui/core";
@@ -50,14 +50,8 @@ class App extends Component {
   //lifecycle hook
   componentDidMount(){
     this.fetchInitialContentsList()    
-    // this.AssessLoggedInState()
+    this.AssessLoggedInState()
     console.log("Mount done");
-  }
-  shouldComponentUpdate(){
-    if(this.state.postList.length > 0){
-      return true
-    }
-    return false
   }
   //log in & out
   AssessLoggedInState(){
@@ -187,7 +181,14 @@ class App extends Component {
     let temp = this.state.next_page_count + Number(num)
     this.setState({next_page_count:temp,current_page:(temp*5)+1})
   }
-
+  updatePost(item){
+    await API.graphql({
+      query:updatePostMutation, 
+      variables:{id: item.id},
+      authMode: 'AWS_IAM'
+    })    
+    console.log("updated");
+  }
   loadPages(){
     return (
       <Pages 
