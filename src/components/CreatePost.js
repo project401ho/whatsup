@@ -33,7 +33,14 @@ class CreatePost extends Component {
       announcement: false,
     }
   }
-  togglecheck(){
+  togglecheck(){    
+    if(!this.state.announcement){
+      let temp = Object.assign({},this.state.resource,{postID:"announcement"})
+      this.setState({resource:temp})
+      this.state.resources.forEach((item)=>{
+        item.postID="announcement"
+      })
+    }
     this.setState({announcement:!this.state.announcement})
   }
   componentDidMount(){
@@ -150,8 +157,7 @@ class CreatePost extends Component {
               let temp = Object.assign({},item,{file:"done"})
               this.props.createResource(temp)
             })
-            if(!this.state.announcement){
-              
+            if(!this.state.announcement){              
               this.props.createPost(this.state.post)
             }
             else{

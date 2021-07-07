@@ -19,7 +19,7 @@ import {
   createPost as createPostMutation, 
   // createComment as createCommentMutation, 
   createResource as createResourceMutation,
-  // updatePost as updatePostMutation,
+  updatePost as updatePostMutation,
 } from './graphql/mutations'
 import { Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 // import {Button} from "@material-ui/core";
@@ -128,7 +128,7 @@ class App extends Component {
           limit: 49, 
           type: "post",
           sortDirection: "DESC",
-          nextToken: this.state.nexttoken_ContenList[this.state.nexttoken_ContenList.length-1],
+          nextToken: null,
         },       
         authMode: 'AWS_IAM',            
       })
@@ -146,9 +146,10 @@ class App extends Component {
         nexttoken_ContenList:newtokenlist, 
         required_page_count:pagecount,
         total_post_count:postFromAPI[1].count+1,
+        next_page_count:0,
       })
 
-      this.changePage(this.state.current_page)
+      this.changePage(1)
   }
 
 
@@ -187,7 +188,14 @@ class App extends Component {
     let temp = this.state.next_page_count + Number(num)
     this.setState({next_page_count:temp,current_page:(temp*5)+1})
   }
-
+  async updatePost(item){
+    await API.graphql({
+      query:updatePostMutation, 
+      variables:{input: item},
+      authMode: 'AWS_IAM'
+    })   
+    console.log("updated");
+  }
   loadPages(){
     return (
       <Pages 
@@ -230,7 +238,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Navigation user={this.state.user} loggedin={this.state.loggedin} ></Navigation>
+          <Navigation fetchInitialContentsList={(e)=>this.fetchInitialContentsList()} user={this.state.user} loggedin={this.state.loggedin} ></Navigation>
           <Switch>
             <Route exact path='/'>
               {this.loadContentList()}

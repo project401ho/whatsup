@@ -27,6 +27,8 @@ API.graphql로 fetch하면 300ms-700ms 정도 걸림 <br>
 어떻게 줄이는지 알아보는중 <br>
 서버사이드 렌더링을 해야할듯 <br>
 next js 를 사용해야하고 create-react-app에서 migrate해야함 <br>
+로고 클릭시 1페이지로 이동 <br>
+
 
 ## 7.6
 페이지 네이션 작동 안함

@@ -7,7 +7,7 @@ class Navigation extends Component {
   render(){
     return (
       <div className="navigation">
-          <Link to="/" className="navigation_title" >
+          <Link to="/page/1" className="navigation_title" onClick={()=>this.props.fetchInitialContentsList()}>
             <img src="/logo_transparent.png" alt="whats up logo" ></img>       
             <p className="navigation_slogan">세상의 모든 <br></br> 유우머</p>                
           </Link>

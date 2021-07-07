@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom';
 class Pages extends Component {
 
   load_pages(){
-    // console.log("load pages");
     
     let lists = []    
     for(let i = 1; i < this.props.required_page_count+1; i++){

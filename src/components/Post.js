@@ -139,8 +139,6 @@ class Post extends Component {
     for(let i = 0; i < resourcelist.length; i++){
       let item = resourcelist[i]
       let _url = await Storage.get(item.filename)
-      console.log(item.filename);
-      console.log(item.filename.split(".")[1] === "mp4");
       if(item.filename.split(".")[1] === "mp4"){
         templist.push(
         <div key={_url}>
@@ -328,7 +326,6 @@ class Post extends Component {
   }
   
   async createComment(formData){
-    console.time("fetch")
     //폼 체크
     if(!formData.nickname || !formData.content ) return
     if(!this.props.loggedin){
@@ -376,7 +373,6 @@ class Post extends Component {
 
     this.setState({post:temp.data.getPost})
     this.commentListGenerate()
-console.timeEnd("fetch")
   }
 
   
@@ -438,7 +434,6 @@ console.timeEnd("fetch")
     return false
   }
   undoLikePost(item, type){
-    console.log("undo");
     let templist = []
     let username = this.props.user.username
     let temp = Object.assign({},item)
